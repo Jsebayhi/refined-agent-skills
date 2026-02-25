@@ -1,0 +1,5 @@
+# Compiled/packaged skill artifacts
+*.skill
+
+# Large reference guides
+The-Complete-Guide-to-Building-Skill-for-Claude.pdf
