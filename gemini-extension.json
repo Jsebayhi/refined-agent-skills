@@ -1,0 +1,7 @@
+{
+  "name": "std-skills",
+  "version": "0.1.0",
+  "description": "A collection of standard skills for Gemini CLI",
+  "publisher": "jeremy sebayhi",
+  "license": "MIT"
+}
