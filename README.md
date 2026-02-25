@@ -1,0 +1,1 @@
+The idea of this extension is to allow installing all the skills at once or cherry pick.
