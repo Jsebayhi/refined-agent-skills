@@ -5,6 +5,8 @@ This extension provides a collection of standard skills for the Gemini CLI.
 ## Project Structure
 
 - `skills/`: Contains the individual skills.
+    - `engineering-agent-skills/`: Expert system for building and designing agent skills.
+    - `deep-reading-agent-skill/`: Teaches agents to deeply analyze and reflect on resources (PDFs, docs, web pages) section by section.
 
 ## Configuration
 
@@ -14,6 +16,11 @@ This extension provides a collection of standard skills for the Gemini CLI.
 
 ### GEMINI.md Maintenance
 **CRITICAL:** This `GEMINI.md` file must be actively maintained by any agent working on this extension. It serves as the primary repository for project-specific operational intelligence, developer notes, and conventions. Update it whenever new workflows, gotchas, or structural patterns are introduced.
+
+### Git Conventions
+**MANDATORY:** One commit per skill. A commit must never touch multiple skills. 
+- When adding or updating a skill, only changes within that skill's directory (and relevant top-level files like `README.md` or `.gitignore` if required for that skill) should be included.
+- Fixes or improvements to existing skills must be in their own dedicated commits.
 
 ### README Maintenance
 When adding a new skill to the `skills/` directory:
