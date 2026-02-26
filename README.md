@@ -30,3 +30,16 @@ gemini skills install <git-repo-url> --path skills/engineering-agent-skills
 # Or link from a local directory (updates reflect immediately)
 gemini skills link ./skills/engineering-agent-skills
 ```
+
+### [Deep Reading Agent Skill](skills/deep-reading-agent-skill/SKILL.md)
+*   **Description**: Teaches agents to deeply analyze and reflect on resources (PDFs, docs, web pages) section by section.
+*   **Triggers**: "read the following resources deeply", "deeply read this PDF section by section", "analyze the nuances and spirit of these documents".
+
+**Installation:**
+```bash
+# Install from a remote git repository
+gemini skills install <git-repo-url> --path skills/deep-reading-agent-skill
+
+# Or link from a local directory (updates reflect immediately)
+gemini skills link ./skills/deep-reading-agent-skill
+```
