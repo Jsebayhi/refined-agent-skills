@@ -56,3 +56,16 @@ gemini skills install <git-repo-url> --path skills/git-commit-convention
 # Or link from a local directory (updates reflect immediately)
 gemini skills link ./skills/git-commit-convention
 ```
+
+### [Deep Brainstorming](skills/deep-brainstorming/SKILL.md)
+*   **Description**: Guides the agent through a rigorous brainstorming process using Tree of Thought and Red Teaming.
+*   **Triggers**: "brainstorm", "explore possibilities", "think deeply before acting".
+
+**Installation:**
+```bash
+# Install from a remote git repository
+gemini skills install <git-repo-url> --path skills/deep-brainstorming
+
+# Or link from a local directory (updates reflect immediately)
+gemini skills link ./skills/deep-brainstorming
+```
