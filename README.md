@@ -43,3 +43,16 @@ gemini skills install <git-repo-url> --path skills/deep-reading-agent-skill
 # Or link from a local directory (updates reflect immediately)
 gemini skills link ./skills/deep-reading-agent-skill
 ```
+
+### [Git Commit Convention Skill](skills/git-commit-convention/SKILL.md)
+*   **Description**: Commits staged changes conventionally.
+*   **Triggers**: "git commit", "prepare commit", "draft a commit message", "commit changes conventionally".
+
+**Installation:**
+```bash
+# Install from a remote git repository
+gemini skills install <git-repo-url> --path skills/git-commit-convention
+
+# Or link from a local directory (updates reflect immediately)
+gemini skills link ./skills/git-commit-convention
+```

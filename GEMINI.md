@@ -7,6 +7,7 @@ This extension provides a collection of standard skills for the Gemini CLI.
 - `skills/`: Contains the individual skills.
     - `engineering-agent-skills/`: Expert system for building and designing agent skills.
     - `deep-reading-agent-skill/`: Teaches agents to deeply analyze and reflect on resources (PDFs, docs, web pages) section by section.
+    - `git-commit-convention/`: Commits staged changes conventionally.
 
 ## Configuration
 
