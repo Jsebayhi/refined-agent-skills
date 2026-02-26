@@ -4,11 +4,11 @@
 
 ### Vulnerability: "Yes-Man" Loop
 - **Risk:** The agent might simply agree with the user's first suggestion and perform a "mock" brainstorm.
-- **Countermeasure:** The `SKILL.md` explicitly mandates "Red-Teaming" and requires 2-3 distinct alternatives (Naive, Scalable, Minimalist) to force divergent thinking. The `validate_brainstorm.js` script checks for multiple options and challenge keywords.
+- **Countermeasure:** The `SKILL.md` explicitly mandates "Red-Teaming" and requires 2-3 distinct alternatives (Naive, Scalable, Minimalist) to force divergent thinking.
 
 ### Vulnerability: "Code-Sneaking"
 - **Risk:** The agent might include full implementation details within an "Option A" description.
-- **Countermeasure:** Strict `validate_brainstorm.js` rule that fails if large code blocks are present (>300 chars). The `SKILL.md` uses the `HALT` instruction before moving to implementation.
+- **Countermeasure:** Strict "No Jump to Implementation" rule in `SKILL.md`. The workflow is divided into distinct phases with mandatory checklists, and the "Synthesis" phase is the only allowed exit to implementation.
 
 ### Vulnerability: "Alignment Skipping"
 - **Risk:** The agent might proceed with a brainstorm based on incorrect assumptions.
