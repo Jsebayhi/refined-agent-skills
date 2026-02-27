@@ -42,9 +42,17 @@ Draft the skill files. You MUST actively draw upon all prompt engineering knowle
 *   **Structural Scaffolding:** Use clear Markdown headers (`### CRITICAL RULES`, `### WORKFLOW`) to cleanly separate constraints from actions.
 *   **Mechanical Chain-of-Thought:** For complex, multi-step workflows, generate a Markdown checklist in the `SKILL.md`. Explicitly instruct the target agent to copy that checklist into its output to track its own state and prevent skipped steps.
 *   **Stateful Interaction Loops:** Explicitly define exit conditions. If user approval is needed, write: `"HALT AND WAIT FOR USER TO TYPE 'APPROVE'."`
-*   **Progressive Capability Validation (The Router Pattern):** When a generated skill requires a validation script, do not instruct the agent to run `node validate.js` directly. Instead, you MUST output a `validate_router.sh` script that implements a multi-tiered fallback (Tier 0: NPX, Tier 1: Native Node, Tier 2: Docker). 
-*   **Abstract the Agent:** Instruct the target agent ONLY to execute `scripts/validate_router.sh`. Do not ask the agent to reason about its environment tier. If neither Node nor Docker is present, the script must fail explicitly rather than providing weak validation.
-*   **Defensive Guardrails (Solve, Don't Punt):** Anticipate failure modes. If you bundle Python/Bash scripts, ensure they are written to catch exceptions and output semantic error messages designed for an LLM to read (e.g., "Error: Field X missing"), rather than throwing raw tracebacks.
+*   **Strategic Scripting (Solve, Don't Punt):** Do not default to "ceremonial" validation. Instead, categorize scripts based on their functional or psychological utility:
+    *   **Tier A: Functional Utility Scripts (Mandatory for Logic):** If a task involves data transformation, API calls, file parsing, or complex calculations, you MUST offload this to a script. Do not ask the agent to "reason" through a regex or a 50-line JSON transformation.
+    *   **Tier B: Quality Gating & Behavioral Nudges (Situational):** Mandate validation scripts when you need to enforce a higher standard than the agent's first attempt. 
+        *   **Syntactic/Schema Gates:** Use scripts to verify YAML/JSON structure and mandatory fields. The script is the "Ground Truth," not the LLM.
+        *   **Heuristic Red Flags (The Deep Reading Pattern):** Use scripts to detect "manifestly low effort" (e.g., repetitive phrasing, insufficient detail, missing keywords). These scripts act as behavioral nudges, forcing the agent to reflect more deeply or try again if the first output is too thin.
+*   **Resilient Script Execution (The Universal Router):** Any script that requires an external runtime (Node, Python, Docker) MUST be executed via a resilient router following a multi-tiered fallback (Tier 0: NPX/Local, Tier 1: Native Runtime, Tier 2: Docker). 
+    *   **Script Pair Naming Convention:**
+        *   **The Router (Public Interface):** Must have an expressive, outcome-oriented name (e.g., `scripts/enforce_quality_standards.sh`). This is the only script the agent should call.
+        *   **The Logic (Internal Implementation):** Must use the same base name suffixed with `_internal` (e.g., `scripts/enforce_quality_standards_internal.js`). This signals to the agent that it is a dependency, not a primary tool.
+*   **Abstract the Agent:** Instruct the target agent ONLY to execute the top-level router scripts. Do not ask the agent to reason about its environment or call `_internal` scripts directly.
+*   **Defensive Utility (Offload the Heavy Lifting):** Anticipate deterministic hurdles. If you bundle Python/Bash scripts for data fetching or setup, ensure they are written to catch exceptions and output semantic error messages designed for an LLM to read (e.g., "Error: Field X missing"), rather than throwing raw tracebacks.
 *   **Flat References:** Keep all file paths one level deep (e.g., `references/api-guide.md`). No deeply nested reference chains. Include a Table of Contents in reference files longer than 100 lines.
 
 **Strict Frontmatter Syntax (Non-Negotiable):**

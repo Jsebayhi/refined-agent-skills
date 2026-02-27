@@ -29,21 +29,22 @@ Follow these steps precisely.
 - [ ] Step 4: Final Execution
 ```
 
-### Step 1: Data Discovery
-1. Use the `FileSystem:read_file` tool to ingest the client documents provided by the user.
-2. If the document is an unsupported format, refer to `references/supported-formats.md` for extraction strategies before failing.
+### Step 1: Data Extraction & Syntactic Gate (Functional Utility)
+1. Use the `scripts/extract_data_resiliently.sh` tool to ingest the client documents. This script follows the **Universal Router** pattern (Tiered Fallback) and calls `scripts/extract_data_resiliently_internal.js` to handle format conversion.
+2. **Syntactic Check:** The script will also verify that all mandatory YAML/JSON fields are present. If the script fails, you MUST fix the source data or extraction logic before proceeding.
 
-### Step 2: Plan Generation
+### Step 2: Plan Generation & Quality Nudge
 1. Analyze the fetched data.
 2. Generate a structured JSON plan mapping the client data to the required billing format.
 3. Save this plan locally as `proposed_onboarding.json`.
+4. **Behavioral Nudge:** Run `scripts/check_detail_level.py proposed_onboarding.json`. This script is a "Red Flag Detector" that checks if the plan is too thin. If it fails, expand the plan with more detail before the final validation.
 
-### Step 3: Validation Loop (Stateful Interaction)
-This is a strict feedback loop. You must not proceed to Step 4 until this passes.
-1. Run the progressive validation router: `bash scripts/validate_router.sh proposed_onboarding.json`.
+### Step 3: High-Stakes Validation (Situational)
+This step is required because billing account creation is a **High-Stakes, Destructive Operation**.
+1. Run the progressive validation router: `bash scripts/enforce_quality_standards.sh proposed_onboarding.json`.
 2. **Review Output:** 
-    *   If the script outputs semantic errors (e.g., "Error: Field 'jurisdiction' is missing"), modify `proposed_onboarding.json` accordingly and re-run the script.
-    *   You MUST repeat this loop until the script outputs the exact phrase: `VALIDATION SUCCESS`.
+    *   If the script outputs semantic errors (e.g., "Error: Field 'jurisdiction' is missing"), modify `proposed_onboarding.json` and re-run the script.
+    *   You MUST repeat this loop until the script outputs: `VALIDATION SUCCESS`.
 
 ### Step 4: Final Execution
 1. Present the validated JSON plan to the user in a readable Markdown format.

@@ -72,19 +72,45 @@ ELSE: Flag for review, Create compliance case.
 ```
 
 ### Pattern 6: Verifiable Outputs (Plan-Validate-Execute)
-**Use when:** Performing batch operations, destructive changes, complex validation rules, or high-stakes operations where errors are costly.
+**Use when:** Performing batch operations, destructive changes, or high-stakes operations where errors are costly (e.g., mass database updates, financial transactions).
 **Structure Example:**
-```markdown
-### Step 1: Create Plan
-1. Analyze input data.
-2. Generate a structured plan file (e.g., `changes.json`).
-### Step 2: Validate Plan
-1. Run validation script: `python scripts/validate_changes.py changes.json`.
-2. If errors are found, fix `changes.json` and re-run validation.
-### Step 3: Execute
-1. Only when validation passes, run `python scripts/apply_changes.py changes.json`.
-```
-*Key techniques:* Catches errors early, provides objective machine-verifiable checks, enables reversible planning.
+1. **Plan:** LLM creates `changes.json`.
+2. **Validate:** `python scripts/validate_changes.py changes.json`.
+3. **Execute:** `python scripts/apply_changes.py changes.json`.
+
+---
+
+## Strategic Scripting: Functional vs. Validation
+
+To build efficient skills, you must distinguish between scripts that **perform logic** and scripts that **check logic**.
+
+### Functional Utility Scripts (The "Muscles")
+**MANDATORY FOR:** Any deterministic data manipulation.
+- **Why?** It is faster, more accurate, and more token-efficient than asking an LLM to parse text or transform JSON.
+- **Examples:**
+  - `scripts/extract_metrics.py`: Parses a 1,000-line log file to find errors.
+  - `scripts/format_table.js`: Converts a JSON array into a specific Markdown table format.
+  - `scripts/fetch_metadata.sh`: Uses `curl` to grab API headers.
+
+### Validation Scripts (The "Checkpoints" and "Nudges")
+**SITUATIONAL FOR:** Quality control and behavioral modification.
+- **Why?** To provide a machine-verifiable gate and to prevent "lazy agent syndrome."
+- **Examples of Meaningful Validation:**
+  - **Syntactic/Schema Correctness:** Verifying that generated YAML or JSON is valid and includes all mandatory fields. The script is the "Ground Truth," not the LLM.
+  - **Heuristic "Red Flags":** Identifying low-quality output (e.g., word count too low, repetitive phrasing, missing domain keywords). These scripts act as behavioral nudges, forcing the agent to try again when its first attempt is too thin.
+  - **High-Stakes Gating:** Required for any task involving `rm`, destructive `POST` requests, or complex multi-file refactors.
+- **Avoid "Ceremonial Validation":** Do not create a `validate.sh` script for simple, low-stakes text-generation tasks that provide no objective check.
+
+### Resilient Script Execution (The Universal Router)
+**MANDATORY FOR:** ALL scripts (Functional Utility and Validation).
+- **Why?** Agent environments vary wildly (bare metal vs. containerized vs. browser-based).
+- **The Script Pair Naming Convention:**
+  - **The Router (The Interface):** Expressive, outcome-oriented (e.g., `scripts/enforce_quality_standards.sh`). This is the only script the agent should call.
+  - **The Logic (The Implementation):** Use the base name suffixed with `_internal` (e.g., `scripts/enforce_quality_standards_internal.js`). This signals that the script is a dependency of the router.
+- **The Router Pattern (Tiered Fallback):**
+  - **Tier 0 (Local/NPX):** Attempt to run using local package runners (e.g., `npx`, `pipx`).
+  - **Tier 1 (Native):** Attempt to run using the native runtime if available (`node`, `python3`).
+  - **Tier 2 (Docker):** Pull a slim container image and execute the `_internal` script in isolation.
 
 ---
 

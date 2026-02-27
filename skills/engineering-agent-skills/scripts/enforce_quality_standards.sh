@@ -1,11 +1,11 @@
 #!/bin/bash
-# validate_router.sh - Universal Skill Validation Router
+# enforce_quality_standards.sh - Universal Skill Validation Router
 
 SKILL_DIR=$1
 SCRIPT_DIR="$(dirname "$0")"
 
 if [ -z "$SKILL_DIR" ]; then
-    echo "Usage: bash scripts/validate_router.sh <path_to_skill>"
+    echo "Usage: bash scripts/enforce_quality_standards.sh <path_to_skill>"
     exit 1
 fi
 
