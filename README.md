@@ -69,3 +69,16 @@ gemini skills install <git-repo-url> --path skills/deep-brainstorming
 # Or link from a local directory (updates reflect immediately)
 gemini skills link ./skills/deep-brainstorming
 ```
+
+### [Working with GitLab MR](skills/working-with-gitlab-mr/SKILL.md)
+*   **Description**: Enforces a high-transparency, senior-level Merge Request lifecycle on GitLab.
+*   **Triggers**: "address the feedback", "fix the MR", "create a merge request", "manage MR lifecycle", "respond to reviewer", "work with gitlab mr", "review the MR".
+
+**Installation:**
+```bash
+# Install from a remote git repository
+gemini skills install <git-repo-url> --path skills/working-with-gitlab-mr
+
+# Or link from a local directory (updates reflect immediately)
+gemini skills link ./skills/working-with-gitlab-mr
+```

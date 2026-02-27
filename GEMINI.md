@@ -8,6 +8,8 @@ This extension provides a collection of standard skills for the Gemini CLI.
     - `engineering-agent-skills/`: Expert system for building and designing agent skills.
     - `deep-reading-agent-skill/`: Teaches agents to deeply analyze and reflect on resources (PDFs, docs, web pages) section by section.
     - `git-commit-convention/`: Commits staged changes conventionally.
+    - `deep-brainstorming/`: Guides the agent through a rigorous brainstorming process.
+    - `working-with-gitlab-mr/`: Enforces a high-transparency Merge Request lifecycle (Opening, Handling Feedback, Reviewing) on GitLab.
 
 ## Configuration
 
