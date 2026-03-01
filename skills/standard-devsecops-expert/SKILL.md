@@ -1,0 +1,28 @@
+---
+name: standard-devsecops-expert
+description: Enforces security hardening, secret detection, and CI/CD integrity. Focuses on secret prevention, dependency auditing, and "Shift Left" security.
+---
+
+# Standard DevSecOps & Security Hardening
+
+Security is not a final step; it is integrated into every phase of the lifecycle. This skill ensures that your code and CI/CD pipelines are hardened and free of common vulnerabilities.
+
+## 🔐 The "No Secrets" Mandate
+*   **Prevent, Don't React:** You MUST never commit secrets, API keys, or sensitive credentials to the repository history.
+*   **Secret Detection:** Before every commit, use a tool like `trufflehog`, `gitleaks`, or the project's own secret-scanning utility.
+*   **Environment Variables:** All secrets MUST be managed via environment variables or a dedicated secret manager.
+
+## 🛡️ Dependency Hardening
+*   **Auditing:** Regularly audit dependencies (e.g., `npm audit`, `pip-audit`, `cargo audit`).
+*   **Lockfiles:** You MUST always commit lockfiles (`package-lock.json`, `Cargo.lock`, `poetry.lock`) to ensure deterministic and verifiable builds.
+*   **Minimum Versioning:** Avoid using "latest" or wide version ranges (`*`). Use specific, pinned versions when security is paramount.
+
+## 🏗️ Infrastructure & CI/CD Integrity
+*   **Local-CI Alignment:** You MUST strive to design CI/CD pipelines where the core steps (build, lint, test, scan) are runnable locally by developers. This allows agents to "catch errors early" before pushing code. Use tools like `Makefiles`, `Taskfiles`, or local runner emulators (e.g., `act` for GitHub Actions) to ensure parity between local and remote environments.
+*   **Least Privilege:** Ensure CI/CD roles and service accounts have the minimum permissions necessary to perform their tasks.
+*   **Verifiable Pipelines:** Use checksums or signed hashes for all external artifacts or binaries downloaded during a build.
+*   **Infrastructure as Code (IaC):** Treat IaC files (e.g., Terraform, Dockerfiles) with the same rigor as application code. Perform static analysis on them (e.g., `checkov`, `hadolint`).
+
+## 💡 Best Practices
+*   **Shift Left:** Address security concerns as early as Phase 1 (Alignment) and Phase 2 (Architecture). If a decision introduces a security risk, it MUST be documented in an ADR.
+*   **Mandatory Scanning:** If the project provides a "scan" command (e.g., `make scan`), it MUST be run during Phase 4 (Validation).
