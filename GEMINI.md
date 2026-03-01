@@ -25,6 +25,19 @@ This extension provides a collection of standard skills for the Gemini CLI.
 - When adding or updating a skill, only changes within that skill's directory (and relevant top-level files like `README.md` or `.gitignore` if required for that skill) should be included.
 - Fixes or improvements to existing skills must be in their own dedicated commits.
 
+## Modular Engineering & Multi-Skill Activation
+This extension follows an "Orchestrator + Specialized Experts" architecture. To ensure high-quality production engineering, agents are encouraged and expected to activate multiple skills simultaneously.
+
+### Recommended Combinations:
+- **Feature Development:** `standard-software-lifecycle` + `deep-brainstorming` + `standard-architecture-decisions` + `[Language]-expert`.
+- **Quality Assurance:** `standard-software-lifecycle` + `standard-testing-philosophy` + `standard-devsecops-expert`.
+- **Submission:** `standard-software-lifecycle` + `standard-git-collaboration` + `standard-user-documentation`.
+
+### Conflict Resolution:
+1. **Orchestrator (Lifecycle):** Defines the *Current State* and *Phase*.
+2. **Specialized Experts:** Define the *Quality Bar* and *Standards* for that state.
+3. **Language Experts:** Provide the *Syntax* and *Tools* to achieve the standards.
+
 ### README Maintenance
 When adding a new skill to the `skills/` directory:
 1. Update the `Available Skills` section in `README.md`.
