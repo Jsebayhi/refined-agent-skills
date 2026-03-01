@@ -1,6 +1,6 @@
 # Standard Skills (std-skills)
 
-A collection of standard agent skills for the Gemini CLI. This extension allows you to install all these skills at once or cherry-pick individual ones.
+A collection of standard agent skills for the Gemini CLI. This extension provides a modular, production-grade engineering suite and specialized utilities.
 
 ## Installation
 
@@ -14,71 +14,61 @@ gemini extensions install <git-repo-url>
 gemini skills link /path/to/std-skills-gemini-cli-extensions
 ```
 
-## Available Skills
+---
 
-You can choose to install or link individual skills if you prefer not to install the entire repository.
+## 🏗️ The Production-Grade Software Lifecycle
 
-### [Engineering Agent Skills](skills/engineering-agent-skills/SKILL.md)
-*   **Description**: Engineers, scaffolds, and validates agent skills using production-grade patterns.
-*   **Triggers**: "create a skill", "build a workflow", "design an agent tool".
+This suite follows an **"Orchestrator + Specialized Experts"** architecture. The `standard-software-lifecycle` manages the process, while specialized skills provide the high-rigor standards for each phase.
 
-**Installation:**
-```bash
-# Install from a remote git repository
-gemini skills install <git-repo-url> --path skills/engineering-agent-skills
+### 1. Orchestration (The Framework)
+*   **[Standard Software Lifecycle](skills/standard-software-lifecycle/SKILL.md)**: Manages the full 5-phase SDLC (Alignment, Architecture, Implementation, Validation, Submission). Handles **Re-Entry Protocols** for starting mid-task.
+    *   *Triggers*: "fix a bug", "implement a feature", "address PR feedback".
 
-# Or link from a local directory (updates reflect immediately)
-gemini skills link ./skills/engineering-agent-skills
-```
+### 2. Strategy & Architecture (The "Why")
+*   **[Deep Brainstorming](skills/deep-brainstorming/SKILL.md)**: Divergent thinking using Tree of Thought and Red Teaming during Phase 2.
+    *   *Triggers*: "brainstorm", "explore possibilities", "think deeply".
+*   **[Standard Architecture Decisions (ADR)](skills/standard-architecture-decisions/SKILL.md)**: Convergent codification of decisions. Mandates 3+ alternatives.
+    *   *Triggers*: "create an ADR", "architectural decision", "analyze alternatives".
 
-### [Deep Reading Agent Skill](skills/deep-reading-agent-skill/SKILL.md)
-*   **Description**: Teaches agents to deeply analyze and reflect on resources (PDFs, docs, web pages) section by section.
-*   **Triggers**: "read the following resources deeply", "deeply read this PDF section by section", "analyze the nuances and spirit of these documents".
+### 3. Implementation Experts (The "Hands")
+*   **[Bash Expert](skills/bash-expert/SKILL.md)**: Idiomatic shell scripting, ShellCheck compliance, and BATS testing.
+    *   *Triggers*: "write a bash script", "fix the shell script", "test with BATS".
+*   **[Python Expert](skills/python-expert/SKILL.md)**: Production-grade Python, Ruff/Black compliance, and Pytest implementation.
+    *   *Triggers*: "write a python script", "fix the python code", "test with pytest".
 
-**Installation:**
-```bash
-# Install from a remote git repository
-gemini skills install <git-repo-url> --path skills/deep-reading-agent-skill
+### 4. Quality & Testing (The "Validation")
+*   **[Standard Testing Philosophy](skills/standard-testing-philosophy/SKILL.md)**: The language-agnostic "Testing Trophy" (Static -> Integration -> E2E).
+    *   *Triggers*: "testing strategy", "testing trophy", "mocking philosophy".
+*   **[Standard UI Testing](skills/standard-ui-testing/SKILL.md)**: Enforces POM, signal-based waiting, and user-centric assertions for UI/E2E testing.
+    *   *Triggers*: "write a ui test", "e2e testing", "playwright tests".
 
-# Or link from a local directory (updates reflect immediately)
-gemini skills link ./skills/deep-reading-agent-skill
-```
+### 5. Infrastructure & Security (The "Hardening")
+*   **[Standard DevSecOps Expert](skills/standard-devsecops-expert/SKILL.md)**: Shift-Left security, secret detection, and **Local-CI Alignment** (reproducible pipelines).
+    *   *Triggers*: "security audit", "harden the pipeline", "check for secrets", "local ci alignment".
 
-### [Git Commit Convention Skill](skills/git-commit-convention/SKILL.md)
-*   **Description**: Commits staged changes conventionally.
-*   **Triggers**: "git commit", "prepare commit", "draft a commit message", "commit changes conventionally".
+### 6. Delivery & Collaboration (The "Submission")
+*   **[Standard Git Collaboration](skills/standard-git-collaboration/SKILL.md)**: Dual-platform (gh/glab) support, Conventional Commits, and **PRB Framework** (Problem-Reasoning-Benefit).
+    *   *Triggers*: "create a PR", "open a merge request", "PR standards".
+*   **[Standard User Documentation](skills/standard-user-documentation/SKILL.md)**: Enforces **Diátaxis** (Tutorials, How-to, Reference, Explanation) and "Documentation is Code."
+    *   *Triggers*: "update the readme", "write documentation", "create a user guide".
 
-**Installation:**
-```bash
-# Install from a remote git repository
-gemini skills install <git-repo-url> --path skills/git-commit-convention
+---
 
-# Or link from a local directory (updates reflect immediately)
-gemini skills link ./skills/git-commit-convention
-```
+## 🛠️ Meta-Engineering
 
-### [Deep Brainstorming](skills/deep-brainstorming/SKILL.md)
-*   **Description**: Guides the agent through a rigorous brainstorming process using Tree of Thought and Red Teaming.
-*   **Triggers**: "brainstorm", "explore possibilities", "think deeply before acting".
+*   **[Engineering Agent Skills](skills/engineering-agent-skills/SKILL.md)**: The expert system for designing and scaffolding new agent skills.
+    *   *Triggers*: "create a skill", "build a workflow", "design an agent tool".
 
-**Installation:**
-```bash
-# Install from a remote git repository
-gemini skills install <git-repo-url> --path skills/deep-brainstorming
+---
 
-# Or link from a local directory (updates reflect immediately)
-gemini skills link ./skills/deep-brainstorming
-```
+## 🔍 Analysis & Research Utilities
 
-### [Working with GitLab MR](skills/working-with-gitlab-mr/SKILL.md)
-*   **Description**: Enforces a high-transparency, senior-level Merge Request lifecycle on GitLab.
-*   **Triggers**: "address the feedback", "fix the MR", "create a merge request", "manage MR lifecycle", "respond to reviewer", "work with gitlab mr", "review the MR".
+*   **[Deep Reading Agent Skill](skills/deep-reading-agent-skill/SKILL.md)**: Section-by-section analysis and reflection on complex resources (PDFs, Docs, Web).
+    *   *Triggers*: "read deeply", "analyze the nuances", "reflect on the spirit".
 
-**Installation:**
-```bash
-# Install from a remote git repository
-gemini skills install <git-repo-url> --path skills/working-with-gitlab-mr
+---
 
-# Or link from a local directory (updates reflect immediately)
-gemini skills link ./skills/working-with-gitlab-mr
-```
+## 📦 Legacy & Simple Tools
+
+*   **[Git Commit Convention](skills/git-commit-convention/SKILL.md)**: Lightweight tool for conventional commits without the full submission lifecycle.
+    *   *Triggers*: "git commit", "conventional commit".
