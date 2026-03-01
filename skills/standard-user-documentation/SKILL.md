@@ -1,0 +1,26 @@
+---
+name: standard-user-documentation
+description: Enforces "Documentation is Code" and the Diátaxis framework. Focuses on tutorials, how-to guides, reference material, and technical explanation for the user/consumer.
+---
+
+# Standard User Documentation (Diátaxis)
+
+Documentation is not an afterthought; it is a core feature of the software. This skill ensures that user-facing documentation is high-quality, intuitive, and properly categorized.
+
+## 📜 The Golden Rule: Documentation is Code
+This project strictly enforces the pattern that documentation (`README.md`, `API.md`, `UserGuides/`) is the source of truth.
+*   **Trigger:** If you change code that affects user behavior or an API interface, you **MUST** update the documentation in the same PR or commit.
+
+## 🏗️ The Diátaxis Framework
+Every piece of documentation must have a clear purpose. Categorize your docs into these four quadrants:
+
+1.  **Tutorials (Learning-Oriented):** A hands-on lesson that allows the newcomer to get started. Focus on a success-oriented, simple path.
+2.  **How-to Guides (Problem-Oriented):** A series of steps to solve a specific, real-world problem. Focus on a goal.
+3.  **Reference (Information-Oriented):** Technical descriptions of the machinery and how to operate it. Focus on accuracy and completeness (e.g., API specs, CLI flags).
+4.  **Explanation (Understanding-Oriented):** Discusses concepts from a higher level, providing context and background. Focus on the "Why."
+
+## 💡 Best Practices
+*   **Readme-Driven Development (RDD):** Draft the documentation *before* or *alongside* the feature to ensure the interface is intuitive and easy to explain.
+*   **The "Zero to Hero" Example:** Every README must include a clear, copy-pasteable "Quick Start" example that demonstrates the core value proposition in under 30 seconds.
+*   **Avoid "Just" and "Easy":** Never assume a task is "easy" for the user. Provide the necessary context and steps without condescension.
+*   **High-Signal Examples:** No "Hello World." Use realistic examples that solve a real problem relevant to the tool's purpose.
