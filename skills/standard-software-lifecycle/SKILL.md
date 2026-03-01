@@ -1,0 +1,70 @@
+---
+name: standard-software-lifecycle
+description: Manages the full software development lifecycle (SDLC) through a strict 5-phase workflow: Alignment, Architecture, Implementation, Validation, and Submission. Use when starting a new feature, fixing a bug, or performing a code review.
+---
+
+# Standard Software Engineering Lifecycle
+
+You are the project engineer. You MUST strictly follow the **Research -> Strategy -> Execution** lifecycle. Do not skip phases or take shortcuts.
+
+## 🏁 Re-Entry & Starting Mid-Task
+If you are starting a session where work is already in progress (e.g., addressing PR feedback):
+1.  **Identify the State:** Use `git status` and check for open PRs/MRs.
+2.  **Re-Enter:** State your entry point (e.g., "Current Phase: 5. Submission & Peer Review (Addressing Feedback)").
+3.  **Read the Room:** Read all existing PR comments/reviews before making any changes.
+
+## 🚦 Strict Workflow Mandate
+1.  **Announcement:** At the start of every task or major step, you MUST explicitly state which Phase you are currently in (e.g., "Current Phase: 1. Alignment").
+2.  **Sequential Progress:** You MUST complete each phase in order. Do not move to Architecture without Alignment, or Implementation without an approved Strategy/ADR.
+3.  **Discovery:** Before acting, you MUST identify the project's specific protocol (test runners, build tools, and **Git Platform: GitHub or GitLab**).
+4.  **Verification:** You MUST verify your changes through automated tests before proceeding to Phase 5. If no tests exist, you MUST create a reproduction script.
+5.  **Documentation:** You MUST update the project's documentation (`GEMINI.md`, `README.md`, or component docs) when making architectural changes.
+6.  **Diff Hygiene:** You MUST be extremely careful when using replacement tools to avoid accidental deletions of existing content. Always verify your `git diff` before committing.
+
+## 🧠 Mental Checklist
+- [ ] **Alignment:** Is the Goal/Problem clearly defined through Research?
+- [ ] **Architecture:** Are at least 3 alternatives analyzed, documented in the ADR, and reasons for rejection clearly defined?
+- [ ] **Implementation:** Are docs and code updated?
+- [ ] **Validation:** Did the project's test suite pass?
+- [ ] **Submission:** Is the PR body formatted for a squash commit (Why + Issue) following the PRB framework?
+- [ ] **Feedback:** Have all review comments been addressed and responded to via threaded replies?
+
+## 🚀 The Workflow
+
+### 1. Alignment (Problem Space / Research)
+👉 [Read Phase 1 Guide](phases/01_alignment.md)
+
+### 2. Architecture (Solution Space / Strategy)
+👉 [Read Phase 2 Guide](phases/02_architecture.md)
+*   **Action:** If high-ambiguity, activate `deep-brainstorming`.
+*   **Action:** Document decisions using `standard-architecture-decisions`.
+
+### 3. Implementation (Execution)
+👉 [Read Phase 3 Guide](phases/03_implementation.md)
+*   **Action:** Consult the relevant `[Language]-expert` skill.
+
+### 4. Validation (Verification & Cleanup)
+👉 [Read Phase 4 Guide](phases/04_validation.md)
+*   **Mandate:** Identify and run the project's specific test runner.
+*   **Local-CI Parity:** Strive to run the full validation suite locally before pushing. Look for `Makefiles`, `Taskfiles`, or `local-ci` scripts that mirror the remote pipeline.
+*   **Cleanup:** Remove unneeded changes and simplify code before submission.
+
+### 5. Submission & Peer Review (Delivery & Iteration)
+👉 [Read Phase 5 Guide](phases/05_submission.md)
+*   **Action:** Use `standard-git-collaboration` for PR creation and feedback loops.
+*   **Iteration:** This phase is a loop. Address feedback, push updates, and reply to threads until the PR is merged.
+
+## 🛠️ Project Discovery Cheat Sheet
+| Task | Typical Discovery Files |
+| :--- | :--- |
+| **Project Context** | `GEMINI.md`, `README.md`, `ARCHITECTURE.md` |
+| **Build/Test** | `Makefile`, `package.json`, `Cargo.toml`, `pyproject.toml` |
+| **Dependencies** | `requirements.txt`, `package-lock.json`, `go.mod` |
+| **CI/CD** | `.github/workflows/`, `.gitlab-ci.yml`, `jenkinsfile` |
+
+## 📚 References
+*   `standard-architecture-decisions`: ADR & Strategy standards.
+*   `standard-testing-philosophy`: The Testing Trophy & Mocking principles.
+*   `standard-git-collaboration`: Commits & PR Standards.
+*   `standard-user-documentation`: External doc standards (Diátaxis).
+*   `standard-devsecops-expert`: Security & Hardening mandates.
