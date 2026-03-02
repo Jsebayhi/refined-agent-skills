@@ -1,6 +1,6 @@
 ---
 name: engineering-agent-skills
-description: Engineers, scaffolds, audits, and validates agent skills using production-grade patterns. Use when the user asks to "create a skill", "refine a workflow", "audit an existing skill", "validate a prompt", or structure instructions for an AI.
+description: Engineers, scaffolds, audits, and validates agent skills using production-grade patterns. Complementary to built-in skill creation tools. Use when the user asks to "create a skill", "refine a workflow", "audit an existing skill", "validate a prompt", or structure instructions for an AI.
 metadata:
   category: meta-engineering
   version: 2.1.0
