@@ -1,5 +1,5 @@
 ---
-name: standard-software-lifecycle
+name: orchestrating-software-lifecycle
 description: Manages the full software development lifecycle (SDLC) through a strict 5-phase workflow: Alignment, Architecture, Implementation, Validation, and Submission. Use when starting a new feature, fixing a bug, or performing a code review.
 ---
 
@@ -37,11 +37,11 @@ If you are starting a session where work is already in progress (e.g., addressin
 ### 2. Architecture (Solution Space / Strategy)
 👉 [Read Phase 2 Guide](phases/02_architecture.md)
 *   **Action:** If high-ambiguity, activate `deep-brainstorming`.
-*   **Action:** Document decisions using `standard-architecture-decisions`.
+*   **Action:** Document decisions using `maintaining-rigorous-architecture-decisions`.
 
 ### 3. Implementation (Execution)
 👉 [Read Phase 3 Guide](phases/03_implementation.md)
-*   **Action:** Consult the relevant `[Language]-expert` skill.
+*   **Action:** Consult the relevant `engineering-reliable-[software/scripts]-with-[Language]` skill.
 
 ### 4. Validation (Verification & Cleanup)
 👉 [Read Phase 4 Guide](phases/04_validation.md)
@@ -51,7 +51,7 @@ If you are starting a session where work is already in progress (e.g., addressin
 
 ### 5. Submission & Peer Review (Delivery & Iteration)
 👉 [Read Phase 5 Guide](phases/05_submission.md)
-*   **Action:** Use `standard-git-collaboration` for PR creation and feedback loops.
+*   **Action:** Use `collaborating-on-git-projects` for PR creation and feedback loops.
 *   **Iteration:** This phase is a loop. Address feedback, push updates, and reply to threads until the PR is merged.
 
 ## 🛠️ Project Discovery Cheat Sheet
@@ -63,8 +63,8 @@ If you are starting a session where work is already in progress (e.g., addressin
 | **CI/CD** | `.github/workflows/`, `.gitlab-ci.yml`, `jenkinsfile` |
 
 ## 📚 References
-*   `standard-architecture-decisions`: ADR & Strategy standards.
-*   `standard-testing-philosophy`: The Testing Trophy & Mocking principles.
-*   `standard-git-collaboration`: Commits & PR Standards.
-*   `standard-user-documentation`: External doc standards (Diátaxis).
-*   `standard-devsecops-expert`: Security & Hardening mandates.
+*   `maintaining-rigorous-architecture-decisions`: ADR & Strategy standards.
+*   `testing-software-efficiently`: The Testing Trophy & Mocking principles.
+*   `collaborating-on-git-projects`: Commits & PR Standards.
+*   `authoring-effective-user-documentation`: External doc standards (Diátaxis).
+*   `upholding-devsecops-standards`: Security & Hardening mandates.
