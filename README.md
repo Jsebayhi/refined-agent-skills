@@ -1,6 +1,6 @@
-# Standard Skills (std-skills)
+# Refined Agent Skills (refined-agent-skills)
 
-A collection of high-signal engineering skills for the Gemini CLI. This extension provides a modular, production-grade suite for building grounded, reliable, and maintainable software.
+A collection of high-signal engineering and professional agent skills for the Gemini CLI. This extension provides a curated suite of "distilled experts" designed to build grounded, reliable, and maintainable software through senior-level protocols.
 
 ## Installation
 
@@ -11,7 +11,7 @@ To make all the skills in this repository available in your Gemini CLI at once:
 gemini extensions install <git-repo-url>
 
 # Or link the entire repository of skills locally (updates reflect immediately)
-gemini skills link /path/to/std-skills-gemini-cli-extensions
+gemini skills link /path/to/refined-agent-skills
 ```
 
 ---

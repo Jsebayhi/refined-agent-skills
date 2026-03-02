@@ -1,6 +1,6 @@
-# Gemini CLI Extension: std-skills
+# Gemini CLI Extension: refined-agent-skills
 
-This extension provides a collection of standard skills for the Gemini CLI.
+This extension provides a collection of distilled, high-signal experts for the Gemini CLI.
 
 ## Project Structure
 
