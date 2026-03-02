@@ -1,5 +1,5 @@
 ---
-name: standard-git-collaboration
+name: collaborating-on-git-projects
 description: Enforces high-signal repository history through Conventional Commits and "No Filler" Pull Request bodies. Focuses on the "Technical Why" and PR feedback etiquette.
 ---
 
