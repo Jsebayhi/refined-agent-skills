@@ -1,5 +1,5 @@
 ---
-name: standard-ui-testing
+name: validating-user-interfaces
 description: Enforces Page Object Model (POM), signal-based waiting, and user-centric assertions for UI and E2E testing. Focused on Playwright/Cypress/Selenium reliability.
 ---
 
