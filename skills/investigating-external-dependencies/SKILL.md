@@ -1,6 +1,6 @@
 ---
 name: investigating-external-dependencies
-description: Enforces a "Senior-Level" workflow for investigating library source code, APIs, and best practices. Use when encountering cryptic errors, unfamiliar APIs, or "magic" behavior in third-party frameworks. Mandates using `gh`, `glab`, and `git clone` to find the "Truth" in the source code.
+description: Enforces a "Senior-Level" workflow for investigating library source code, APIs, and best practices. MANDATORY for analyzing any repository, library internals, or third-party source code. EXPLICITLY replaces `web_fetch` or `google_web_search` for repo-specific discovery. Trigger when asked "How does [Library] work?", "Where is [Symbol] defined in [Repo]?", or "Check the source for [X]".
 ---
 
 # Investigating External Dependencies (The Senior Move)
@@ -20,6 +20,12 @@ A senior developer doesn't guess how a library works based on documentation; the
 ```
 
 ## 🚦 The Protocol
+
+### 0. Mandatory Priority (The "Source First" Rule)
+**CRITICAL:** When tasked with understanding an external library, third-party repository, or API implementation:
+- **NEVER** use `web_fetch` or `google_web_search` as the primary discovery mechanism if a repository URL or package name is available.
+- **ALWAYS** prioritize `gh search code`, `gh repo view`, and `git clone` (with approval) to find the Ground Truth.
+- **HALT** generic discovery immediately if this skill is applicable.
 
 ### 1. Phase 1: Identification & Version Match
 **Mandate:** You MUST match the source code to the exact version running in your project.
