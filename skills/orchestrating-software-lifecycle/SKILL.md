@@ -13,12 +13,28 @@ If you are starting a session where work is already in progress (e.g., addressin
 2.  **Re-Enter:** State your entry point (e.g., "Current Phase: 5. Submission & Peer Review (Addressing Feedback)").
 3.  **Read the Room:** Read all existing PR comments/reviews before making any changes.
 
+## 🛡️ Workflow Enforcement
+**The Workflow is the Law.** All tasks must proceed through the phases defined below.
+*   **No Skipping:** Never jump to implementation before Alignment and Architecture are formally completed.
+*   **Explicit State:** Always prefix your intent with the current workflow phase (e.g., "Current Phase: 1. Alignment").
+*   **Evidence-Based Transitions:** Moving between phases requires evidence (e.g., an issue comment, a drafted ADR, or passing tests).
+
+## 🔍 Clarity & Ambiguity Protocol
+Avoid errors due to unspoken assumptions by applying this protocol:
+*   **Low Ambiguity:** State key assumptions and move to Strategy.
+*   **Moderate Ambiguity:** Engage in focused clarification first (ask 1-3 targeted questions).
+*   **High Ambiguity:** Explicitly state assumptions and **WAIT for user validation** before proceeding.
+
+## 🤖 Session Mode Protocols
+*   **Interactive Mode:** Mandatory "Wait-for-Approval" at the end of Phase 1 and Phase 2. Use "Radical Candor"—challenge the user and propose alternatives.
+*   **Autonomous Mode:** Do not block. Document your self-alignment/architecture in the project's tracking system (Issue/ADR) and proceed immediately. If risk is extreme, halt and log a critical intervention request.
+
 ## 🚦 Strict Workflow Mandate
 1.  **Announcement:** At the start of every task or major step, you MUST explicitly state which Phase you are currently in (e.g., "Current Phase: 1. Alignment").
 2.  **Sequential Progress:** You MUST complete each phase in order. Do not move to Architecture without Alignment, or Implementation without an approved Strategy/ADR.
 3.  **Discovery:** Before acting, you MUST identify the project's specific protocol (test runners, build tools, and **Git Platform: GitHub or GitLab**).
 4.  **Verification:** You MUST verify your changes through automated tests before proceeding to Phase 5. If no tests exist, you MUST create a reproduction script.
-5.  **Documentation:** You MUST update the project's documentation (`GEMINI.md`, `README.md`, or component docs) when making architectural changes.
+5.  **Documentation:** You MUST update the project's documentation (`GEMINI.md`, `README.md`, or component docs) **simultaneously with code changes** in the same commit/PR.
 6.  **Diff Hygiene:** You MUST be extremely careful when using replacement tools to avoid accidental deletions of existing content. Always verify your `git diff` before committing.
 
 ## 🧠 Mental Checklist

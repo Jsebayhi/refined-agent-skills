@@ -25,6 +25,8 @@ Every ADR must include:
 ## 📝 ADR Template
 Use the following format when creating ADRs in the project's `adr/` folder.
 
+> **Greenfield Rule:** If creating an ADR for a NEW system or foundational pattern, focus on the **establishment** of the standard. Do not invent a "legacy" state if one did not exist in the tracked history.
+
 ```markdown
 # NNNN. Title of Decision
 

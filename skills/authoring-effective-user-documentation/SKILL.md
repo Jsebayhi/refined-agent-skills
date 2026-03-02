@@ -9,7 +9,7 @@ Documentation is not an afterthought; it is a core feature of the software. This
 
 ## 📜 The Golden Rule: Documentation is Code
 This project strictly enforces the pattern that documentation (`README.md`, `API.md`, `UserGuides/`) is the source of truth.
-*   **Trigger:** If you change code that affects user behavior or an API interface, you **MUST** update the documentation in the same PR or commit.
+*   **Simultaneous Update:** If you change code that affects user behavior or an API interface, you **MUST** update the documentation in the **same PR or commit**. Documentation is not a follow-up task; it is part of the implementation.
 
 ## 🏗️ The Diátaxis Framework
 Every piece of documentation must have a clear purpose. Categorize your docs into these four quadrants:

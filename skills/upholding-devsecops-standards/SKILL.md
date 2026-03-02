@@ -13,6 +13,7 @@ Security is not a final step; it is integrated into every phase of the lifecycle
 *   **Environment Variables:** All secrets MUST be managed via environment variables or a dedicated secret manager.
 
 ## 🛡️ Dependency Hardening
+*   **Zero-Debt Suppressions:** Never suppress a vulnerability to simply "get it done." Every suppression MUST be justified and time-bound (e.g., 90-day TTL) directly within the project's ignore file (e.g., `.trivyignore`).
 *   **Auditing:** Regularly audit dependencies (e.g., `npm audit`, `pip-audit`, `cargo audit`).
 *   **Lockfiles:** You MUST always commit lockfiles (`package-lock.json`, `Cargo.lock`, `poetry.lock`) to ensure deterministic and verifiable builds.
 *   **Minimum Versioning:** Avoid using "latest" or wide version ranges (`*`). Use specific, pinned versions when security is paramount.
