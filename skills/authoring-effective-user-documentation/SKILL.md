@@ -1,5 +1,5 @@
 ---
-name: standard-user-documentation
+name: authoring-effective-user-documentation
 description: Enforces "Documentation is Code" and the Diátaxis framework. Focuses on tutorials, how-to guides, reference material, and technical explanation for the user/consumer.
 ---
 
