@@ -49,6 +49,7 @@ Avoid errors due to unspoken assumptions by applying this protocol:
 
 ### 1. Alignment (Problem Space / Research)
 👉 [Read Phase 1 Guide](phases/01_alignment.md)
+*   **Action (External Discovery):** If the task involves understanding or troubleshooting external libraries or repositories, you **MUST** activate and follow the `investigating-external-dependencies` skill. **DO NOT** use generic search tools (`web_fetch`, `google_web_search`) as your primary source-level discovery mechanism.
 
 ### 2. Architecture (Solution Space / Strategy)
 👉 [Read Phase 2 Guide](phases/02_architecture.md)
