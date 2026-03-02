@@ -38,6 +38,10 @@ Analyze the user's requirements and formulate a structural plan.
 
 Draft the skill files. You MUST actively draw upon all prompt engineering knowledge you possess to harden the instructions. Apply these specific techniques to the generated `SKILL.md`:
 
+*   **Semantic Naming & Action-Oriented Nudging:** The skill name is the first and most powerful "nudge" for the agent. Do not use nouns or categories. Use present-participle verbs coupled with quality anchors:
+    *   **The Verb-First Mandate:** Use active verbs (e.g., `Orchestrating...`, `Engineering...`, `Upholding...`) to trigger an immediate mission-oriented mindset.
+    *   **Quality Anchors:** Include adjectives that define the "Success State" (e.g., `Reliable`, `Rigorous`, `Effective`, `High-Signal`) to set the behavioral bar.
+    *   **Mission vs. Mechanism:** Generally, name the skill after the **Outcome** (e.g., `testing-software-efficiently`). However, if the skill's primary purpose is to enforce a specific methodology or teach a governance system, name it after the **Mastery** of that system (e.g., `applying-testing-trophy-methodology`), as the system itself becomes the mission.
 *   **No Personas:** Do not give the target agent an identity (e.g., "You are an accountant"). Provide procedural knowledge only.
 *   **Structural Scaffolding:** Use clear Markdown headers (`### CRITICAL RULES`, `### WORKFLOW`) to cleanly separate constraints from actions.
 *   **Mechanical Chain-of-Thought:** For complex, multi-step workflows, generate a Markdown checklist in the `SKILL.md`. Explicitly instruct the target agent to copy that checklist into its output to track its own state and prevent skipped steps.
@@ -56,7 +60,7 @@ Draft the skill files. You MUST actively draw upon all prompt engineering knowle
 *   **Flat References:** Keep all file paths one level deep (e.g., `references/api-guide.md`). No deeply nested reference chains. Include a Table of Contents in reference files longer than 100 lines.
 
 **Strict Frontmatter Syntax (Non-Negotiable):**
-*   `name`: Max 64 chars, lowercase alphanumeric + hyphens only. No consecutive hyphens. Must match folder name.
+*   `name`: Max 64 chars, lowercase alphanumeric + hyphens only. No consecutive hyphens. MUST follow the **Action-Oriented Nudging** pattern: `present-participle-verb` + `quality-adj` + `mission-noun` (e.g., `engineering-reliable-software-with-python`).
 *   `description`: Must be third-person. Must explicitly state WHAT it does and WHEN to trigger it. No XML tags.
 *   `compatibility`: If a generated skill strictly requires a specific execution tier (e.g., it MUST have Docker), declare this hard requirement here.
 

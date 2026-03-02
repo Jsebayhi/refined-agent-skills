@@ -1,5 +1,5 @@
 ---
-name: client-onboarding-pipeline
+name: orchestrating-client-onboarding-pipelines
 description: End-to-end client onboarding and validation workflow. Use when the user asks to "onboard a new client", "process new user data", or "run the intake pipeline". DO NOT use for querying existing user data, updating passwords, or simple data exploration.
 compatibility: "Requires Node.js or Docker for reliable validation."
 metadata:
@@ -7,7 +7,7 @@ metadata:
   author: AI-Engineering-Team
 ---
 
-# Client Onboarding Pipeline
+# Orchestrating Client Onboarding Pipelines
 
 ## CRITICAL RULES & GUARDRAILS
 *   **Negative Constraint:** Do NOT skip the validation phase under any circumstances. Regulatory compliance is mandatory.
