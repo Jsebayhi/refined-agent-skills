@@ -1,5 +1,5 @@
 ---
-name: bash-expert
+name: engineering-reliable-scripts-with-bash
 description: Provides idiomatic Bash scripting standards, ShellCheck compliance, and BATS testing implementation. Enforces robust, error-handled shell scripts for production.
 ---
 
