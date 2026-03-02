@@ -1,5 +1,5 @@
 ---
-name: standard-devsecops-expert
+name: upholding-devsecops-standards
 description: Enforces security hardening, secret detection, and CI/CD integrity. Focuses on secret prevention, dependency auditing, and "Shift Left" security.
 ---
 
