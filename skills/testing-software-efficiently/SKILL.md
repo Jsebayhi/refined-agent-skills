@@ -1,5 +1,5 @@
 ---
-name: standard-testing-philosophy
+name: testing-software-efficiently
 description: Teaches the "Testing Trophy" methodology and language-agnostic testing strategies. Enforces high confidence-to-cost ratios, boundary mocking, and contract testing.
 ---
 
