@@ -35,6 +35,8 @@ This suite follows an **"Orchestrator + Specialized Experts"** architecture. For
     *   *Triggers*: "write a python script", "fix the python code", "test with pytest".
 *   **[Engineering Reliable Scripts with Bash](skills/engineering-reliable-scripts-with-bash/SKILL.md)**: Robust shell scripting, ShellCheck compliance, and BATS testing.
     *   *Triggers*: "write a bash script", "fix the shell script", "test with BATS".
+*   **[Authoring High-Signal Git Commits](skills/authoring-high-signal-git-commits/SKILL.md)**: Generates descriptive, truth-based commit messages from staged changes.
+    *   *Triggers*: "git commit", "prepare commit", "commit changes conventionally".
 
 ### 4. Quality & Testing (The "Validation")
 *   **[Testing Software Efficiently](skills/testing-software-efficiently/SKILL.md)**: The language-agnostic "Testing Trophy" methodology.
@@ -65,10 +67,3 @@ This suite follows an **"Orchestrator + Specialized Experts"** architecture. For
 
 *   **[Deep Reading Agent Skill](skills/deep-reading-agent-skill/SKILL.md)**: Section-by-section analysis and reflection on complex resources.
     *   *Triggers*: "read deeply", "analyze the nuances", "reflect on the spirit".
-
----
-
-## 📦 Legacy & Simple Tools
-
-*   **[Git Commit Convention](skills/git-commit-convention/SKILL.md)**: Lightweight tool for conventional commits.
-    *   *Triggers*: "git commit", "conventional commit".

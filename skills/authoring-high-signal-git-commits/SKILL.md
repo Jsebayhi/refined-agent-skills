@@ -1,5 +1,5 @@
 ---
-name: git-commit-convention
+name: authoring-high-signal-git-commits
 description: Commits staged changes conventionally. Use when the user asks to "git commit", "prepare commit", "draft a commit message", or "commit changes conventionally".
 metadata:
   category: git-workflow
