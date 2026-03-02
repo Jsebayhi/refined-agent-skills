@@ -1,5 +1,5 @@
 ---
-name: standard-architecture-decisions
+name: maintaining-rigorous-architecture-decisions
 description: Enforces a rigorous architectural design process using Architecture Decision Records (ADRs). Mandates analysis of 3+ alternatives and documentation of context, decisions, and consequences.
 ---
 
@@ -11,15 +11,14 @@ Architecture is about managing "Irreversible Decisions." This skill ensures that
 For any change that significantly impacts the system's structure, performance, or maintainability, you MUST create an ADR.
 
 ### 1. Analysis of Alternatives
-You MUST analyze at least **3 distinct alternatives** during Phase 2 (Architecture).
-*   **The Naive Approach:** The simplest, most direct implementation.
-*   **The Scalable Approach:** Focused on performance and future-proofing.
-*   **The Optimized Approach:** A balanced middle ground or a completely different paradigm.
+You MUST analyze at least **3 distinct alternatives** and more is better. Each alternatives must offer another view of the project, not be a slight variation of another alternative. You must complement at least 2 alternatives with at least one wild alterantive.
+
+Once all alternatives are on the table, you must evaluate them, identify the strength and weakness of each and then think about a few alternatives that would combine all the strength if possible, or most of them.
 
 ### 2. The ADR Structure
 Every ADR must include:
 *   **Context:** The problem, constraints, and current state.
-*   **Alternatives Considered:** A table or list comparing the 3+ options with Pros, Cons, and Status (Rejected/Selected).
+*   **Alternatives Considered:** 3+ options with Pros, Cons, the Status (Rejected/Selected) and the reasoning for rejection/selection.
 *   **Decision:** The final choice and the technical rationale (Why).
 *   **Consequences:** Both positive and negative impacts on the project.
 
@@ -30,7 +29,7 @@ Use the following format when creating ADRs in the project's `adr/` folder.
 # NNNN. Title of Decision
 
 ## Status
-Proposed | Accepted | Superseded by [NNNN](link)
+Proposed | Accepted | Superseded by [NNNN](link) | Supersed by [NNNN](link)
 
 ## Context
 What is the problem we are solving? What are the constraints?
