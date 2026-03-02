@@ -22,15 +22,23 @@ Use `type(scope): description` for titles.
     - **Reasoning:** The technical justification for the chosen solution.
     - **Benefit:** The functional outcome or improvement.
 
+## 🛑 Non-Interactive Mandate (Senior Efficiency)
+To prevent terminal hangs and blocking the user, you MUST strictly adhere to non-interactive CLI usage:
+*   **Disable Pagers:** Prefix all discovery commands with `GH_PAGER=cat` or `GLAB_PAGER=cat` (e.g., `GH_PAGER=cat gh pr view --comments`).
+*   **No Blocking/Watch Flags:** NEVER use `--live`, `--watch`, or any flag that causes the command to continuously monitor or refresh the output (e.g., `glab ci status --live` is FORBIDDEN).
+*   **One-Shot Discovery:** Use commands that return immediately. For CI status:
+    - **GitHub:** `GH_PAGER=cat gh pr checks`
+    - **GitLab:** `GLAB_PAGER=cat glab ci status` (without `--live`) or `glab ci view` (one-shot).
+
 ## 🛠️ Dual-Platform Cheat Sheet
 
 ### GitHub (`gh`)
-*   **Discovery:** `gh pr list`, `gh pr view --comments`
+*   **Discovery:** `GH_PAGER=cat gh pr list`, `GH_PAGER=cat gh pr view --comments`
 *   **Creation:** `gh pr create --title "..." --body "..."`
 *   **Feedback:** `gh pr comment --body "..."` (Top-level) or use `gh api` for specific threads.
 
 ### GitLab (`glab`)
-*   **Discovery:** `glab mr list`, `glab mr view --comments`
+*   **Discovery:** `GLAB_PAGER=cat glab mr list`, `GLAB_PAGER=cat glab mr view --comments`
 *   **Creation:** `glab mr create --title "..." --description "..."`
 *   **Threaded Reply:** 
     1. Fetch Discussions: `glab api projects/:id/merge_requests/:iid/discussions`

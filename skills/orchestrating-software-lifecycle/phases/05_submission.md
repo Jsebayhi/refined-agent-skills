@@ -8,6 +8,9 @@
 git push origin <branch>
 ```
 
+## 🛑 Non-Interactive Mandate
+To prevent terminal hangs and blocking the user, you MUST strictly adhere to non-interactive CLI usage. For any discovery command (e.g. `gh pr view`, `glab mr list`), prefix the command with `GH_PAGER=cat` or `GLAB_PAGER=cat` to disable pagers. NEVER use `--watch`, `--live`, or similar blocking flags.
+
 ## 2. Pull Request (Squash-Ready)
 Create the PR using a title and body that follow the project's commit message standards. Because the repository squashes PRs, the PR title and body **will become** the final commit message in the main branch.
 

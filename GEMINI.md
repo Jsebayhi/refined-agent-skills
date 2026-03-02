@@ -25,6 +25,11 @@ This extension provides a collection of distilled, high-signal experts for the G
 - When adding or updating a skill, only changes within that skill's directory (and relevant top-level files like `README.md` or `.gitignore` if required for that skill) should be included.
 - Fixes or improvements to existing skills must be in their own dedicated commits.
 
+**NON-INTERACTIVE MANDATE:** You MUST use `gh` and `glab` in non-interactive mode to prevent terminal hangs.
+- Prefix all discovery commands with `GH_PAGER=cat` or `GLAB_PAGER=cat`.
+- Forbid usage of `--live`, `--watch`, or any command that continuously refreshes output.
+- Use one-shot discovery commands (e.g., `gh pr checks` instead of `gh pr view --watch`).
+
 ## Modular Engineering & Multi-Skill Activation
 This extension follows an "Orchestrator + Specialized Experts" architecture. To ensure high-quality production engineering, agents are encouraged and expected to activate multiple skills simultaneously.
 
