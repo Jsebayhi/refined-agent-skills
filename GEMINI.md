@@ -29,9 +29,9 @@ This extension provides a collection of standard skills for the Gemini CLI.
 This extension follows an "Orchestrator + Specialized Experts" architecture. To ensure high-quality production engineering, agents are encouraged and expected to activate multiple skills simultaneously.
 
 ### Recommended Combinations:
-- **Feature Development:** `standard-software-lifecycle` + `deep-brainstorming` + `standard-architecture-decisions` + `[Language]-expert`.
-- **Quality Assurance:** `standard-software-lifecycle` + `standard-testing-philosophy` + `standard-devsecops-expert`.
-- **Submission:** `standard-software-lifecycle` + `standard-git-collaboration` + `standard-user-documentation`.
+- **Feature Development:** `orchestrating-software-lifecycle` + `deep-brainstorming` + `maintaining-rigorous-architecture-decisions` + `engineering-reliable-software-with-[Language]`.
+- **Quality Assurance:** `orchestrating-software-lifecycle` + `testing-software-efficiently` + `upholding-devsecops-standards`.
+- **Submission:** `orchestrating-software-lifecycle` + `collaborating-on-git-projects` + `authoring-effective-user-documentation`.
 
 ### Conflict Resolution:
 1. **Orchestrator (Lifecycle):** Defines the *Current State* and *Phase*.
