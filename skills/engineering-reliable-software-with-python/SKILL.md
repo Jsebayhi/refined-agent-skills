@@ -1,5 +1,5 @@
 ---
-name: python-expert
+name: engineering-reliable-software-with-python
 description: Provides idiomatic Python engineering standards, Ruff/Black compliance, and Pytest implementation. Enforces type safety, dependency pinning, and modular architecture.
 ---
 
