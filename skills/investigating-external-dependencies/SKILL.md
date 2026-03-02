@@ -24,7 +24,10 @@ A senior developer doesn't guess how a library works based on documentation; the
 ### 1. Phase 1: Identification & Version Match
 **Mandate:** You MUST match the source code to the exact version running in your project.
 - Find version in lockfiles: `package-lock.json`, `poetry.lock`, `go.sum`, `Cargo.lock`.
-- Find repo URL: `npm view <pkg> repository.url`, `pip show <pkg>`, etc.
+- Find repo URL using native tools:
+    - **NPM:** `npm view <pkg> repository.url`
+    - **Python:** `pip show <pkg>` (Look for Home-page)
+    - **Rust:** Check `Cargo.toml` or search on crates.io.
 
 ### 2. Phase 2: Idiom Discovery (The "Grain")
 **Goal:** Discover the API and best practices as intended by the library authors.
@@ -34,11 +37,12 @@ A senior developer doesn't guess how a library works based on documentation; the
 
 ### 3. Phase 3: The Deep Dive (Troubleshooting)
 **Goal:** Resolve cryptic errors or "magic" behavior.
-- **Local Triage:** Inspect code in `node_modules/`, `venv/`, or equivalent. This is the fastest way to see the actual executing code.
+- **Local Triage:** Inspect code in `node_modules/`, `venv/`, or equivalent.
 - **Remote Search (`gh`/`glab`):**
-    - Search for error strings or internal function names: `gh search code "error message" --repo <owner/repo>`.
-    - Check Issues/PRs for context on the specific code path.
-- **Strategic Clone:** If the library is complex or local files are bundled, `git clone --depth 1 --branch <version>` into `artifacts/external/` for full-project `grep` and navigation.
+    - Search for error strings: `gh search code "error message" --repo <owner/repo>`.
+    - Browse the file tree: `gh repo view <owner/repo> --web`.
+- **Strategic Clone:** If the library is complex, you may `git clone --depth 1 --branch <version>` into `artifacts/external/`.
+    - **STATEFUL HALT:** You MUST ask for user approval before performing a `git clone`.
 
 ### 4. Phase 4: Synthesis & Application
 - Apply discovered patterns to the local project.
