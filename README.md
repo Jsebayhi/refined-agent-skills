@@ -54,6 +54,10 @@ This suite follows an **"Orchestrator + Specialized Experts"** architecture. For
 *   **[Authoring Effective User Documentation](skills/authoring-effective-user-documentation/SKILL.md)**: Enforces Diátaxis and "Documentation is Code."
     *   *Triggers*: "update the readme", "write documentation", "create a user guide".
 
+### 7. External Research & Discovery
+*   **[Investigating External Dependencies](skills/investigating-external-dependencies/SKILL.md)**: Senior-Level library investigation (source code, APIs, best practices).
+    *   *Triggers*: "how does this library handle [X]?", "weird error from [Dependency]", "discover the grain".
+
 ---
 
 ## 🛠️ Meta-Engineering

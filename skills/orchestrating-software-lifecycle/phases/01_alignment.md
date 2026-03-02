@@ -14,6 +14,7 @@ Explore the "Idea Space" of the *problem* itself. Use `gh issue view <number>` t
 *   **Why** is this valuable?
 *   **Is it a good idea?** Challenge the premise.
 *   **Ambiguity Check:** Apply the protocol from `references/mandates.md`.
+*   **Library Research:** If working with unfamiliar or complex libraries, activate `investigating-external-dependencies` to discover the API's "grain" and best practices through source-level research.
 
 ## 3. Contract (The Output)
 1.  **Synthesize:** Summarize the Problem Statement and Success Criteria.

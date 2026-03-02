@@ -84,3 +84,4 @@ Avoid errors due to unspoken assumptions by applying this protocol:
 *   `collaborating-on-git-projects`: Commits & PR Standards.
 *   `authoring-effective-user-documentation`: External doc standards (Diátaxis).
 *   `upholding-devsecops-standards`: Security & Hardening mandates.
+*   `investigating-external-dependencies`: Senior-Level library investigation (source code, APIs, best practices).
