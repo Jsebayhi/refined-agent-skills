@@ -10,7 +10,15 @@ Skills use a three-level system to manage context window usage:
 
 ## Common Skill Use Case Categories
 
-Before writing code, identify 2-3 concrete use cases. Skills generally utilize techniques from one or more of the following three categories. **Note that these categories are not mutually exclusive; a complex skill will often blend elements of all three** (e.g., using an MCP tool to fetch data, following an automated workflow to process it, and creating a formatted document as the final asset).
+### Agentic vs. Non-Agentic Tasks
+Before selecting an architecture, distinguish between the two:
+- **Non-Agentic Tasks:** Evaluate single-shot inference (e.g., MMLU, GSM8K, HumanEval). Multi-agent systems (MAS) often show monotonic improvement here through simple ensembling/voting.
+- **Agentic Tasks:** Require (i) sustained multi-step environment interactions, (ii) iterative information gathering under partial observability, and (iii) adaptive strategy refinement based on feedback. MAS behavior is fundamentally different here, governed by coordination overhead and error propagation.
+
+### The Capability Ceiling ($P_{SA} \approx 0.45$)
+The effectiveness of multi-agent coordination is inversely related to single-agent performance. Coordination yields diminishing or negative returns once a Single-Agent baseline exceeds an empirical threshold of **~45% accuracy**.
+*   **High-Performing Baseline ($P_{SA} > 0.45$):** Use a Single-Agent System (SAS) to maximize context integration and minimize overhead.
+*   **Low-Performing Baseline ($P_{SA} < 0.45$):** Consider a Multi-Agent System (MAS) to leverage error absorption and parallel exploration.
 
 ### Category 1: Document & Asset Creation
 Used for creating consistent, high-quality output including documents, presentations, apps, designs, code, etc.

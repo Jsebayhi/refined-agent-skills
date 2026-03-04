@@ -26,11 +26,16 @@ Before writing any files, you must deeply understand the domain. You need the fo
 
 ## Phase 2: Architectural Strategy (Chain of Thought)
 Analyze the user's requirements and formulate a structural plan.
-1.  **Context Economics (Progressive Disclosure):** 
+1.  **Scaling Analysis (SAS vs. MAS Selection):** 
+    *   **Baseline Evaluation:** Determine if the task has a high single-agent success rate ($P_{SA} > 0.45$). If yes, prefer a Single-Agent (SAS) architecture.
+    *   **Task Structure:** Is the task **parallelizable** (Centralized MAS), **dynamic/exploratory** (Decentralized MAS), or **sequential** (SAS)?
+    *   **Tool Complexity:** If tool count $T > 10$, prioritize SAS to avoid coordination tax.
+    *   Consult `references/05-scaling-and-architecture-selection.md` for quantitative criteria.
+2.  **Context Economics (Progressive Disclosure):** 
     *   State exactly what core logic MUST go in `SKILL.md` (must remain < 500 lines).
     *   State what verbose knowledge (schemas, templates, large guides) will be pushed to the `references/` folder.
-2.  **Workflow Pattern Selection:** Select the appropriate pattern (e.g., Sequential, Multi-MCP, Context-Aware, or **Plan-Validate-Execute** for high-stakes tasks). See `references/03-patterns-and-troubleshooting.md`.
-3.  **File Tree:** Propose the exact file and folder structure. (Use only relative paths and forward slashes `/`).
+3.  **Workflow Pattern Selection:** Select the appropriate pattern (e.g., Sequential, Multi-MCP, Context-Aware, or **Plan-Validate-Execute** for high-stakes tasks). See `references/03-patterns-and-troubleshooting.md`.
+4.  **File Tree:** Propose the exact file and folder structure. (Use only relative paths and forward slashes `/`).
 
 *Action:* If operating interactively, use the `ask_user` tool to present this plan and explicitly ask the user for approval before drafting. If operating autonomously, state your plan and proceed to Phase 3.
 

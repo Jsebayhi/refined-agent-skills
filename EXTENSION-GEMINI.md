@@ -14,6 +14,15 @@ This extension provides a suite of high-signal engineering skills. These instruc
 - Forbid usage of `--live`, `--watch`, or any command that continuously refreshes output.
 - Use one-shot discovery commands (e.g., `gh pr checks` instead of `gh pr view --watch`).
 
+## Agentic Scaling & Architecture Selection
+**MANDATORY:** When designing or architecting agentic workflows, you MUST prioritize efficiency by applying the "Science of Scaling" principles:
+1.  **Baseline-First Design:** Establish the success rate of a Single-Agent System ($P_{SA}$) before proposing MAS. If $P_{SA} > 0.45$, you MUST provide a technical justification for why a multi-agent approach is needed, as it likely introduces negative returns.
+2.  **Topology Alignment:** Match the architecture to the task structure:
+    - **SAS (Single-Agent):** Default for sequential reasoning, high tool counts ($T > 10$), or high-baseline tasks.
+    - **Centralized MAS:** For parallelizable subtasks requiring a validation bottleneck (orchestrator).
+    - **Decentralized MAS:** For dynamic, exploratory tasks with high-entropy search spaces.
+3.  **Avoid "Independent" MAS:** Never use uncoordinated multi-agent systems for agentic tasks, as they amplify errors **17.2x**.
+
 ## Operational Mandates: Skill Escalation & Complexity Management
 
 ### ⚠️ The "Step Back" Mandate: Resilience Over Persistence

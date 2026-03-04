@@ -39,7 +39,7 @@ This suite follows an **"Orchestrator + Specialized Experts"** architecture. For
     *   *Triggers*: "git commit", "prepare commit", "commit changes conventionally".
 
 ### 4. Quality & Testing (The "Validation")
-*   **[Testing Software Efficiently](skills/testing-software-efficiently/SKILL.md)**: The language-agnostic "Testing Trophy" methodology.
+*   **[Testing Software Efficiently](skills/testing-software-efficiently/SKILL.md)**: The language-agnostic "Testing Trophy" methodology. Now integrated with the **Adversarial Reviewer** sub-agent for independent audits.
     *   *Triggers*: "testing strategy", "testing trophy", "mocking philosophy".
 *   **[Validating User Interfaces](skills/validating-user-interfaces/SKILL.md)**: Enforces POM, signal-based waiting, and user-centric assertions for UI/E2E testing.
     *   *Triggers*: "write a ui test", "e2e testing", "playwright tests".
@@ -58,11 +58,15 @@ This suite follows an **"Orchestrator + Specialized Experts"** architecture. For
 *   **[Investigating External Dependencies](skills/investigating-external-dependencies/SKILL.md)**: Senior-Level library investigation (source code, APIs, best practices).
     *   *Triggers*: "how does this library handle [X]?", "weird error from [Dependency]", "discover the grain".
 
+### 8. Agentic Systems & Architecture
+*   **[Engineering Multi-Agent Systems](skills/engineering-multi-agent-systems/SKILL.md)**: The "Standard Model" of agentic architecture, topologies, and cognitive thermodynamics.
+    *   *Triggers*: "multi-agent system", "synergistic agents", "agentic architecture", "coordination tax".
+
 ---
 
 ## 🛠️ Meta-Engineering
 
-*   **[Engineering Agent Skills](skills/engineering-agent-skills/SKILL.md)**: The expert system for designing and scaffolding new agent skills.
+*   **[Engineering Agent Skills](skills/engineering-agent-skills/SKILL.md)**: The expert system for designing and scaffolding new agent skills. Now includes **Research-Validated Agent Scaling** principles (SAS vs. MAS selection, Capability Ceiling, and Topology Alignment).
     *   *Triggers*: "create a skill", "build a workflow", "design an agent tool".
 
 ---
@@ -71,3 +75,13 @@ This suite follows an **"Orchestrator + Specialized Experts"** architecture. For
 
 *   **[Deep Reading Agent Skill](skills/deep-reading-agent-skill/SKILL.md)**: Section-by-section analysis and reflection on complex resources.
     *   *Triggers*: "read deeply", "analyze the nuances", "reflect on the spirit".
+
+---
+
+## 🤖 Autonomous Experts (Sub-Agents)
+
+These are specialized agents that the main agent can delegate tasks to for more rigorous, independent execution.
+
+*   **[Adversarial Reviewer](agents/adversarial-reviewer.md)**: A "Fresh Eye" auditor for critical code review.
+    *   *Purpose*: Finds security flaws, edge cases, and architectural drift that the main agent might miss due to "Coder's Bias".
+    *   *Invocation*: Use the `adversarial_reviewer` tool to audit a diff or implementation plan.
