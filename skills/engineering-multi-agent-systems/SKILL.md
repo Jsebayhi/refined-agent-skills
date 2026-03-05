@@ -10,6 +10,7 @@ This skill provides the foundational laws and architectural patterns required to
 ## 1. The Philosophical Mandate: Context Segregation
 The primary bottleneck in single-agent systems is **Coder's Bias**. Once an agent generates a solution, its internal "Potential Function" is locked into that path.
 *   **Segregation Theory:** Effectiveness is derived from what an agent *doesn't* know. Sub-agents must be "Cognitively Isolated" from the main agent's scratchpad to provide an objective audit.
+*   **Mandatory Context Injection:** You MUST load and inject any available prompt libraries, role definitions, or context engineering (e.g., from `.gemini/prompts/` or `references/`) before starting the loop. Coordination fails when agents lack a shared "Instructional Alignment."
 *   **Reject Agentic Bloat:** Never add an agent unless it provides **Knowledge Heterogeneity**. Three identical agents are just a high-cost path to a single-model error.
 
 ## 2. The 4 Laws of Synergy
@@ -46,7 +47,8 @@ Stop viewing prompts as "Instructions" and start viewing them as **Potential Fun
 1.  **Step-Back:** Analyze the task's "Decomposability."
     *   **Sequential Tasks** (e.g., state-dependent planning): Prefer **SAS (Single-Agent)** to avoid information fragmentation.
     *   **Parallel Tasks** (e.g., analysis, extraction): Use **Centralized Orchestration**.
-2.  **Select Topology:** Based on the Task-Topology Fit (SAS, Orchestrator, or Debate).
+2.  **Load & Inject:** Identify and load all existing prompt engineering, reference schemas, or role-based templates from the workspace.
+3.  **Select Topology:** Based on the Task-Topology Fit (SAS, Orchestrator, or Debate).
 3.  **Engineer Heterogeneity:** Assign sub-agents orthogonal roles (e.g., Security vs. Performance).
 4.  **Enforce Segregation:** Pass only the *Result* of Turn $N$ to the sub-agent, never the *Monologue*.
 5.  **Synthesize:** Merge trajectories into a final "Context Manifesto."
