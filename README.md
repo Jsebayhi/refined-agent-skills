@@ -58,6 +58,10 @@ This suite follows an **"Orchestrator + Specialized Experts"** architecture. For
 *   **[Investigating External Dependencies](skills/investigating-external-dependencies/SKILL.md)**: Senior-Level library investigation (source code, APIs, best practices).
     *   *Triggers*: "how does this library handle [X]?", "weird error from [Dependency]", "discover the grain".
 
+### 8. Agentic Systems & Architecture
+*   **[Engineering Multi-Agent Systems](skills/engineering-multi-agent-systems/SKILL.md)**: The "Standard Model" of agentic architecture, topologies, and cognitive thermodynamics.
+    *   *Triggers*: "multi-agent system", "synergistic agents", "agentic architecture", "coordination tax".
+
 ---
 
 ## 🛠️ Meta-Engineering
