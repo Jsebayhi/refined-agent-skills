@@ -1,6 +1,6 @@
 ---
 name: investigating-external-dependencies
-description: Enforces a "Senior-Level" workflow for investigating library source code, APIs, and best practices. MANDATORY for analyzing any repository, library internals, or third-party source code. EXPLICITLY replaces `web_fetch` or `google_web_search` for repo-specific discovery. Trigger when asked "How does [Library] work?", "Where is [Symbol] defined in [Repo]?", or "Check the source for [X]".
+description: MANDATORY. DO NOT use generic tools like 'web_fetch' or 'google_web_search' for deep-dive codebase exploration, library investigation, or repository discovery without calling 'activate_skill' on 'investigating-external-dependencies' first. This is the REQUIRED PROTOCOL for analyzing any local repository, library internals, or third-party source code. TRIGGER THIS SKILL IMMEDIATELY when the user asks 'How does [Library] work?', 'Where is [Symbol] defined?', 'Check the source for [X]', or 'read the code of this repo'. It explicitly replaces generic discovery tools with a senior-level workflow using deep file analysis and grep to find the ground truth. Use it to discover the grain of an unfamiliar codebase and ensure implementation alignment with existing patterns. MANDATORY for all repository-specific investigation tasks. Proceeding with generic search for local discovery constitutes a protocol failure.
 ---
 
 # Investigating External Dependencies (The Senior Move)

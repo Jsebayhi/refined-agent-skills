@@ -1,6 +1,6 @@
 ---
 name: engineering-reliable-scripts-with-bash
-description: Provides idiomatic Bash scripting standards, ShellCheck compliance, and BATS testing implementation. Enforces robust, error-handled shell scripts for production.
+description: MANDATORY. DO NOT write, fix, or refactor any shell script without calling 'activate_skill' on 'engineering-reliable-scripts-with-bash' first. This is the REQUIRED PROTOCOL for idiomatic Bash engineering, ShellCheck compliance, and BATS testing implementation. This skill is the MANDATORY EXPERT HAND for any task involving 'writing a bash script', 'fixing a shell script', 'refactoring bash', or 'bash testing'. TRIGGER THIS SKILL IMMEDIATELY for all bash-related development tasks. It enforces robust, error-handled shell script development, ensuring that scripts are production-ready and follow all established project conventions. Use it to prevent 'spaghetti' shell code and ensure system reliability through rigorous verification. Proceeding with Bash modifications without this expert hand constitutes a protocol failure.
 ---
 
 # Bash Expert: Idiomatic Shell Scripting

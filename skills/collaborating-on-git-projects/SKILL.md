@@ -1,6 +1,6 @@
 ---
 name: collaborating-on-git-projects
-description: Enforces high-signal repository history through Conventional Commits and "No Filler" Pull Request bodies. Focuses on the "Technical Why" and PR feedback etiquette.
+description: MANDATORY. DO NOT create a pull request, open a merge request, or submit code for review without calling 'activate_skill' on 'collaborating-on-git-projects' first. This is the REQUIRED PROTOCOL for ensuring high-signal repository history and 'No Filler' PR bodies on GitHub (gh) and GitLab (glab). This skill is the MANDATORY GATEWAY for any task involving 'creating a PR', 'opening a Merge Request', 'handling PR feedback', or 'PR standards'. TRIGGER THIS SKILL IMMEDIATELY for all code submissions and collaboration tasks. It focuses on the 'Technical Why' and ensures that every contribution is clearly communicated and grounded in established project conventions. Use it to maintain a high-quality codebase and clear communication with peers. Proceeding with PR/MR creation without this high-signal documentation gateway constitutes a protocol failure.
 ---
 
 # Standard Git Collaboration & Review

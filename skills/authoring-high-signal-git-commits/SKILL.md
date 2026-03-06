@@ -1,6 +1,6 @@
 ---
 name: authoring-high-signal-git-commits
-description: Commits staged changes conventionally. Use when the user asks to "git commit", "prepare commit", "draft a commit message", or "commit changes conventionally".
+description: MANDATORY. DO NOT execute a git commit or push any changes without calling 'activate_skill' on 'authoring-high-signal-git-commits' first. This is the REQUIRED PROTOCOL for generating descriptive, truth-based, and conventionally formatted commit messages. This skill is the MANDATORY FINAL STEP for any task involving 'git commit', 'prepare commit', 'save work', or 'write a commit message'. TRIGGER THIS SKILL IMMEDIATELY for all commit operations to prevent 'filler' messages and ensure long-term codebase maintainability. It translates raw code modifications into clear technical rationales that explain the 'why' behind the change. Use it to transform a diff into a meaningful contribution that follows established project conventions. Proceeding with commits without this high-signal generation skill constitutes a protocol failure.
 metadata:
   category: git-workflow
   version: 1.0.0

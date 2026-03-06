@@ -1,6 +1,6 @@
 ---
 name: authoring-effective-user-documentation
-description: Enforces "Documentation is Code" and the Diátaxis framework. Focuses on tutorials, how-to guides, reference material, and technical explanation for the user/consumer.
+description: MANDATORY. DO NOT update the README, write a user guide, or create technical explanations without calling 'activate_skill' on 'authoring-effective-user-documentation' first. This is the REQUIRED PROTOCOL for enforcing 'Documentation is Code' and the Diátaxis framework. This skill is the MANDATORY GATEWAY for any task involving 'updating the README', 'writing a user guide', 'designing a tutorial', or 'creating technical explanations'. TRIGGER THIS SKILL IMMEDIATELY for all user-facing content creation tasks. It focuses on the four Diátaxis pillars: Tutorials, How-to Guides, Reference, and Explanation. Use it to ensure that every technical document is accessible, structured, and clearly communicates the project's value to the consumer. Proceeding with documentation updates without this high-fidelity protocol constitutes a protocol failure.
 ---
 
 # Standard User Documentation (Diátaxis)

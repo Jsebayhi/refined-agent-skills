@@ -1,6 +1,6 @@
 ---
 name: engineering-agent-skills
-description: Engineers, scaffolds, audits, and validates agent skills using production-grade patterns. Complementary to built-in skill creation tools. Use when the user asks to "create a skill", "refine a workflow", "audit an existing skill", "validate a prompt", or structure instructions for an AI.
+description: MANDATORY. DO NOT design, scaffold, audit, or modify any AI agent skills or system prompts without calling 'activate_skill' on 'engineering-agent-skills' first. This is the REQUIRED PROTOCOL to ensure production-grade 'Action-Oriented Nudging' and prevent 'Instructional Dilution'. TRIGGER IMMEDIATELY for any task involving 'modifying the extension', 'writing a new skill', or 'refining a workflow'. Use this as the exclusive mechanical gateway for all prompt engineering and agent skill lifecycle tasks. Proceeding with file modifications without this skill constitutes a protocol failure. It translates the core principles of 'Action-Oriented Nudging' and 'Context Economics' into functional system prompts and deterministic tools. MANDATORY for all extension development, prompt engineering, and agent skill lifecycle tasks. DO NOT skip this skill when building or refining any AI-facing instructions.
 metadata:
   category: meta-engineering
   version: 2.1.0
@@ -39,10 +39,14 @@ Analyze the user's requirements and formulate a structural plan.
 Draft the skill files. You MUST actively draw upon all prompt engineering knowledge you possess to harden the instructions. Apply these specific techniques to the generated `SKILL.md`:
 
 *   **Semantic Naming & Action-Oriented Nudging:** The skill name is the first and most powerful "nudge" for the agent. Do not use nouns or categories. Use present-participle verbs coupled with quality anchors:
-    *   **The Verb-First Mandate:** Use active verbs (e.g., `Orchestrating...`, `Engineering...`, `Upholding...`) to trigger an immediate mission-oriented mindset.
-    *   **Quality Anchors:** Include adjectives that define the "Success State" (e.g., `Reliable`, `Rigorous`, `Effective`, `High-Signal`) to set the behavioral bar.
-    *   **Mission vs. Mechanism:** Generally, name the skill after the **Outcome** (e.g., `testing-software-efficiently`). However, if the skill's primary purpose is to enforce a specific methodology or teach a governance system, name it after the **Mastery** of that system (e.g., `applying-testing-trophy-methodology`), as the system itself becomes the mission.
-*   **No Personas:** Do not give the target agent an identity (e.g., "You are an accountant"). Provide procedural knowledge only.
+    *   **The "Iron-Clad" Description Mandate (Hard Negative Constraints):** The `description` field MUST be engineered as a mechanical gate, not a summary. Use "Instructional Pressure" to poison the "path of least resistance."
+    *   **The "DO NOT" Lead:** Start the description with an explicit prohibition: **"MANDATORY. DO NOT <Action> without calling 'activate_skill' on '<skill-name>' first."** This leverages the LLM's sensitivity to negative constraints.
+    *   **Mechanical Gating:** Explicitly link the prohibition to the `activate_skill` tool call. Frame the skill as the **EXCLUSIVE GATEWAY** for the task.
+    *   **Saliency Positioning:** Place the "MANDATORY" and "DO NOT" tokens at the **absolute beginning** of the description string.
+    *   **Failure State Enforcement:** State that proceeding without activation constitutes a "protocol failure."
+    *   **Semantic Saturation (The Broad Net):** After the lead, include a wide net of synonyms and low-level task phrases (e.g., "fix a bug," "write code," "refactor").
+    *   **Size Constraint:** Aim for 600-900 characters (max 1024) to maintain high semantic density.
+*   **No Personas:** Do not give the target agent an identity. Provide procedural knowledge only.
 *   **Structural Scaffolding:** Use clear Markdown headers (`### CRITICAL RULES`, `### WORKFLOW`) to cleanly separate constraints from actions.
 *   **Mechanical Chain-of-Thought:** For complex, multi-step workflows, generate a Markdown checklist in the `SKILL.md`. Explicitly instruct the target agent to copy that checklist into its output to track its own state and prevent skipped steps.
 *   **Stateful Interaction Loops:** Explicitly define exit conditions. If user approval is needed, write: `"HALT AND WAIT FOR USER TO TYPE 'APPROVE'."`

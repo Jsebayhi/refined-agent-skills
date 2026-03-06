@@ -1,6 +1,6 @@
 ---
 name: orchestrating-software-lifecycle
-description: Manages the full software development lifecycle (SDLC) through a strict 5-phase workflow: Alignment, Architecture, Implementation, Validation, and Submission. Use when starting a new feature, fixing a bug, or performing a code review.
+description: MANDATORY. DO NOT start a new task, fix a bug, or implement a feature without calling 'activate_skill' on 'orchestrating-software-lifecycle' first. This is the REQUIRED PROTOCOL to manage the full software development lifecycle (SDLC) through a high-fidelity 5-phase workflow: Alignment, Architecture, Implementation, Validation, and Submission. This skill is the MANDATORY ORCHESTRATOR for starting any new feature, fixing a bug, or performing code reviews. TRIGGER THIS SKILL IMMEDIATELY for any task involving 'start a task', 'help with this project', or 'what's next?'. Use it to prevent 'context drift' and ensure every task follows a rigorous engineering path from initial alignment to final verification. DO NOT proceed with implementation until Phase 1 Alignment is established. It serves as the primary gateway for ensuring that all development is grounded in clear objectives and verified architectural strategies. Proceeding without activation constitutes a protocol failure.
 ---
 
 # Standard Software Engineering Lifecycle
