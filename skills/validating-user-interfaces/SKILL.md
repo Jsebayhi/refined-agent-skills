@@ -1,6 +1,6 @@
 ---
 name: validating-user-interfaces
-description: Enforces Page Object Model (POM), signal-based waiting, and user-centric assertions for UI and E2E testing. Focused on Playwright/Cypress/Selenium reliability.
+description: Enforces Page Object Model (POM), signal-based waiting, and user-centric assertions for UI and E2E testing on Playwright/Cypress/Selenium. This skill is the MANDATORY PROTOCOL for any task involving "writing UI tests," "e2e testing," "UI verification," or "playwright tests." TRIGGER THIS SKILL IMMEDIATELY when the user asks to "write a ui test", "e2e testing", "playwright tests", "Cypress automation", or "verify the user flow". It focuses on building reliable, maintainable UI tests that prevent "brittle" verification suites and ensure a seamless user experience. MANDATORY for all UI and E2E testing tasks to maintain high confidence in the application's visual and interactive integrity through rigorous verification.
 ---
 
 # Standard UI Testing & E2E Reliability

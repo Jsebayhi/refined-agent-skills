@@ -1,6 +1,6 @@
 ---
 name: testing-software-efficiently
-description: Teaches the "Testing Trophy" methodology and language-agnostic testing strategies. Enforces high confidence-to-cost ratios, boundary mocking, and contract testing.
+description: Verifies software quality by enforcing the "Testing Trophy" methodology for high-confidence software development. Mandates the design of integration and unit tests, the implementation of robust boundary mocks, and the execution of independent "Fresh Eye" code audits via the Adversarial Reviewer sub-agent. This skill is the MANDATORY GATEWAY for all code modifications, bug fixes, feature implementations, and PR reviews to eliminate Coder's Bias. TRIGGER THIS SKILL IMMEDIATELY when the user asks to "fix a bug", "write some code", "check my work", "is this correct?", "verify the implementation", "add a feature", "review this PR", "address feedback", or "refactor this module". Use for all quality assurance (QA), regression testing, and security sanity checks. DO NOT skip this skill for any task that alters the codebase. This skill ensures that no code is submitted without empirical verification and adversarial oversight to prevent regressions and hidden vulnerabilities.
 ---
 
 # Standard Testing Philosophy: The Testing Trophy
@@ -28,3 +28,20 @@ Enforce JSON Schemas or API contracts for all service interactions. Verify that 
 *   **Synchronization:** Use polling/probes to ensure services are ready before starting tests (avoid "Sleep/Wait" race conditions).
 *   **Clean Slate:** Every test starts with a fresh, predictable environment.
 *   **Parallel Readiness:** NEVER mutate global shared state. Use local overrides or scoped fixtures.
+
+## 🛡️ Verification via Sub-Agent: The "Fresh Eye" Review
+For all significant code changes, you MUST leverage the **Adversarial Reviewer** sub-agent to perform an independent audit of your work.
+
+### When to Invoke
+- Before submitting a feature or bug fix.
+- When working on security-critical paths (Auth, Permissions, Encryption).
+- When a change affects multiple files or core architectural layers.
+
+### How to Invoke
+Call the `adversarial_reviewer` tool with a detailed query containing:
+1.  **Original Objective:** The task you were assigned.
+2.  **Implementation Summary:** A concise explanation of the changes you made.
+3.  **The Diff:** The exact code changes (use `git diff` or describe them clearly).
+
+### Integration Goal
+Use the sub-agent's feedback to refine your implementation. If the sub-agent identifies a risk or edge case you missed, you MUST address it before completing the task. This eliminates "Coder's Bias" and ensures a high-signal contribution.

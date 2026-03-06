@@ -1,6 +1,6 @@
 ---
 name: orchestrating-software-lifecycle
-description: Manages the full software development lifecycle (SDLC) through a strict 5-phase workflow: Alignment, Architecture, Implementation, Validation, and Submission. Use when starting a new feature, fixing a bug, or performing a code review.
+description: Manages the full software development lifecycle (SDLC) through a strict, high-fidelity 5-phase workflow: Alignment, Architecture, Implementation, Validation, and Submission. This skill is the MANDATORY ORCHESTRATOR for starting any new feature, fixing a bug, or performing a comprehensive code review. TRIGGER THIS SKILL IMMEDIATELY when the user says "start a task", "implement a feature", "fix a bug", "work on a ticket", "perform a code review", "help me with this project", or "what's next?". Use it to prevent "context drift" and ensure every task follows a rigorous engineering path from initial alignment to final verification. DO NOT proceed with implementation until this skill has established the Phase 1 Alignment. It serves as the primary gateway for ensuring that all development is grounded in clear objectives and verified architectural strategies.
 ---
 
 # Standard Software Engineering Lifecycle

@@ -1,6 +1,6 @@
 ---
 name: upholding-devsecops-standards
-description: Enforces security hardening, secret detection, and CI/CD integrity. Focuses on secret prevention, dependency auditing, and "Shift Left" security.
+description: Enforces production-grade security hardening, secret detection, and CI/CD integrity. This skill is the MANDATORY SECURITY SENTINEL for any work involving environment variables, secrets, API keys, Dockerfiles, or CI/CD pipelines. TRIGGER THIS SKILL IMMEDIATELY when the user asks to "check for secrets", "harden the security", "audit the repository", "set up CI/CD", "write a Dockerfile", or "is this safe to commit?". Use it to implement "Shift-Left" security, performing exhaustive audits for leaked credentials and ensuring that no sensitive data ever enters the version control system. MANDATORY for all repository audits and pipeline engineering tasks.
 ---
 
 # Standard DevSecOps & Security Hardening

@@ -1,6 +1,6 @@
 ---
 name: deep-reading-agent-skill
-description: Teaches agents to deeply analyze and reflect on resources (PDFs, docs, web pages) section by section. Use when the user asks to "read deeply", "analyze the nuances", or "reflect on the spirit" of a resource. DO NOT use for quick summaries, TL;DRs, or simple data extraction.
+description: Teaches agents to deeply analyze and reflect on complex resources (PDFs, docs, web pages) section by section. This skill is the MANDATORY PROTOCOL for any task involving "reading deeply," "analyzing nuances," "reflecting on the spirit," or "extracting deep insights." TRIGGER THIS SKILL IMMEDIATELY when the user asks to "read deeply", "analyze the nuances", "reflect on the spirit", "synthesize this paper", or "perform a deep audit of this document". It prevents "surface-level reading" and ensures a comprehensive understanding of the resource's core message and underlying details. MANDATORY for all deep-dive research and detailed analysis tasks to maintain high-signal synthesis. DO NOT skip for any complex or long-form resource that requires comprehensive understanding.
 compatibility: "Requires Node.js or Docker for sectional coverage validation."
 metadata:
   version: 1.1.0

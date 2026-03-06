@@ -1,6 +1,6 @@
 ---
 name: authoring-high-signal-git-commits
-description: Commits staged changes conventionally. Use when the user asks to "git commit", "prepare commit", "draft a commit message", or "commit changes conventionally".
+description: Generates descriptive, truth-based, and conventionally formatted commit messages from staged changes. This skill is the MANDATORY FINAL STEP for ensuring a high-signal repository history. TRIGGER THIS SKILL IMMEDIATELY when the user asks to "git commit", "prepare commit", "save work", "push changes", or "write a commit message." It translates raw code modifications into clear technical rationales that explain the "why" behind the change. MANDATORY for all commit operations to prevent "filler" messages and ensure long-term codebase maintainability. Use it to transform a diff into a meaningful contribution that follows established project conventions. DO NOT commit without using this high-signal generation skill.
 metadata:
   category: git-workflow
   version: 1.0.0

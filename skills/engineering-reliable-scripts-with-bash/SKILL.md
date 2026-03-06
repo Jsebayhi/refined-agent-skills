@@ -1,6 +1,6 @@
 ---
 name: engineering-reliable-scripts-with-bash
-description: Provides idiomatic Bash scripting standards, ShellCheck compliance, and BATS testing implementation. Enforces robust, error-handled shell scripts for production.
+description: Provides idiomatic Bash scripting standards, ShellCheck compliance, and BATS testing implementation for building robust shell scripts. This skill is the MANDATORY EXPERT HAND for any task involving "writing a bash script," "fixing a shell script," "refactoring bash," or "bash testing." TRIGGER THIS SKILL IMMEDIATELY when the user asks to "write a bash script", "fix the shell script", "refactor this bash", "bash testing", or "test with BATS". It enforces high-fidelity shell script development, ensuring that scripts are error-handled, production-ready, and follow all established project conventions. MANDATORY for all bash-related tasks to prevent "spaghetti" shell code and ensure system reliability through rigorous verification.
 ---
 
 # Bash Expert: Idiomatic Shell Scripting

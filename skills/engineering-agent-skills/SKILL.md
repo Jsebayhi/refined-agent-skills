@@ -1,6 +1,6 @@
 ---
 name: engineering-agent-skills
-description: Engineers, scaffolds, audits, and validates agent skills using production-grade patterns. Complementary to built-in skill creation tools. Use when the user asks to "create a skill", "refine a workflow", "audit an existing skill", "validate a prompt", or structure instructions for an AI.
+description: Engineers, scaffolds, audits, and validates high-fidelity AI agent skills using production-grade patterns. This skill is the MANDATORY PROTOCOL for any task involving "modifying the extension," "writing a new skill," "designing a prompt," or "fixing a workflow." TRIGGER THIS SKILL IMMEDIATELY when the user asks to "create a skill", "scaffold a workflow", "audit a prompt", "design an agent tool", "fix the extension", or "refine the system prompt." It translates the core principles of "Action-Oriented Nudging" and "Context Economics" into functional system prompts and deterministic tools. MANDATORY for all extension development, prompt engineering, and agent skill lifecycle tasks. DO NOT skip this skill when building or refining any AI-facing instructions.
 metadata:
   category: meta-engineering
   version: 2.1.0
@@ -39,9 +39,12 @@ Analyze the user's requirements and formulate a structural plan.
 Draft the skill files. You MUST actively draw upon all prompt engineering knowledge you possess to harden the instructions. Apply these specific techniques to the generated `SKILL.md`:
 
 *   **Semantic Naming & Action-Oriented Nudging:** The skill name is the first and most powerful "nudge" for the agent. Do not use nouns or categories. Use present-participle verbs coupled with quality anchors:
-    *   **The Verb-First Mandate:** Use active verbs (e.g., `Orchestrating...`, `Engineering...`, `Upholding...`) to trigger an immediate mission-oriented mindset.
-    *   **Quality Anchors:** Include adjectives that define the "Success State" (e.g., `Reliable`, `Rigorous`, `Effective`, `High-Signal`) to set the behavioral bar.
-    *   **Mission vs. Mechanism:** Generally, name the skill after the **Outcome** (e.g., `testing-software-efficiently`). However, if the skill's primary purpose is to enforce a specific methodology or teach a governance system, name it after the **Mastery** of that system (e.g., `applying-testing-trophy-methodology`), as the system itself becomes the mission.
+    *   **The "Super-Trigger" Description Mandate (Saturate & Command):** The `description` field in the frontmatter is the primary activation signal for the router. You MUST saturate it with triggers to ensure it never fails to fire.
+    *   **Semantic Saturation (The Broad Net):** Do not rely on high-level category names. Include a wide net of synonyms and low-level task phrases (e.g., instead of just "Testing," use "bug fixes," "feature implementations," "quality assurance," and "refactoring").
+    *   **Instructional Pressure (The Mandatory Gateway):** Use high-stakes, imperative language. Frame the skill as a **"MANDATORY GATEWAY"** or **"REQUIRED PROTOCOL"**. Use phrases like **"TRIGGER IMMEDIATELY when..."** and **"DO NOT skip for any task that..."** to create a hard constraint for the router.
+    *   **The "Listen For" Pattern (Explicit Quotes):** Include a list of literal developer phrases the router should listen for (e.g., `Trigger when the user says "check my work", "is this correct?", or "fix this bug"`).
+    *   **Problem-Solution Mapping:** Describe the *pain point* the skill solves (e.g., "eliminate Coder's Bias," "prevent regressions," "ensure security hardening").
+    *   **Size Constraint:** Aim for 600-900 characters (max 1024) to ensure maximum semantic density without diluting the core triggers.
 *   **No Personas:** Do not give the target agent an identity (e.g., "You are an accountant"). Provide procedural knowledge only.
 *   **Structural Scaffolding:** Use clear Markdown headers (`### CRITICAL RULES`, `### WORKFLOW`) to cleanly separate constraints from actions.
 *   **Mechanical Chain-of-Thought:** For complex, multi-step workflows, generate a Markdown checklist in the `SKILL.md`. Explicitly instruct the target agent to copy that checklist into its output to track its own state and prevent skipped steps.
