@@ -78,36 +78,6 @@ ELSE: Flag for review, Create compliance case.
 2. **Validate:** `python scripts/validate_changes.py changes.json`.
 3. **Execute:** `python scripts/apply_changes.py changes.json`.
 
-### Pattern 7: Centralized Coordination (Orchestrator-Subagent)
-**Use when:** Tasks are parallelizable (e.g., financial analysis, multi-source extraction) and require strong error containment.
-**Structure Example:**
-- **Orchestrator:** Decomposes task, assigns subtasks to workers.
-- **Subagents:** Execute specialized subtasks (e.g., Worker 1: Extract Revenue, Worker 2: Analyze Risk).
-- **Validation Bottleneck:** Orchestrator reviews all subagent outputs before synthesizing final response.
-*Key techniques:* **Error Absorption** (containing errors to 4.4x vs 17.2x in independent systems), hierarchical task decomposition.
-
-### Pattern 8: Decentralized Debate (Peer-to-Peer)
-**Use when:** Tasks require dynamic exploration of high-entropy search spaces (e.g., web navigation, open-ended research).
-**Structure Example:**
-- **Agents:** Multiple agents perform independent exploration.
-- **Debate Loop:** Agents exchange findings and challenge/verify each other's conclusions.
-- **Consensus:** Final output derived from peer consensus or voting.
-*Key techniques:* Parallel discovery, peer verification, consensus formation.
-
----
-
-## Critical Scaling Trade-offs
-
-To avoid performance degradation, monitor these research-validated trade-offs.
-
-### The Tool-Coordination Trade-off
-Multi-agent systems fragment the per-agent token budget. For tool-heavy tasks (e.g., 10+ tools), the coordination tax often outweighs the benefits.
-*   **Fix:** If $T > 10$, prefer Single-Agent (SAS) or highly efficient Centralized architectures with a slim orchestrator.
-
-### Topology-Dependent Error Amplification
-Without a verification mechanism, Independent MAS amplifies errors **17.2x** versus a Single-Agent baseline.
-*   **Fix:** Always include a validation bottleneck (Pattern 7) or peer-debate loop (Pattern 8) to catch and correct cascading errors.
-
 ---
 
 ## Strategic Scripting: Functional vs. Validation
