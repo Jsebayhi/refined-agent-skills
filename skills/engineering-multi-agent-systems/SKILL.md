@@ -1,6 +1,6 @@
 ---
 name: engineering-multi-agent-systems
-description: Distilled science of agentic engineering. Teaches the Standard Model of multi-agent topologies, cognitive thermodynamics, and synergistic collaboration.
+description: MANDATORY. DO NOT design, analyze, or optimize any workflow involving multiple agents or synergistic collaboration without calling 'activate_skill' on 'engineering-multi-agent-systems' first. This is the REQUIRED PROTOCOL for orchestrating complex agentic systems using the 'Standard Model' of multi-agent topologies and cognitive thermodynamics. This skill is MANDATORY for all tasks involving agentic scaling analysis, topology selection, and coordination tax. TRIGGER THIS SKILL when the user asks to 'build a multi-agent system', 'coordinate agents', 'scale my agentic workflow', or 'analyze agent synergy'. It translates high-level concepts like 'Potential Functions' and 'Error Amplification' into actionable architecture decisions. Use it to eliminate 'Agentic Bloat' and ensure that multi-agent systems provide positive returns over single-agent baselines. MANDATORY for all architectural decisions regarding multi-agent coordination. Proceeding without activation constitutes a protocol failure.
 ---
 
 # The Standard Model of Agentic Engineering

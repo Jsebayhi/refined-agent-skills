@@ -1,6 +1,6 @@
 ---
 name: upholding-devsecops-standards
-description: Enforces security hardening, secret detection, and CI/CD integrity. Focuses on secret prevention, dependency auditing, and "Shift Left" security.
+description: MANDATORY. DO NOT modify environment variables, handle secrets, write Dockerfiles, or update CI/CD pipelines without calling 'activate_skill' on 'upholding-devsecops-standards' first. This is the REQUIRED PROTOCOL to enforce production-grade security hardening and secret detection. This skill is the MANDATORY SECURITY SENTINEL for any task involving API keys, 'is this safe to commit?', 'harden the security', or 'set up CI/CD'. TRIGGER THIS SKILL IMMEDIATELY for repository audits and pipeline engineering tasks. Use it to implement 'Shift-Left' security, performing exhaustive audits for leaked credentials and ensuring that no sensitive data ever enters the version control system. MANDATORY for all security audits and infrastructure-as-code modifications. Proceeding without activation constitutes a protocol failure.
 ---
 
 # Standard DevSecOps & Security Hardening

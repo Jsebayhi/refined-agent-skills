@@ -1,6 +1,6 @@
 ---
 name: engineering-reliable-software-with-python
-description: Provides idiomatic Python engineering standards, Ruff/Black compliance, and Pytest implementation. Enforces type safety, dependency pinning, and modular architecture.
+description: MANDATORY. DO NOT write, fix, or refactor any Python code without calling 'activate_skill' on 'engineering-reliable-software-with-python' first. This is the REQUIRED PROTOCOL for idiomatic Python engineering, Ruff/Black compliance, and Pytest implementation. This skill is the MANDATORY EXPERT HAND for any task involving 'writing python', 'fixing python code', 'refactoring python', or 'pytest implementation'. TRIGGER THIS SKILL IMMEDIATELY for all python-related development tasks. It enforces high-fidelity Python development, ensuring that code is type-safe, modular, and follows all established project conventions. Use it to prevent 'quick and dirty' code and ensure long-term maintainability through rigorous verification. Proceeding with Python modifications without this expert hand constitutes a protocol failure.
 ---
 
 # Python Expert: Production-Grade Python

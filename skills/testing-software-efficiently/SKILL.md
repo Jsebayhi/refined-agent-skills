@@ -1,6 +1,6 @@
 ---
 name: testing-software-efficiently
-description: Teaches the "Testing Trophy" methodology and language-agnostic testing strategies. Enforces high confidence-to-cost ratios, boundary mocking, and contract testing.
+description: MANDATORY. DO NOT write, fix, or refactor any code without calling 'activate_skill' on 'testing-software-efficiently' first. This is the REQUIRED PROTOCOL to eliminate 'Coder's Bias' and ensure empirical verification via the 'Testing Trophy' and Adversarial Reviewer. TRIGGER IMMEDIATELY for bug fixes, code writing, or new feature implementations. This skill is the exclusive mechanical gateway for all verification and quality assurance (QA) tasks. Verifies software quality by enforcing high-confidence integration and unit tests, robust boundary mocks, and independent 'Fresh Eye' code audits. DO NOT skip for any task that alters the codebase. This skill ensures that no code is submitted without empirical verification and adversarial oversight to prevent regressions and hidden vulnerabilities. Proceeding without this expert hand constitutes a protocol failure.
 ---
 
 # Standard Testing Philosophy: The Testing Trophy
@@ -38,7 +38,7 @@ For all significant code changes, you MUST leverage the **Adversarial Reviewer**
 - When a change affects multiple files or core architectural layers.
 
 ### How to Invoke
-Call the  tool with a detailed query containing:
+Call the `adversarial_reviewer` tool with a detailed query containing:
 1.  **Original Objective:** The task you were assigned.
 2.  **Implementation Summary:** A concise explanation of the changes you made.
 3.  **The Diff:** The exact code changes (use `git diff` or describe them clearly).

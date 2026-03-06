@@ -1,6 +1,6 @@
 ---
 name: deep-brainstorming
-description: Guides the agent through a rigorous brainstorming process using Tree of Thought and Red Teaming to explore multiple solutions before committing to implementation. Use when the user asks to "brainstorm", "explore possibilities", or "think deeply before acting". DO NOT use for simple tasks, quick bug fixes, or when the user explicitly provides a complete, finalized implementation plan.
+description: MANDATORY. DO NOT finalize an implementation plan or commit to a single solution for a complex task without calling 'activate_skill' on 'deep-brainstorming' first. This is the REQUIRED PROTOCOL for exploring multiple solutions using Tree of Thought and Red Teaming. This skill is the MANDATORY GATEWAY for any task involving 'brainstorming', 'exploring possibilities', 'thinking deeply', or 'analyzing trade-offs'. TRIGGER THIS SKILL IMMEDIATELY for all architectural exploration and divergent thinking tasks. Use it to prevent 'path lock' and ensure that the final implementation is the most robust and efficient solution. DO NOT skip for any task that involves architectural choices or complex problem-solving. Proceeding with convergent action without divergent exploration constitutes a protocol failure.
 metadata:
   version: 1.0.0
 ---

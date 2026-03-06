@@ -1,6 +1,6 @@
 ---
 name: maintaining-rigorous-architecture-decisions
-description: Enforces a rigorous architectural design process using Architecture Decision Records (ADRs). Mandates analysis of 3+ alternatives and documentation of context, decisions, and consequences.
+description: MANDATORY. DO NOT make any major architectural decisions or commit to a structural plan without calling 'activate_skill' on 'maintaining-rigorous-architecture-decisions' first. This is the REQUIRED PROTOCOL for enforcing a rigorous architectural design process using Architecture Decision Records (ADRs). This skill is the MANDATORY GATEWAY for any task involving 'creating an ADR', 'architectural decisions', 'analyzing alternatives', or 'documenting why'. TRIGGER THIS SKILL IMMEDIATELY for all architectural governance tasks. It mandates the analysis of 3+ alternatives and the documentation of context, decisions, and consequences. Use it to ensure that every major choice is grounded in research and clearly documented for future contributors. DO NOT skip for any task that alters the project's architectural trajectory. Proceeding without an ADR for major changes constitutes a protocol failure.
 ---
 
 # Standard Architecture Decisions (ADR)
