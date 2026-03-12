@@ -1,9 +1,9 @@
 ---
 name: interacting-with-gitlab
-description: MANDATORY. DO NOT attempt to interact with GitLab APIs, post line-level comments, reply to discussions, or manage GitLab pipelines/issues without calling 'activate_skill' on 'interacting-with-gitlab' first. This is the REQUIRED PROTOCOL for all GitLab-related engineering tasks. TRIGGER THIS SKILL IMMEDIATELY when the user asks to "comment on a line", "reply to a PR comment", "check the pipeline", "list issues", or "manage GitLab projects". It provides a specialized suite of MCP tools (gitlab:*) that abstract complex SHA management, pipeline job discovery, and repository inspection into deterministic, non-interactive operations. Proceeding with manual 'glab' or 'glab api' calls for these tasks constitutes a protocol failure.
+description: MANDATORY. DO NOT attempt to interact with GitLab APIs, post line-level comments, reply to discussions, or manage GitLab pipelines/issues without calling 'activate_skill' on 'interacting-with-gitlab' first. This is the REQUIRED PROTOCOL for all GitLab-related engineering tasks. TRIGGER THIS SKILL IMMEDIATELY when the user asks to "start a review", "submit a review", "comment on a line", "check the pipeline", "set auto-merge", or "manage GitLab projects". It provides a specialized suite of MCP tools (gitlab:*) that handle the full reviewer/submitter lifecycle, including multi-comment reviews via draft notes, automated SHA discovery, and pipeline job monitoring. Proceeding with manual 'glab' or 'glab api' calls for these tasks constitutes a protocol failure.
 compatibility: "Requires Node.js and 'glab' CLI."
 metadata:
-  version: 2.0.0
+  version: 3.0.0
   author: AI-Engineering-Team
 ---
 
@@ -11,8 +11,14 @@ metadata:
 
 ## CRITICAL RULES & GUARDRAILS
 *   **MCP-First Mandate:** You MUST use the `gitlab:*` MCP tools for all discovery and interaction tasks. These tools are pre-configured to handle non-interactive execution and `GLAB_PAGER=cat` automatically.
-*   **Precision Mandate:** Use `gitlab:post_line_comment` for all code reviews. Do NOT attempt to construct the 'position' object or find SHAs manually; the tool handles this by querying the MR context internally.
-*   **Pipeline & Logs:** When troubleshooting CI/CD, use `gitlab:list_pipeline_jobs` followed by `gitlab:get_job_trace`. This is the most efficient way to fetch logs without manual parsing.
+*   **Review Lifecycle (Reviewer):** 
+    1. Use `gitlab:create_draft_note` to add multiple comments without notifying the author immediately.
+    2. Use `gitlab:submit_review` with an outcome (`APPROVE`, `REQUEST_CHANGES`, or `COMMENT`) to publish all drafts at once.
+*   **Submitter Lifecycle:**
+    1. Use `gitlab:run` with `mr create` to open a PR.
+    2. Use `gitlab:list_pipeline_jobs` and `gitlab:get_job_trace` to monitor and troubleshoot CI.
+    3. Use `gitlab:set_auto_merge` once the review is satisfactory to ensure the MR merges as soon as the pipeline passes.
+*   **Context Requirement:** Always use `gitlab:get_mr_details` or `gitlab:list_discussions` (with `only_unresolved: true`) to understand the current state before responding to feedback.
 
 ## WORKFLOW: [Plan-Validate-Execute Pattern]
 
@@ -22,41 +28,47 @@ Follow these steps precisely.
 
 ```markdown
 ### GitLab Interaction State:
-- [ ] Step 1: Resource Discovery (using gitlab:* tools)
-- [ ] Step 2: Context Retrieval (if needed, e.g., list_discussions)
-- [ ] Step 3: Tool Execution (e.g., post_line_comment, get_job_trace)
-- [ ] Step 4: Verification
+- [ ] Step 1: Resource Discovery & Context (using gitlab:* tools)
+- [ ] Step 2: Planning Actions (Review vs. Submission tasks)
+- [ ] Step 3: Tool Execution (Drafting notes, Submitting reviews, or CI monitoring)
+- [ ] Step 4: Final Verification
 ```
 
-### Step 1: Resource Discovery
-1. Identify the target (Merge Request, Issue, or Pipeline).
-2. Use the `gitlab:run` tool for discovery if a specialized tool is not available:
-   ```json
-   // Example: List MRs
-   gitlab:run({ "command_args": "mr list" })
-   ```
+### Step 1: Context Discovery
+1. Identify the MR IID.
+2. Run `gitlab:get_mr_details({ "iid": "<IID>" })` to fetch labels, status, and SHAs.
+3. Run `gitlab:list_discussions({ "iid": "<IID>", "only_unresolved": true })` to find active threads.
 
-### Step 2: Specialized Discovery (Pipelines & Discussions)
-*   **For Pipelines:** If you have a pipeline ID, run `gitlab:list_pipeline_jobs` to find the failed job ID.
-*   **For Discussions:** Run `gitlab:list_discussions` to find the `discussion_id` for a reply.
+### Step 2: Reviewer Workflow (Precision Feedback)
+*   **Add Draft Comment:**
+    ```json
+    gitlab:create_draft_note({ "iid": "123", "path": "src/app.js", "line": 10, "message": "Suggest refactoring this." })
+    ```
+*   **Submit Review (Final Step):**
+    ```json
+    gitlab:submit_review({ "iid": "123", "outcome": "REQUEST_CHANGES", "message": "Good progress, but please address the draft notes." })
+    ```
 
-### Step 3: Action Execution
-*   **Line Comment:**
+### Step 3: Submitter Workflow (Delivery)
+*   **Troubleshoot Pipeline:**
     ```json
-    gitlab:post_line_comment({ "iid": "123", "path": "src/main.js", "line": 42, "message": "Typo here" })
+    // 1. List jobs
+    gitlab:list_pipeline_jobs({ "pipeline_id": "88888" })
+    // 2. Get failed job trace
+    gitlab:get_job_trace({ "job_id": "77777" })
     ```
-*   **Get Job Logs:**
+*   **Set Auto-Merge:**
     ```json
-    gitlab:get_job_trace({ "job_id": "999888" })
+    gitlab:set_auto_merge({ "iid": "123" })
     ```
-*   **Reply to Thread:**
+*   **Update MR Labels/Title:**
     ```json
-    gitlab:post_reply({ "iid": "123", "discussion_id": "abc...", "message": "Fixed in next push" })
+    gitlab:update_mr({ "iid": "123", "labels": "bugfix,high-priority" })
     ```
 
 ### Step 4: Verification
-1. Review the tool output. The `gitlab:*` tools return the raw response or a semantic error message.
-2. If a tool fails with a `409 Conflict`, the SHAs for the MR have likely changed; retry the operation.
+1. Review the tool output for successful API responses.
+2. If a tool fails with a `409 Conflict`, the SHAs for the MR have likely changed; re-fetch details and retry.
 
 ## 📚 References
 *   `references/gitlab-api-cheatsheet.md`: Payload structures and error handling for GitLab API.

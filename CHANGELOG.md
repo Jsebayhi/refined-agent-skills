@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-03-12
+
+### Added
+- Expanded `interacting-with-gitlab` MCP tools to support full reviewer and submitter lifecycles.
+- Added `gitlab:create_draft_note` and `gitlab:submit_review` for multi-comment review workflows.
+- Added `gitlab:set_auto_merge` and `gitlab:update_mr` for MR management.
+- Added `only_unresolved` filter to `gitlab:list_discussions`.
+- Added `gitlab:get_mr_details` for comprehensive MR state inspection.
+
 ## [0.3.1] - 2026-03-12
 
 ### Added
