@@ -61,7 +61,7 @@ const tools = {
     }
   },
   "gitlab:list_discussions": {
-    description: "List all discussion threads in an MR.",
+    description: "List all discussion threads in an MR, including resolution status.",
     parameters: { iid: "string" },
     run: ({ iid }) => {
       const response = runGlabApi(`projects/:id/merge_requests/${iid}/discussions`);
@@ -69,7 +69,15 @@ const tools = {
       const discussions = JSON.parse(response);
       return JSON.stringify(discussions.map(d => ({
         id: d.id,
-        notes: d.notes.map(n => ({ id: n.id, body: n.body, author: n.author.username }))
+        resolvable: d.resolvable || false,
+        resolved: d.resolved || false,
+        notes: d.notes.map(n => ({ 
+          id: n.id, 
+          body: n.body, 
+          author: n.author.username,
+          resolvable: n.resolvable || false,
+          resolved: n.resolved || false
+        }))
       })), null, 2);
     }
   },
