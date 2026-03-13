@@ -2,12 +2,23 @@ const { execSync } = require('child_process');
 
 const GLAB_ENV = { ...process.env, GLAB_PAGER: 'cat', PAGER: 'cat' };
 
+function handleGlabError(error) {
+  const stderr = error.stderr ? error.stderr.toString() : '';
+  const stdout = error.stdout ? error.stdout.toString() : '';
+  
+  if (stderr.includes('glab auth login') || stdout.includes('glab auth login') || stderr.includes('Invalid token')) {
+    return "ERROR: GitLab authentication failed. Please run 'glab auth login' in your terminal to authenticate before using this tool.";
+  }
+  
+  return `Error: ${error.message}\nSTDOUT: ${stdout}\nSTDERR: ${stderr}`;
+}
+
 function runGlab(argsArray) {
   const cmd = `glab ${argsArray.join(' ')}`;
   try {
     return execSync(cmd, { env: GLAB_ENV, encoding: 'utf-8' });
   } catch (error) {
-    return `Error: ${error.message}\nSTDOUT: ${error.stdout}\nSTDERR: ${error.stderr}`;
+    return handleGlabError(error);
   }
 }
 
@@ -24,13 +35,13 @@ function runGlabApi(endpoint, method = 'GET', data = null) {
   try {
     return execSync(cmd, { input, env: GLAB_ENV, encoding: 'utf-8' });
   } catch (error) {
-    return `Error: ${error.message}\nSTDOUT: ${error.stdout}\nSTDERR: ${error.stderr}`;
+    return handleGlabError(error);
   }
 }
 
 function getMrDiffRefs(iid) {
   const response = runGlabApi(`projects/:id/merge_requests/${iid}`);
-  if (response.startsWith('Error:')) throw new Error(response);
+  if (response.startsWith('Error:') || response.startsWith('ERROR:')) throw new Error(response);
   const mr = JSON.parse(response);
   return mr.diff_refs;
 }
@@ -90,7 +101,8 @@ const tools = {
     parameters: { iid: "string", outcome: "string", message: "string" },
     run: ({ iid, outcome, message }) => {
       // 1. Bulk publish drafts
-      runGlabApi(`projects/:id/merge_requests/${iid}/draft_notes/bulk_publish`, 'POST');
+      const publishResp = runGlabApi(`projects/:id/merge_requests/${iid}/draft_notes/bulk_publish`, 'POST');
+      if (publishResp.startsWith('ERROR:')) return publishResp;
       
       // 2. Post summary note with quick action for outcome
       let body = message || "Review submitted.";
@@ -106,7 +118,7 @@ const tools = {
     parameters: { iid: "string", only_unresolved: "boolean" },
     run: ({ iid, only_unresolved }) => {
       const response = runGlabApi(`projects/:id/merge_requests/${iid}/discussions`);
-      if (response.startsWith('Error:')) return response;
+      if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
       let discussions = JSON.parse(response);
       if (only_unresolved) {
         discussions = discussions.filter(d => d.notes.some(n => n.resolvable && !n.resolved));
@@ -151,7 +163,7 @@ const tools = {
     parameters: { pipeline_id: "string" },
     run: ({ pipeline_id }) => {
       const response = runGlabApi(`projects/:id/pipelines/${pipeline_id}/jobs`);
-      if (response.startsWith('Error:')) return response;
+      if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
       const jobs = JSON.parse(response);
       return JSON.stringify(jobs.map(j => ({ id: j.id, name: j.name, status: j.status })), null, 2);
     }
@@ -179,7 +191,7 @@ async function main() {
       if (request.method === 'initialize') {
         console.log(JSON.stringify({
           jsonrpc: "2.0", id: request.id,
-          result: { capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "1.1.0" } }
+          result: { capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "1.2.0" } }
         }));
       } else if (request.method === 'list_tools') {
         console.log(JSON.stringify({
