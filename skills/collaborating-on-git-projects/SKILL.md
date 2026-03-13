@@ -24,11 +24,9 @@ Use `type(scope): description` for titles.
 
 ## 🛑 Non-Interactive Mandate (Senior Efficiency)
 To prevent terminal hangs and blocking the user, you MUST strictly adhere to non-interactive CLI usage:
-*   **Disable Pagers:** Prefix all discovery commands with `GH_PAGER=cat` or `GLAB_PAGER=cat` (e.g., `GH_PAGER=cat gh pr view --comments`).
-*   **No Blocking/Watch Flags:** NEVER use `--live`, `--watch`, or any flag that causes the command to continuously monitor or refresh the output (e.g., `glab ci status --live` is FORBIDDEN).
-*   **One-Shot Discovery:** Use commands that return immediately. For CI status:
-    - **GitHub:** `GH_PAGER=cat gh pr checks`
-    - **GitLab:** `GLAB_PAGER=cat glab ci status` (without `--live`) or `glab ci view` (one-shot).
+*   **GitHub Paging:** For GitHub (`gh`), prefix discovery commands with `GH_PAGER=cat`.
+*   **GitLab Paging:** You **MUST** use the `interacting-with-gitlab` skill. Its MCP tools handle environment hygiene (`GLAB_PAGER=cat`) and non-interactive enforcement automatically.
+*   **No Blocking/Watch Flags:** NEVER use `--live`, `--watch`, or any flag that causes the command to continuously monitor or refresh the output.
 
 ## 🛠️ Dual-Platform Cheat Sheet
 
@@ -38,11 +36,10 @@ To prevent terminal hangs and blocking the user, you MUST strictly adhere to non
 *   **Feedback:** `gh pr comment --body "..."` (Top-level) or use `gh api` for specific threads.
 
 ### GitLab (`glab`)
-*   **Discovery:** `GLAB_PAGER=cat glab mr list`, `GLAB_PAGER=cat glab mr view --comments`
-*   **Creation:** `glab mr create --title "..." --description "..."`
-*   **Threaded Reply:** 
-    1. Fetch Discussions: `glab api projects/:id/merge_requests/:iid/discussions`
-    2. Post Reply: `glab api -X POST projects/:id/merge_requests/:iid/discussions/:disc_id/notes -f body="Done."`
+*   **Mandatory Skill:** Activate `interacting-with-gitlab`.
+*   **Discovery:** `gitlab_list_mrs`, `gitlab_view({ "type": "mr" })`.
+*   **Creation:** `gitlab_create_mr({ "title": "...", "description": "...", "fill": true })`.
+*   **Threaded Reply:** `gitlab_reply_to_discussion({ "iid": "...", "discussion_id": "...", "message": "Done.", "resolve": true })`.
 
 ## 💡 Examples & Best Practices
 
