@@ -40,7 +40,7 @@ function getMrDiffRefs(iid) {
 
 const tools = {
   "gitlab_search": {
-    description: "Search projects, issues, or MRs.",
+    description: "Search projects, issues, or MRs globally across GitLab.",
     parameters: { query: "string", scope: "string" },
     required: ["query"],
     run: ({ query, scope }) => runGlabApi(`search?scope=${scope || 'projects'}&search=${encodeURIComponent(query)}`)
@@ -57,13 +57,27 @@ const tools = {
     }
   },
   "gitlab_get_mr_diffs": {
-    description: "Fetch diffs for an MR.",
+    description: "Fetch the diffs for a specific Merge Request.",
     parameters: { iid: "string" },
     required: ["iid"],
     run: ({ iid }) => runGlab(['mr', 'diff', iid])
   },
+  "gitlab_list_mrs": {
+    description: "List Merge Requests with filters.",
+    parameters: { state: "string", labels: "string", source_branch: "string", author: "string", per_page: "number" },
+    required: [],
+    run: ({ state, labels, source_branch, author, per_page }) => {
+      const args = ['mr', 'list'];
+      if (state) args.push('--state', state);
+      if (labels) args.push('--label', labels);
+      if (source_branch) args.push('--source-branch', source_branch);
+      if (author) args.push('--author', author);
+      if (per_page) args.push('--per-page', per_page.toString());
+      return runGlab(args);
+    }
+  },
   "gitlab_create_mr": {
-    description: "Create a new MR.",
+    description: "Create a new MR. Can optionally enable auto-merge immediately.",
     parameters: { title: "string", description: "string", source_branch: "string", target_branch: "string", labels: "string", fill: "boolean", draft: "boolean", auto_merge: "boolean" },
     required: [],
     run: ({ title, description, source_branch, target_branch, labels, fill, draft, auto_merge }) => {
@@ -79,20 +93,33 @@ const tools = {
       if (createResp.startsWith('Error:') || createResp.startsWith('ERROR:') || !auto_merge) return createResp;
       const match = createResp.match(/!(\d+)/) || createResp.match(/merge_requests\/(\d+)/);
       if (match) {
-        const autoMergeResp = runGlab(['mr', 'merge', match[1], '--auto', '--yes']);
+        const iid = match[1];
+        const autoMergeResp = runGlab(['mr', 'merge', iid, '--auto', '--yes']);
         return `${createResp}\n\nAUTO-MERGE: ${autoMergeResp}`;
       }
       return createResp;
     }
   },
+  "gitlab_merge_mr": {
+    description: "Merge an MR immediately.",
+    parameters: { iid: "string", rebase: "boolean", remove_source_branch: "boolean", squash: "boolean" },
+    required: ["iid"],
+    run: ({ iid, rebase, remove_source_branch, squash }) => {
+      const args = ['mr', 'merge', iid, '--yes'];
+      if (rebase) args.push('--rebase');
+      if (remove_source_branch) args.push('--remove-source-branch');
+      if (squash) args.push('--squash');
+      return runGlab(args);
+    }
+  },
   "gitlab_get_mr_details": {
-    description: "Fetch full MR details.",
+    description: "Fetch full MR details via API.",
     parameters: { iid: "string" },
     required: ["iid"],
     run: ({ iid }) => runGlabApi(`projects/:id/merge_requests/${iid}`)
   },
   "gitlab_post_comment": {
-    description: "Immediate comment on a line.",
+    description: "Post a comment to an MR that is published IMMEDIATELY.",
     parameters: { iid: "string", path: "string", line: "number", message: "string" },
     required: ["iid", "path", "line", "message"],
     run: ({ iid, path, line, message }) => {
@@ -104,7 +131,7 @@ const tools = {
     }
   },
   "gitlab_add_comment_to_review": {
-    description: "Add a draft comment.",
+    description: "Add a comment to an ongoing review (Draft Mode).",
     parameters: { iid: "string", path: "string", line: "number", message: "string" },
     required: ["iid", "path", "line", "message"],
     run: ({ iid, path, line, message }) => {
@@ -116,7 +143,7 @@ const tools = {
     }
   },
   "gitlab_submit_review": {
-    description: "Publish drafts and set outcome.",
+    description: "Submit your full review (publishes drafts).",
     parameters: { iid: "string", outcome: "string", message: "string" },
     required: ["iid", "outcome"],
     run: ({ iid, outcome, message }) => {
@@ -128,6 +155,12 @@ const tools = {
       else body = `/submit_review\n\n${body}`;
       return runGlabApi(`projects/:id/merge_requests/${iid}/notes`, 'POST', { body });
     }
+  },
+  "gitlab_delete_comment": {
+    description: "Delete a specific comment/note from an MR.",
+    parameters: { iid: "string", note_id: "string" },
+    required: ["iid", "note_id"],
+    run: ({ iid, note_id }) => runGlabApi(`projects/:id/merge_requests/${iid}/notes/${note_id}`, 'DELETE')
   },
   "gitlab_approve": {
     description: "Approve an MR.",
@@ -142,7 +175,7 @@ const tools = {
     run: ({ iid }) => runGlabApi(`projects/:id/merge_requests/${iid}/unapprove`, 'POST')
   },
   "gitlab_list_discussions": {
-    description: "List discussion threads.",
+    description: "List all discussion threads in an MR.",
     parameters: { iid: "string", only_unresolved: "boolean" },
     required: ["iid"],
     run: ({ iid, only_unresolved }) => {
@@ -154,7 +187,7 @@ const tools = {
     }
   },
   "gitlab_reply_to_discussion": {
-    description: "Reply to a thread.",
+    description: "Reply to a thread. Set 'resolve: true' to close the loop.",
     parameters: { iid: "string", discussion_id: "string", message: "string", resolve: "boolean" },
     required: ["iid", "discussion_id", "message"],
     run: ({ iid, discussion_id, message, resolve }) => {
@@ -164,13 +197,13 @@ const tools = {
     }
   },
   "gitlab_resolve_discussion": {
-    description: "Toggle resolution status.",
+    description: "Toggle resolution status of a thread.",
     parameters: { iid: "string", discussion_id: "string", resolved: "boolean" },
     required: ["iid", "discussion_id", "resolved"],
     run: ({ iid, discussion_id, resolved }) => runGlabApi(`projects/:id/merge_requests/${iid}/discussions/${discussion_id}?resolved=${resolved}`, 'PUT')
   },
   "gitlab_list_pipelines": {
-    description: "List CI pipelines.",
+    description: "List recent CI pipelines.",
     parameters: { status: "string", ref: "string" },
     required: [],
     run: ({ status, ref }) => {
@@ -180,6 +213,12 @@ const tools = {
       return runGlab(args);
     }
   },
+  "gitlab_run_pipeline": {
+    description: "Create/Run a new CI pipeline on a specific branch/ref.",
+    parameters: { ref: "string" },
+    required: ["ref"],
+    run: ({ ref }) => runGlab(['ci', 'run', '--branch', ref])
+  },
   "gitlab_get_pipeline_details": {
     description: "Fetch pipeline details.",
     parameters: { pipeline_id: "string" },
@@ -187,7 +226,7 @@ const tools = {
     run: ({ pipeline_id }) => runGlabApi(`projects/:id/pipelines/${pipeline_id}`)
   },
   "gitlab_wait_for_pipeline": {
-    description: "Wait for pipeline completion.",
+    description: "Wait for pipeline completion (Polling).",
     parameters: { pipeline_id: "string", timeout_minutes: "number" },
     required: ["pipeline_id"],
     run: async ({ pipeline_id, timeout_minutes }) => {
@@ -221,7 +260,7 @@ const tools = {
     run: ({ job_id }) => runGlabApi(`projects/:id/jobs/${job_id}/trace`)
   },
   "gitlab_set_auto_merge": {
-    description: "Enable auto-merge.",
+    description: "Enable auto-merge for an MR.",
     parameters: { iid: "string" },
     required: ["iid"],
     run: ({ iid }) => runGlab(['mr', 'merge', iid, '--auto', '--yes'])
@@ -237,6 +276,30 @@ const tools = {
       if (description) args.push('--description', `"${description}"`);
       return runGlab(args);
     }
+  },
+  "gitlab_list_repository_tree": {
+    description: "List files in a repository directory.",
+    parameters: { path: "string", ref: "string" },
+    required: [],
+    run: ({ path, ref }) => {
+      let endpoint = `projects/:id/repository/tree`;
+      const params = [];
+      if (path) params.push(`path=${encodeURIComponent(path)}`);
+      if (ref) params.push(`ref=${ref}`);
+      if (params.length > 0) endpoint += `?${params.join('&')}`;
+      const response = runGlabApi(endpoint);
+      if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
+      return JSON.stringify(JSON.parse(response).map(i => ({ name: i.name, type: i.type, path: i.path })), null, 2);
+    }
+  },
+  "gitlab_get_repository_file": {
+    description: "Fetch raw content of a file from the repository.",
+    parameters: { path: "string", ref: "string" },
+    required: ["path"],
+    run: ({ path, ref }) => {
+      const encodedPath = encodeURIComponent(path);
+      return runGlabApi(`projects/:id/repository/files/${encodedPath}/raw?ref=${ref || 'main'}`);
+    }
   }
 };
 
@@ -251,7 +314,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.0.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.1.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);
