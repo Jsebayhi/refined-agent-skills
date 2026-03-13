@@ -6,7 +6,7 @@ This extension provides a suite of high-signal engineering skills. These instruc
 **MANDATORY:** When asked to analyze, understand, or troubleshoot external libraries, third-party repositories, or implementation details of any dependency:
 1.  **NEVER** rely on `web_fetch` or `google_web_search` as the primary discovery mechanism if the repository URL or package name is available.
 2.  **ALWAYS** activate and follow the `investigating-external-dependencies` skill.
-3.  **PRIORITIZE** `gh search code`, `gh repo view`, and `git clone` (with approval) to find the "Ground Truth" in the actual source code.
+3.  **PRIORITIZE** using platform-specific specialized skills (`interacting-with-github` or `interacting-with-gitlab`) and `git clone` (with approval) to find the "Ground Truth" in the actual source code.
 
 ## Terminal Hygiene: Non-Interactive Mandate
 **MANDATORY:** You MUST use `gh` and `glab` in non-interactive mode to prevent terminal hangs.
