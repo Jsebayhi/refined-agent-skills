@@ -253,17 +253,22 @@ rl.on('line', async (line) => {
   log(`Received: ${line.substring(0, 100)}...`);
   try {
     const request = JSON.parse(line);
-    if (request.method === 'initialize') {
+    
+    // Support both 'domain/method' and 'method' formats
+    const method = request.method;
+
+    if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "1.9.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.0.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
-    } else if (request.method === 'list_tools') {
-      log('Handling list_tools...');
+    } else if (method === 'tools/list' || method === 'list_tools') {
+      log(`Handling ${method}...`);
       const response = { jsonrpc: "2.0", id: request.id, result: { tools: Object.entries(tools).map(([name, info]) => ({ name, description: info.description, inputSchema: { type: "object", properties: Object.fromEntries(Object.entries(info.parameters).map(([p, type]) => [p, { type }])), required: info.required } })) } };
       process.stdout.write(JSON.stringify(response) + '\n');
-    } else if (request.method === 'call_tool') {
-      log(`Calling tool: ${request.params.name}`);
-      const tool = tools[request.params.name];
+    } else if (method === 'tools/call' || method === 'call_tool') {
+      const name = request.params.name;
+      log(`Calling tool: ${name}`);
+      const tool = tools[name];
       if (tool) {
         try {
           const result = await tool.run(request.params.arguments);
@@ -274,11 +279,16 @@ rl.on('line', async (line) => {
           process.stdout.write(JSON.stringify(response) + '\n');
         }
       } else {
-        const response = { jsonrpc: "2.0", id: request.id, error: { code: -32601, message: `Tool not found: ${request.params.name}` } };
+        const response = { jsonrpc: "2.0", id: request.id, error: { code: -32601, message: `Tool not found: ${name}` } };
         process.stdout.write(JSON.stringify(response) + '\n');
       }
-    } else if (request.method === 'notifications/initialized') {
+    } else if (method === 'notifications/initialized') {
       log('Received initialized notification.');
+    } else if (method === 'ping') {
+      const response = { jsonrpc: "2.0", id: request.id, result: {} };
+      process.stdout.write(JSON.stringify(response) + '\n');
+    } else {
+      log(`Unknown method: ${method}`);
     }
   } catch (e) {
     log(`Error: ${e.message}`);
