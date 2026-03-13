@@ -307,12 +307,10 @@ const tools = {
     parameters: { id: "string", failed_logs: "boolean" },
     required: ["id"],
     run: ({ id, failed_logs }) => {
-      const args = ['run', 'view', id];
       if (failed_logs) {
-        args.push('--log-failed');
-        return runGh(args);
+        return runGh(['run', 'view', id, '--log-failed']);
       }
-      return runGh([...args, '--json', 'number,status,conclusion,url,createdAt,updatedAt,jobs']);
+      return runGh(['run', 'view', id, '--json', 'number,status,conclusion,url,createdAt,updatedAt,jobs']);
     }
   },
   "github_wait_for_workflow_run": {
@@ -389,7 +387,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "github-mcp", version: "2.3.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "github-mcp", version: "2.4.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);
