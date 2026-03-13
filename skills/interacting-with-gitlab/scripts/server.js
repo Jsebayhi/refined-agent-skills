@@ -237,12 +237,6 @@ const tools = {
       if (description) args.push('--description', `"${description}"`);
       return runGlab(args);
     }
-  },
-  "gitlab_run": {
-    description: "Run any standard glab command.",
-    parameters: { command_args: "string" },
-    required: ["command_args"],
-    run: ({ command_args }) => runGlab(command_args.split(' '))
   }
 };
 
@@ -253,8 +247,6 @@ rl.on('line', async (line) => {
   log(`Received: ${line.substring(0, 100)}...`);
   try {
     const request = JSON.parse(line);
-    
-    // Support both 'domain/method' and 'method' formats
     const method = request.method;
 
     if (method === 'initialize') {
