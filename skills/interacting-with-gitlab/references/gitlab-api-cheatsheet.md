@@ -7,9 +7,11 @@ The `gitlab_*` tools handle the complexity of the GitLab API internally, includi
 ### Reviewer Feedback Lifecycle
 1. **`gitlab_get_mr_details`**: Fetch MR state and metadata.
 2. **`gitlab_add_comment_to_review`**: Add pending feedback (Review Mode).
-3. **`gitlab_list_vulnerability_findings`**: Audit code for security issues.
-4. **`gitlab_submit_review`**: Finalize and publish all comments at once with an outcome (`APPROVE`, `REQUEST_CHANGES`).
-5. **`gitlab_reply_to_discussion`**: Respond to feedback and optionally resolve threads.
+3. **`gitlab_get_comment`**: Fetch a specific comment's data.
+4. **`gitlab_edit_comment`**: Modify an existing comment.
+5. **`gitlab_list_vulnerability_findings`**: Audit code for security issues.
+6. **`gitlab_submit_review`**: Finalize and publish all comments at once with an outcome (`APPROVE`, `REQUEST_CHANGES`).
+7. **`gitlab_reply_to_discussion`**: Respond to feedback and optionally resolve threads.
 
 ### Submitter/Author Lifecycle
 1. **`gitlab_create_mr`**: Open a new Merge Request. Use `fill: true` for automatic metadata.

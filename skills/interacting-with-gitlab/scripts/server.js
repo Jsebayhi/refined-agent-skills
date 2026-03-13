@@ -213,6 +213,18 @@ const tools = {
   },
 
   // --- Feedback & Review Lifecycle ---
+  "gitlab_get_comment": {
+    description: "Fetch details of a specific comment/note from an MR.",
+    parameters: { iid: "string", note_id: "string" },
+    required: ["iid", "note_id"],
+    run: ({ iid, note_id }) => runGlabApi(`projects/:id/merge_requests/${iid}/notes/${note_id}`)
+  },
+  "gitlab_edit_comment": {
+    description: "Edit the body of an existing comment/note in an MR.",
+    parameters: { iid: "string", note_id: "string", message: "string" },
+    required: ["iid", "note_id", "message"],
+    run: ({ iid, note_id, message }) => runGlabApi(`projects/:id/merge_requests/${iid}/notes/${note_id}`, 'PUT', { body: message })
+  },
   "gitlab_post_comment": {
     description: "Post a comment to an MR that is published IMMEDIATELY.",
     parameters: { iid: "string", path: "string", line: "number", message: "string" },
@@ -355,7 +367,7 @@ const tools = {
     required: ["pipeline_id"],
     run: ({ pipeline_id }) => {
       const resp = runGlabApi(`projects/:id/pipelines/${pipeline_id}/jobs`);
-      if (resp.startsWith('Error:') || resp.startsWith('ERROR:')) return resp;
+      if (resp.startsWith('Error:') || resp.startsWith('ERROR:')) return response;
       try {
         const jobs = JSON.parse(resp);
         return JSON.stringify(jobs.map(j => ({ id: j.id, name: j.name, status: j.status, stage: j.stage, web_url: j.web_url })), null, 2);
@@ -434,7 +446,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.9.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.10.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);

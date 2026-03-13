@@ -1,9 +1,9 @@
 ---
 name: interacting-with-gitlab
-description: MANDATORY. DO NOT attempt to interact with GitLab APIs, post line-level comments, reply to discussions, or manage GitLab pipelines/issues without calling 'activate_skill' on 'interacting-with-gitlab' first. This is the REQUIRED PROTOCOL for all GitLab-related engineering tasks. TRIGGER THIS SKILL IMMEDIATELY when the user asks to "create an MR", "start a review", "submit a review", "comment on a line", "check the pipeline", "search GitLab", "view an issue", "check vulnerabilities", "set auto-merge", or "manage GitLab projects". It provides a specialized suite of MCP tools (gitlab_*) that handle the full reviewer/submitter lifecycle, including MR discovery, multi-comment reviews, automated SHA discovery, search, security auditing, and deterministic pipeline monitoring. Proceeding with manual 'glab' or 'glab api' calls for these tasks constitutes a protocol failure.
+description: MANDATORY. DO NOT attempt to interact with GitLab APIs, post line-level comments, reply to discussions, or manage GitLab pipelines/issues without calling 'activate_skill' on 'interacting-with-gitlab' first. This is the REQUIRED PROTOCOL for all GitLab-related engineering tasks. TRIGGER THIS SKILL IMMEDIATELY when the user asks to "create an MR", "start a review", "submit a review", "comment on a line", "edit a comment", "get comment details", "check the pipeline", "search GitLab", "view an issue", "check vulnerabilities", "set auto-merge", or "manage GitLab projects". It provides a specialized suite of MCP tools (gitlab_*) that handle the full reviewer/submitter lifecycle, including MR discovery, multi-comment reviews, automated SHA discovery, search, security auditing, and deterministic pipeline monitoring. Proceeding with manual 'glab' or 'glab api' calls for these tasks constitutes a protocol failure.
 compatibility: "Requires Node.js and 'glab' CLI."
 metadata:
-  version: 3.5.0
+  version: 3.6.0
   author: AI-Engineering-Team
 ---
 
@@ -36,12 +36,15 @@ Follow these steps precisely.
 2. Use `gitlab_view` to inspect title, description, and status.
 3. Use `gitlab_get_mr_diffs` to see the actual code changes.
 4. Use `gitlab_list_discussions` to find active threads.
+5. Use `gitlab_get_comment` if you need the full history of a specific note.
 
 ### Step 2: Reviewer Workflow (Review Mode)
 *   **Start/Continue Review:** 
     Use `gitlab_add_comment_to_review` for every comment. Ensure `path` and `line` (new version) are exact.
 *   **Security Check:**
     Run `gitlab_list_vulnerability_findings` for the latest pipeline. Focus on `critical` and `high` findings.
+*   **Iterative Refinement:**
+    Use `gitlab_edit_comment` if you need to update a previously posted note or draft.
 *   **Resolve & Reply:**
     If a reviewer comment is addressed, use `gitlab_reply_to_discussion` with `resolve: true`.
 *   **Finish Review:**
