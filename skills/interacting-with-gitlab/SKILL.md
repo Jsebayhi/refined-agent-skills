@@ -1,9 +1,9 @@
 ---
 name: interacting-with-gitlab
-description: MANDATORY. DO NOT attempt to interact with GitLab APIs, post line-level comments, reply to discussions, or manage GitLab pipelines/issues without calling 'activate_skill' on 'interacting-with-gitlab' first. This is the REQUIRED PROTOCOL for all GitLab-related engineering tasks. TRIGGER THIS SKILL IMMEDIATELY when the user asks to "create an MR", "start a review", "submit a review", "comment on a line", "check the pipeline", "search GitLab", "view an issue", "set auto-merge", or "manage GitLab projects". It provides a specialized suite of MCP tools (gitlab_*) that handle the full reviewer/submitter lifecycle, including MR creation, multi-comment reviews, automated SHA discovery, search, and deterministic pipeline monitoring. Proceeding with manual 'glab' or 'glab api' calls for these tasks constitutes a protocol failure.
+description: MANDATORY. DO NOT attempt to interact with GitLab APIs, post line-level comments, reply to discussions, or manage GitLab pipelines/issues without calling 'activate_skill' on 'interacting-with-gitlab' first. This is the REQUIRED PROTOCOL for all GitLab-related engineering tasks. TRIGGER THIS SKILL IMMEDIATELY when the user asks to "create an MR", "start a review", "submit a review", "comment on a line", "check the pipeline", "search GitLab", "view an issue", "set auto-merge", or "manage GitLab projects". It provides a specialized suite of MCP tools (gitlab_*) that handle the full reviewer/submitter lifecycle, including MR discovery, multi-comment reviews, automated SHA discovery, search, and deterministic pipeline monitoring. Proceeding with manual 'glab' or 'glab api' calls for these tasks constitutes a protocol failure.
 compatibility: "Requires Node.js and 'glab' CLI."
 metadata:
-  version: 3.3.0
+  version: 3.4.0
   author: AI-Engineering-Team
 ---
 
@@ -13,9 +13,8 @@ metadata:
 *   **Authentication & Fail-Fast:** The `gitlab_*` tools automatically verify authentication. If a tool returns an "ERROR: GitLab authentication failed" message, you MUST stop immediately, inform the user, and ask them to run `glab auth login` in their terminal.
 *   **Precision Feedback (Line Comments):** When creating comments on specific lines (via `add_comment_to_review` or `post_comment`), you MUST provide the `path` and the `line` number as they appear in the **NEW** version of the file (the diff). Do not guess line numbers.
 *   **Closing the Loop (Resolution):** To resolve a discussion thread, use `gitlab_reply_to_discussion` with `resolve: true`. This is the standard way to verify a fix and clean up the MR for merging.
-*   **Discovery & Search:** Use `gitlab_search` to find projects, issues, or MRs globally. Use `gitlab_view` to inspect the details of a specific resource before acting on it.
-*   **Pipeline Monitoring:** Before merging, you MUST ensure the pipeline passes. Use `gitlab_list_pipelines` to find the latest ID, and `gitlab_wait_for_pipeline` if you need to block until completion.
-*   **MCP-First Mandate:** You MUST use the `gitlab_*` MCP tools for all discovery and interaction tasks. These tools are pre-configured to handle non-interactive execution and `GLAB_PAGER=cat` automatically.
+*   **Discovery & Search Mandate:** You MUST use the `gitlab_search` or `gitlab_list_mrs` tools for all resource discovery. Do NOT attempt to run raw `glab mr list` commands in the terminal. The MCP tools are optimized for unpaged output and distilled JSON to save context.
+*   **MCP-First Mandate:** You MUST use the `gitlab_*` MCP tools for all interaction tasks. These tools are pre-configured to handle non-interactive execution and `GLAB_PAGER=cat` automatically.
 
 ## WORKFLOW: [Plan-Validate-Execute Pattern]
 
@@ -32,7 +31,7 @@ Follow these steps precisely.
 ```
 
 ### Step 1: Resource Discovery & Context
-1. If the resource ID is unknown, use `gitlab_search({ "query": "...", "scope": "merge_requests" })`.
+1. If the resource ID is unknown, use `gitlab_search` or `gitlab_list_mrs({ "project": "80229875", "state": "opened" })`.
 2. Use `gitlab_view({ "type": "mr", "id": "<IID>" })` to inspect title, description, and status.
 3. Use `gitlab_get_mr_diffs({ "iid": "<IID>" })` to see the actual code changes.
 4. Use `gitlab_list_discussions({ "iid": "<IID>", "only_unresolved": true })` to find active threads.

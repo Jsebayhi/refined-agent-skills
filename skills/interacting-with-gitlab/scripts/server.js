@@ -109,10 +109,11 @@ const tools = {
   },
   "gitlab_list_mrs": {
     description: "List Merge Requests with filters.",
-    parameters: { state: "string", labels: "string", source_branch: "string", author: "string", per_page: "number" },
+    parameters: { project: "string", state: "string", labels: "string", source_branch: "string", author: "string", per_page: "number" },
     required: [],
-    run: ({ state, labels, source_branch, author, per_page }) => {
+    run: ({ project, state, labels, source_branch, author, per_page }) => {
       const args = ['mr', 'list'];
+      if (project) args.push('--repo', project);
       if (state) args.push('--state', state);
       if (labels) args.push('--label', labels);
       if (source_branch) args.push('--source-branch', source_branch);
@@ -388,7 +389,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.2.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.3.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);
