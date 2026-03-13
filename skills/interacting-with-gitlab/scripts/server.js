@@ -440,6 +440,18 @@ const tools = {
     run: ({ vulnerability_id }) => runGlabApi(`vulnerabilities/${vulnerability_id}/resolve`, 'POST')
   },
 
+  // --- Safety Hatch ---
+  "gitlab_run_command": {
+    description: "Run a custom glab command not covered by other tools. Automatically handles non-interactive mode and suppresses pagers.",
+    parameters: { command: "string" },
+    required: ["command"],
+    run: ({ command }) => {
+      // Basic sanitization: prevent command injection by splitting into args array
+      const args = command.trim().split(/\s+/);
+      return runGlab(args);
+    }
+  },
+
   // --- Helpers ---
   "gitlab_list_labels": {
     description: "List available project labels.",
@@ -464,7 +476,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.11.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.12.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);
