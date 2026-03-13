@@ -168,10 +168,40 @@ const tools = {
       return runGlabApi(`projects/:id/merge_requests/${iid}/discussions/${discussion_id}?resolved=${resolved}`, 'PUT');
     }
   },
+  "gitlab:list_pipelines": {
+    description: "List recent CI/CD pipelines.",
+    parameters: { status: "string", ref: "string" },
+    run: ({ status, ref }) => {
+      const args = ['ci', 'list'];
+      if (status) args.push('--status', status);
+      if (ref) args.push('--ref', ref);
+      return runGlab(args);
+    }
+  },
   "gitlab:get_pipeline_details": {
     description: "Fetch full details and status for a specific pipeline.",
     parameters: { pipeline_id: "string" },
     run: ({ pipeline_id }) => { return runGlabApi(`projects/:id/pipelines/${pipeline_id}`); }
+  },
+  "gitlab:wait_for_pipeline": {
+    description: "Wait for a pipeline to complete (success, failed, or canceled). Polling tool.",
+    parameters: { pipeline_id: "string", timeout_minutes: "number" },
+    run: async ({ pipeline_id, timeout_minutes }) => {
+      const start = Date.now();
+      const timeoutMs = (timeout_minutes || 10) * 60 * 1000;
+      while (Date.now() - start < timeoutMs) {
+        const response = runGlabApi(`projects/:id/pipelines/${pipeline_id}`);
+        if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
+        const pipeline = JSON.parse(response);
+        const status = pipeline.status;
+        if (['success', 'failed', 'canceled', 'skipped', 'manual'].includes(status)) {
+          return `Pipeline ${pipeline_id} finished with status: ${status}`;
+        }
+        // Wait 15 seconds before polling again
+        await new Promise(resolve => setTimeout(resolve, 15000));
+      }
+      return `TIMEOUT: Pipeline ${pipeline_id} did not complete within ${timeout_minutes || 10} minutes.`;
+    }
   },
   "gitlab:list_pipeline_jobs": {
     description: "List jobs for a specific pipeline.",
@@ -212,13 +242,13 @@ const tools = {
 };
 
 async function main() {
-  process.stdin.on('data', (data) => {
+  process.stdin.on('data', async (data) => {
     try {
       const request = JSON.parse(data.toString());
       if (request.method === 'initialize') {
         console.log(JSON.stringify({
           jsonrpc: "2.0", id: request.id,
-          result: { capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "1.4.0" } }
+          result: { capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "1.5.0" } }
         }));
       } else if (request.method === 'list_tools') {
         console.log(JSON.stringify({
@@ -229,7 +259,7 @@ async function main() {
               inputSchema: {
                 type: "object",
                 properties: Object.fromEntries(Object.entries(info.parameters).map(([p, type]) => [p, { type }])),
-                required: (name === "gitlab:update_mr" || name === "gitlab:reply_to_discussion" || name === "gitlab:resolve_discussion" || name === "gitlab:create_mr") ? ["iid", "discussion_id"] : Object.keys(info.parameters)
+                required: (name === "gitlab:update_mr" || name === "gitlab:reply_to_discussion" || name === "gitlab:resolve_discussion" || name === "gitlab:create_mr" || name === "gitlab:wait_for_pipeline") ? ["iid", "discussion_id", "pipeline_id"] : Object.keys(info.parameters)
               }
             }))
           }
@@ -237,7 +267,7 @@ async function main() {
       } else if (request.method === 'call_tool') {
         const tool = tools[request.params.name];
         if (tool) {
-          const result = tool.run(request.params.arguments);
+          const result = await tool.run(request.params.arguments);
           console.log(JSON.stringify({
             jsonrpc: "2.0", id: request.id,
             result: { content: [{ type: "text", text: result }] }
