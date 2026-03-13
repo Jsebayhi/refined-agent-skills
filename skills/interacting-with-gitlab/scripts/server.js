@@ -54,6 +54,17 @@ function distillProject(project) {
   };
 }
 
+function distillVulnerability(v) {
+  return {
+    id: v.id,
+    title: v.name || v.title,
+    severity: v.severity,
+    report_type: v.report_type,
+    state: v.state,
+    location: v.location ? { file: v.location.file, line: v.location.start_line } : 'unknown'
+  };
+}
+
 const tools = {
   // --- Discovery & Research ---
   "gitlab_search": {
@@ -352,6 +363,30 @@ const tools = {
     run: ({ iid }) => runGlab(['mr', 'merge', iid, '--auto', '--yes'])
   },
 
+  // --- Security & Vulnerabilities ---
+  "gitlab_list_vulnerability_findings": {
+    description: "List vulnerability findings for a project. Filter by pipeline_id, severity, or report_type.",
+    parameters: { 
+      pipeline_id: "string", 
+      severity: "string", // info, low, medium, high, critical
+      report_type: "string", // sast, dast, dependency_scanning, container_scanning
+      state: "string" // all, dismissed
+    },
+    required: [],
+    run: ({ pipeline_id, severity, report_type, state }) => {
+      let endpoint = `projects/:id/vulnerability_findings?scope=${state || 'all'}`;
+      if (pipeline_id) endpoint += `&pipeline_id=${pipeline_id}`;
+      if (severity) endpoint += `&severity=${severity}`;
+      if (report_type) endpoint += `&report_type=${report_type}`;
+      const response = runGlabApi(endpoint);
+      if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
+      try {
+        const findings = JSON.parse(response);
+        return JSON.stringify(findings.map(distillVulnerability), null, 2);
+      } catch (e) { return response; }
+    }
+  },
+
   // --- Helpers ---
   "gitlab_list_labels": {
     description: "List available project labels.",
@@ -376,7 +411,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.5.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.6.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);
