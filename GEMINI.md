@@ -42,3 +42,32 @@ When adding a new skill to the `skills/` directory:
 
 ### Adding a New Skill
 Create a new directory in `skills/` with a `SKILL.md` file following the kebab-case naming convention.
+
+## MCP Development Gotchas
+
+**CRITICAL:** When building or maintaining MCP servers within this extension, adhere to these hard rules to prevent discovery and connection failures.
+
+### 1. Tool Naming Schema
+- **Constraint:** Tool names MUST contain ONLY alphanumeric characters, underscores, or hyphens.
+- **Forbidden:** Do NOT use colons (`:`) or special characters.
+- **Failure Mode:** Violating this causes the Gemini CLI to determine the server provides "no usable tools" and instantly close the connection.
+
+### 2. Stdout Isolation
+- **Constraint:** `stdout` is reserved EXCLUSIVELY for JSON-RPC protocol messages.
+- **Action:** Redirect all logging, debug info, and raw errors to `stderr` (e.g., `process.stderr.write` or `console.error`).
+- **Failure Mode:** Any non-JSON text on `stdout` corrupts the protocol stream and causes a "Connection closed" error.
+
+### 3. Sensitive Environment Variables
+- **Constraint:** Gemini CLI redacts sensitive environment variables (e.g., `*TOKEN*`, `*SECRET*`) by default for `stdio` servers.
+- **Action:** Explicitly list and expand required variables in the `mcpServers` block of `gemini-extension.json`:
+  ```json
+  "env": { "GITLAB_TOKEN": "$GITLAB_TOKEN" }
+  ```
+
+### 4. Robust Path Resolution
+- **Action:** Always use the `${extensionPath}` variable in `gemini-extension.json` to define the path to the server script.
+- **Benefit:** Ensures the CLI can find the server regardless of where the extension is linked or installed.
+
+### 5. Protocol Implementation (Node.js)
+- **Line Buffering:** Use the `readline` module to process `stdin` line-by-line. This ensures stability if multiple JSON-RPC messages are received in a single chunk.
+- **Initialization:** The `initialize` result MUST include `protocolVersion` (e.g., `"2024-11-05"`) and a valid `serverInfo` object.
