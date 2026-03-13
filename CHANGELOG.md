@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-03-13
+
+### Added
+- **GitHub MCP Server**: Implemented a production-grade GitHub MCP server and skill (`interacting-with-github`) mirroring the GitLab implementation.
+- **Security Auditing**: Added `gitlab_list_vulnerability_findings` and `github_list_vulnerability_findings` tools to enable automated security checks during reviews.
+- **Draft Management**: Added specialized tools for managing pending review comments (`gitlab_edit_review_comment`, `gitlab_delete_review_comment`, etc.) to prevent API conflicts.
+- **Iterative Feedback**: Added `gitlab_get_comment` and `gitlab_edit_comment` for precise refinement of live feedback.
+- **Safety Hatch**: Introduced `gitlab_run_command` and `github_run_command` for executing custom CLI flags while maintaining environment hygiene.
+
+### Changed
+- **Platform Modularity**: Refactored `collaborating-on-git-projects` and `upholding-devsecops-standards` to be strictly platform-agnostic, mandating the use of specialized interaction skills.
+- **Context Optimization**: Implemented response distillation for all search and discovery tools, reducing context token consumption by ~80% for complex MRs/PRs.
+- **Auto-Hygiene**: MCP servers now handle `PAGER=cat` and non-interactive enforcement automatically, removing the need for manual terminal prefixing.
+- **Refined Discovery**: Updated `gitlab_list_mrs` with `project` filtering and correct flag mapping for MR states.
+
+### Fixed
+- Fixed **HTTP 415** (Unsupported Content-Type) by explicitly setting JSON headers in all API POST/PUT requests.
+- Fixed 404 errors when attempting to delete draft notes using the standard notes API.
+- Fixed invalid `--state` flag usage in GitLab MR discovery.
+- Improved error handling for missing `glab`/`gh` binaries with user-friendly installation guidance.
+
 ## [0.4.2] - 2026-03-12
 
 ### Added
