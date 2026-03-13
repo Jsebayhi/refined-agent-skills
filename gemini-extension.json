@@ -1,6 +1,6 @@
 {
   "name": "refined-agent-skills",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "A curated collection of high-signal engineering and professional agent skills distilled from real collaborative sessions.",
   "publisher": "jeremy sebayhi",
   "license": "MIT",
@@ -11,8 +11,17 @@
         "${extensionPath}/skills/interacting-with-gitlab/scripts/server.js"
       ],
       "env": {
-        "GITLAB_TOKEN": "$GITLAB_TOKEN",
-        "GITHUB_TOKEN": "$GITHUB_TOKEN"
+        "GITLAB_TOKEN": "$GITLAB_TOKEN"
+      }
+    },
+    "github": {
+      "command": "node",
+      "args": [
+        "${extensionPath}/skills/interacting-with-github/scripts/server.js"
+      ],
+      "env": {
+        "GITHUB_TOKEN": "$GITHUB_TOKEN",
+        "GH_TOKEN": "$GH_TOKEN"
       }
     }
   },

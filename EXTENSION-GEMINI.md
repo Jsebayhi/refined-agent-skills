@@ -10,7 +10,7 @@ This extension provides a suite of high-signal engineering skills. These instruc
 
 ## Terminal Hygiene: Non-Interactive Mandate
 **MANDATORY:** You MUST use `gh` and `glab` in non-interactive mode to prevent terminal hangs.
-- **GitHub (`gh`):** Prefix all discovery commands with `GH_PAGER=cat`.
+- **GitHub (`gh`):** You **MUST** use the `interacting-with-github` skill. Its MCP tools automatically handle environment hygiene (`GH_PAGER=cat`) and non-interactive enforcement.
 - **GitLab (`glab`):** You **MUST** use the `interacting-with-gitlab` skill. Its MCP tools automatically handle environment hygiene (`GLAB_PAGER=cat`) and non-interactive enforcement.
 - **Forbid usage** of `--live`, `--watch`, or any command that continuously refreshes output.
 - **Use one-shot discovery commands** (e.g., `gh pr checks` instead of `gh pr view --watch`).
@@ -30,8 +30,8 @@ This extension follows an "Orchestrator + Specialized Experts" architecture. To 
 
 ### Recommended Combinations:
 - **Feature Development:** `orchestrating-software-lifecycle` + `deep-brainstorming` + `maintaining-rigorous-architecture-decisions` + `engineering-reliable-software-with-[Language]`.
-- **Quality Assurance:** `orchestrating-software-lifecycle` + `testing-software-efficiently` + `upholding-devsecops-standards` + `interacting-with-gitlab`.
-- **Submission:** `orchestrating-software-lifecycle` + `collaborating-on-git-projects` + `authoring-effective-user-documentation` + `interacting-with-gitlab`.
+- **Quality Assurance:** `orchestrating-software-lifecycle` + `testing-software-efficiently` + `upholding-devsecops-standards` + `interacting-with-[github/gitlab]`.
+- **Submission:** `orchestrating-software-lifecycle` + `collaborating-on-git-projects` + `authoring-effective-user-documentation` + `interacting-with-[github/gitlab]`.
 
 ### Conflict Resolution:
 1. **Orchestrator (Lifecycle):** Defines the *Current State* and *Phase*.
