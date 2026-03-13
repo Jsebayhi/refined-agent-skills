@@ -1,17 +1,22 @@
 # GitLab API Cheatsheet for MR Discussions
 
-## Discussion Workflow (Using MCP Tools)
+## Workflow Orchestration (Using MCP Tools)
 
-The `gitlab:*` tools handle the complexity of the GitLab API internally, including:
-- Automatic project and repository discovery.
-- Automatic fetching of `base_sha`, `head_sha`, and `start_sha` for line comments.
-- Building the complex `position` objects required by GitLab.
+The `gitlab:*` tools handle the complexity of the GitLab API internally, including project discovery, SHA management, and non-interactive execution.
 
-### Standard Lifecycle
+### Reviewer Feedback Lifecycle
 1. **`gitlab:get_mr_details`**: Fetch MR state and metadata.
 2. **`gitlab:add_comment_to_review`**: Add pending feedback (draft mode).
-3. **`gitlab:submit_review`**: Finalize and publish all comments at once.
+3. **`gitlab:submit_review`**: Finalize and publish all comments at once with an outcome (`APPROVE`, `REQUEST_CHANGES`).
 4. **`gitlab:reply_to_discussion`**: Respond to feedback and optionally resolve threads.
+
+### Submitter/Author Lifecycle
+1. **`gitlab:run`**: Use `mr create` to open the PR.
+2. **`gitlab:get_mr_details`**: Monitor labels and approval status.
+3. **`gitlab:list_pipeline_jobs`**: Monitor CI execution.
+4. **`gitlab:get_job_trace`**: Troubleshoot failed jobs.
+5. **`gitlab:reply_to_discussion`**: Answer reviewer comments and optionally mark as `resolve: true`.
+6. **`gitlab:set_auto_merge`**: Enable merging once the review is satisfactory.
 
 ## Common Error Codes
 
