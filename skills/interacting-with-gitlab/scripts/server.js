@@ -365,13 +365,8 @@ const tools = {
 
   // --- Security & Vulnerabilities ---
   "gitlab_list_vulnerability_findings": {
-    description: "List vulnerability findings for a project. Filter by pipeline_id, severity, or report_type.",
-    parameters: { 
-      pipeline_id: "string", 
-      severity: "string", // info, low, medium, high, critical
-      report_type: "string", // sast, dast, dependency_scanning, container_scanning
-      state: "string" // all, dismissed
-    },
+    description: "List vulnerability findings for a project.",
+    parameters: { pipeline_id: "string", severity: "string", report_type: "string", state: "string" },
     required: [],
     run: ({ pipeline_id, severity, report_type, state }) => {
       let endpoint = `projects/:id/vulnerability_findings?scope=${state || 'all'}`;
@@ -380,11 +375,27 @@ const tools = {
       if (report_type) endpoint += `&report_type=${report_type}`;
       const response = runGlabApi(endpoint);
       if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
-      try {
-        const findings = JSON.parse(response);
-        return JSON.stringify(findings.map(distillVulnerability), null, 2);
-      } catch (e) { return response; }
+      try { return JSON.stringify(JSON.parse(response).map(distillVulnerability), null, 2); }
+      catch (e) { return response; }
     }
+  },
+  "gitlab_get_vulnerability_details": {
+    description: "Fetch full details for a specific vulnerability (Ultimate tier).",
+    parameters: { vulnerability_id: "string" },
+    required: ["vulnerability_id"],
+    run: ({ vulnerability_id }) => runGlabApi(`vulnerabilities/${vulnerability_id}`)
+  },
+  "gitlab_dismiss_vulnerability": {
+    description: "Dismiss a vulnerability (Mark as false positive, etc.).",
+    parameters: { vulnerability_id: "string" },
+    required: ["vulnerability_id"],
+    run: ({ vulnerability_id }) => runGlabApi(`vulnerabilities/${vulnerability_id}/dismiss`, 'POST')
+  },
+  "gitlab_resolve_vulnerability": {
+    description: "Mark a vulnerability as fixed.",
+    parameters: { vulnerability_id: "string" },
+    required: ["vulnerability_id"],
+    run: ({ vulnerability_id }) => runGlabApi(`vulnerabilities/${vulnerability_id}/resolve`, 'POST')
   },
 
   // --- Helpers ---
@@ -411,7 +422,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.6.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.7.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);
