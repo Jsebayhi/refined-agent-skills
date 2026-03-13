@@ -220,10 +220,34 @@ const tools = {
     run: ({ iid, note_id }) => runGlabApi(`projects/:id/merge_requests/${iid}/notes/${note_id}`)
   },
   "gitlab_edit_comment": {
-    description: "Edit the body of an existing comment/note in an MR.",
+    description: "Edit the body of an existing published comment/note in an MR.",
     parameters: { iid: "string", note_id: "string", message: "string" },
     required: ["iid", "note_id", "message"],
     run: ({ iid, note_id, message }) => runGlabApi(`projects/:id/merge_requests/${iid}/notes/${note_id}`, 'PUT', { body: message })
+  },
+  "gitlab_delete_comment": {
+    description: "Delete a specific published comment/note from an MR.",
+    parameters: { iid: "string", note_id: "string" },
+    required: ["iid", "note_id"],
+    run: ({ iid, note_id }) => runGlabApi(`projects/:id/merge_requests/${iid}/notes/${note_id}`, 'DELETE')
+  },
+  "gitlab_list_review_comments": {
+    description: "List all pending/draft comments (Review mode).",
+    parameters: { iid: "string" },
+    required: ["iid"],
+    run: ({ iid }) => runGlabApi(`projects/:id/merge_requests/${iid}/draft_notes`)
+  },
+  "gitlab_edit_review_comment": {
+    description: "Edit a pending/draft comment from an ongoing review.",
+    parameters: { iid: "string", note_id: "string", message: "string" },
+    required: ["iid", "note_id", "message"],
+    run: ({ iid, note_id, message }) => runGlabApi(`projects/:id/merge_requests/${iid}/draft_notes/${note_id}`, 'PUT', { note: message })
+  },
+  "gitlab_delete_review_comment": {
+    description: "Delete a pending/draft comment from an ongoing review.",
+    parameters: { iid: "string", note_id: "string" },
+    required: ["iid", "note_id"],
+    run: ({ iid, note_id }) => runGlabApi(`projects/:id/merge_requests/${iid}/draft_notes/${note_id}`, 'DELETE')
   },
   "gitlab_post_comment": {
     description: "Post a comment to an MR that is published IMMEDIATELY.",
@@ -262,12 +286,6 @@ const tools = {
       else body = `/submit_review\n\n${body}`;
       return runGlabApi(`projects/:id/merge_requests/${iid}/notes`, 'POST', { body });
     }
-  },
-  "gitlab_delete_comment": {
-    description: "Delete a specific comment/note from an MR.",
-    parameters: { iid: "string", note_id: "string" },
-    required: ["iid", "note_id"],
-    run: ({ iid, note_id }) => runGlabApi(`projects/:id/merge_requests/${iid}/notes/${note_id}`, 'DELETE')
   },
   "gitlab_approve": {
     description: "Approve an MR.",
@@ -446,7 +464,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.10.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.11.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);
