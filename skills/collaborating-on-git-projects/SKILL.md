@@ -25,7 +25,7 @@ Use `type(scope): description` for titles.
 ## 🛑 Non-Interactive Mandate (Senior Efficiency)
 To prevent terminal hangs and blocking the user, you MUST strictly adhere to non-interactive CLI usage:
 *   **GitHub Paging:** For GitHub (`gh`), prefix discovery commands with `GH_PAGER=cat`.
-*   **GitLab Paging:** You **MUST** use the `interacting-with-gitlab` skill. Its MCP tools handle environment hygiene (`GLAB_PAGER=cat`) and non-interactive enforcement automatically.
+*   **GitLab Paging:** If the project is on GitLab, you **MUST** load and use all skills that simplify GitLab interaction (e.g., `interacting-with-gitlab`). These skills automatically handle environment hygiene and non-interactive enforcement.
 *   **No Blocking/Watch Flags:** NEVER use `--live`, `--watch`, or any flag that causes the command to continuously monitor or refresh the output.
 
 ## 🛠️ Dual-Platform Cheat Sheet
@@ -36,10 +36,8 @@ To prevent terminal hangs and blocking the user, you MUST strictly adhere to non
 *   **Feedback:** `gh pr comment --body "..."` (Top-level) or use `gh api` for specific threads.
 
 ### GitLab (`glab`)
-*   **Mandatory Skill:** Activate `interacting-with-gitlab`.
-*   **Discovery:** `gitlab_list_mrs`, `gitlab_view({ "type": "mr" })`.
-*   **Creation:** `gitlab_create_mr({ "title": "...", "description": "...", "fill": true })`.
-*   **Threaded Reply:** `gitlab_reply_to_discussion({ "iid": "...", "discussion_id": "...", "message": "Done.", "resolve": true })`.
+*   **Mandatory Protocol:** You MUST load and use all skills that provide specialized GitLab automation.
+*   **Workflow:** Use platform-specific MCP tools for MR creation, discovery, and threaded replies to ensure high-fidelity interaction.
 
 ## 💡 Examples & Best Practices
 
