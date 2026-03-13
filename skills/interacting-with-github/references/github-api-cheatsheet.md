@@ -5,17 +5,17 @@
 The `github_*` tools handle the complexity of the GitHub API internally, including repository discovery and non-interactive execution.
 
 ### Reviewer Feedback Lifecycle
-1. **`github_get_pr_details`**: Fetch PR state, metadata, and CI status.
-2. **`github_list_vulnerability_findings`**: Audit code for security alerts.
+1. **`github_get_pull_request_details`**: Fetch PR state, metadata, and CI status.
+2. **`github_list_vulnerabilities`**: Audit code for security alerts.
 3. **`github_post_comment`**: Post immediate top-level feedback.
 4. **`github_submit_review`**: Submit a grouped review with an outcome (`APPROVE`, `REQUEST_CHANGES`).
 
 ### Submitter/Author Lifecycle
-1. **`github_create_pr`**: Open a new Pull Request. Use `fill: true` for automatic metadata.
-2. **`github_get_pr_details`**: Monitor labels and mergeability.
-3. **`github_list_runs`**: Monitor GitHub Actions execution.
+1. **`github_create_pull_request`**: Open a new Pull Request. Use `fill: true` for automatic metadata.
+2. **`github_get_pull_request_details`**: Monitor labels and mergeability.
+3. **`github_list_workflow_runs`**: Monitor GitHub Actions execution.
 4. **`github_get_job_logs`**: Troubleshoot failed CI jobs.
-5. **`github_merge_pr`**: Finalize and merge once the review is satisfactory.
+5. **`github_merge_pull_request`**: Finalize and merge once the review is satisfactory.
 
 ## Common Error Codes
 

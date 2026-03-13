@@ -43,7 +43,7 @@ function runGhApi(endpoint, method = 'GET', data = null) {
 
 function distillPr(pr) {
   return {
-    number: pr.number,
+    id: pr.number,
     title: pr.title,
     state: pr.state,
     author: pr.author ? pr.author.login : 'unknown',
@@ -64,7 +64,7 @@ function distillRepo(repo) {
 
 function distillVulnerability(v) {
   return {
-    number: v.number,
+    id: v.number,
     rule: v.rule ? v.rule.description : 'unknown',
     severity: v.rule ? v.rule.severity : v.severity,
     state: v.state,
@@ -125,16 +125,13 @@ const tools = {
     parameters: { path: "string", branch: "string" },
     required: ["path"],
     run: ({ path, branch }) => {
-      return runGhApi(`repos/{owner}/{repo}/contents/${path}${branch ? '?ref=' + branch : ''}`, 'GET', null, { 
-        headers: { 'Accept': 'application/vnd.github.v3.raw' } 
-      });
-      // Note: runGhApi needs header support or a raw flag. I'll use gh api --raw for this if needed.
-      // Refined runGhApi below handles it via runGh(['api', ...])
+      // For raw content, gh api --raw or specific headers are needed.
+      return runGh(['api', `repos/{owner}/{repo}/contents/${path}${branch ? '?ref=' + branch : ''}`, '-H', 'Accept: application/vnd.github.v3.raw']);
     }
   },
 
   // --- PR / Pull Request Management ---
-  "github_list_prs": {
+  "github_list_pull_requests": {
     description: "List Pull Requests with filters.",
     parameters: { state: "string", labels: "string", base: "string", author: "string", limit: "number" },
     required: [],
@@ -148,7 +145,7 @@ const tools = {
       return runGh(args);
     }
   },
-  "github_create_pr": {
+  "github_create_pull_request": {
     description: "Create a new PR.",
     parameters: { title: "string", body: "string", base: "string", head: "string", labels: "string", draft: "boolean", fill: "boolean" },
     required: [],
@@ -164,24 +161,24 @@ const tools = {
       return runGh(args);
     }
   },
-  "github_merge_pr": {
+  "github_merge_pull_request": {
     description: "Merge a PR.",
-    parameters: { number: "string", method: "string", delete_branch: "boolean" },
-    required: ["number"],
-    run: ({ number, method, delete_branch }) => {
-      const args = ['pr', 'merge', number, '--merge']; // Default to merge commit
+    parameters: { id: "string", method: "string", delete_branch: "boolean" },
+    required: ["id"],
+    run: ({ id, method, delete_branch }) => {
+      const args = ['pr', 'merge', id, '--merge']; // Default to merge commit
       if (method === 'squash') args[3] = '--squash';
       if (method === 'rebase') args[3] = '--rebase';
       if (delete_branch) args.push('--delete-branch');
       return runGh(args);
     }
   },
-  "github_get_pr_details": {
+  "github_get_pull_request_details": {
     description: "Fetch full PR details (Distilled summary).",
-    parameters: { number: "string" },
-    required: ["number"],
-    run: ({ number }) => {
-      const response = runGh(['pr', 'view', number, '--json', 'number,title,state,author,url,labels,isDraft,body,baseRefName,headRefName,mergeable,statusCheckRollup']);
+    parameters: { id: "string" },
+    required: ["id"],
+    run: ({ id }) => {
+      const response = runGh(['pr', 'view', id, '--json', 'number,title,state,author,url,labels,isDraft,body,baseRefName,headRefName,mergeable,statusCheckRollup']);
       if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
       try {
         const pr = JSON.parse(response);
@@ -191,59 +188,59 @@ const tools = {
           base: pr.baseRefName,
           head: pr.headRefName,
           mergeable: pr.mergeable,
-          checks: pr.statusCheckRollup ? pr.statusCheckRollup.map(c => ({ name: i.name || c.context, state: c.state || c.status, status: c.conclusion })) : []
+          checks: pr.statusCheckRollup ? pr.statusCheckRollup.map(c => ({ name: c.name || c.context, state: c.state || c.status, status: c.conclusion })) : []
         }, null, 2);
       } catch (e) { return response; }
     }
   },
-  "github_get_pr_diffs": {
+  "github_get_pull_request_diffs": {
     description: "Fetch the diffs for a specific Pull Request.",
-    parameters: { number: "string" },
-    required: ["number"],
-    run: ({ number }) => runGh(['pr', 'diff', number])
+    parameters: { id: "string" },
+    required: ["id"],
+    run: ({ id }) => runGh(['pr', 'diff', id])
   },
 
   // --- Feedback & Review Lifecycle ---
   "github_get_comment": {
     description: "Fetch details of a specific comment from a PR/Issue.",
-    parameters: { comment_id: "string" },
-    required: ["comment_id"],
-    run: ({ comment_id }) => runGhApi(`repos/{owner}/{repo}/issues/comments/${comment_id}`)
+    parameters: { id: "string", note_id: "string" }, // note_id used for consistency with gitlab
+    required: ["id", "note_id"],
+    run: ({ note_id }) => runGhApi(`repos/{owner}/{repo}/issues/comments/${note_id}`)
   },
   "github_edit_comment": {
-    description: "Edit an existing comment.",
-    parameters: { comment_id: "string", body: "string" },
-    required: ["comment_id", "body"],
-    run: ({ comment_id, body }) => runGhApi(`repos/{owner}/{repo}/issues/comments/${comment_id}`, 'PATCH', { body })
+    description: "Edit an existing published comment.",
+    parameters: { id: "string", note_id: "string", message: "string" },
+    required: ["id", "note_id", "message"],
+    run: ({ note_id, message }) => runGhApi(`repos/{owner}/{repo}/issues/comments/${note_id}`, 'PATCH', { body: message })
   },
   "github_delete_comment": {
-    description: "Delete a specific comment.",
-    parameters: { comment_id: "string" },
-    required: ["comment_id"],
-    run: ({ comment_id }) => runGhApi(`repos/{owner}/{repo}/issues/comments/${comment_id}`, 'DELETE')
+    description: "Delete a specific published comment.",
+    parameters: { id: "string", note_id: "string" },
+    required: ["id", "note_id"],
+    run: ({ note_id }) => runGhApi(`repos/{owner}/{repo}/issues/comments/${note_id}`, 'DELETE')
   },
   "github_post_comment": {
     description: "Post a comment to a PR/Issue.",
-    parameters: { number: "string", body: "string" },
-    required: ["number", "body"],
-    run: ({ number, body }) => runGh(['pr', 'comment', number, '--body', `"${body}"`])
+    parameters: { id: "string", message: "string" },
+    required: ["id", "message"],
+    run: ({ id, message }) => runGh(['pr', 'comment', id, '--body', `"${message}"`])
   },
   "github_submit_review": {
     description: "Submit a full PR review.",
-    parameters: { number: "string", outcome: "string", body: "string" },
-    required: ["number", "outcome"],
-    run: ({ number, outcome, body }) => {
-      const args = ['pr', 'review', number];
+    parameters: { id: "string", outcome: "string", message: "string" },
+    required: ["id", "outcome"],
+    run: ({ id, outcome, message }) => {
+      const args = ['pr', 'review', id];
       if (outcome === 'APPROVE') args.push('--approve');
       else if (outcome === 'REQUEST_CHANGES') args.push('--request-changes');
       else args.push('--comment');
-      if (body) args.push('--body', `"${body}"`);
+      if (message) args.push('--body', `"${message}"`);
       return runGh(args);
     }
   },
 
   // --- CI/CD Monitoring ---
-  "github_list_runs": {
+  "github_list_workflow_runs": {
     description: "List recent workflow runs.",
     parameters: { workflow: "string", status: "string", branch: "string" },
     required: [],
@@ -255,27 +252,27 @@ const tools = {
       return runGh(args);
     }
   },
-  "github_get_run_details": {
+  "github_get_workflow_run_details": {
     description: "Fetch workflow run details.",
-    parameters: { run_id: "string" },
-    required: ["run_id"],
-    run: ({ run_id }) => runGh(['run', 'view', run_id, '--json', 'number,status,conclusion,url,createdAt,updatedAt,jobs'])
+    parameters: { id: "string" },
+    required: ["id"],
+    run: ({ id }) => runGh(['run', 'view', id, '--json', 'number,status,conclusion,url,createdAt,updatedAt,jobs'])
   },
   "github_get_job_logs": {
     description: "Fetch logs for a specific job.",
-    parameters: { job_id: "string" },
-    required: ["job_id"],
-    run: ({ job_id }) => runGh(['run', 'view', '--job', job_id, '--log'])
+    parameters: { id: "string" },
+    required: ["id"],
+    run: ({ id }) => runGh(['run', 'view', '--job', id, '--log'])
   },
 
   // --- Security & Vulnerabilities ---
-  "github_list_vulnerability_findings": {
+  "github_list_vulnerabilities": {
     description: "List code scanning alerts for a repository or PR.",
-    parameters: { pr_number: "string", severity: "string", state: "string" },
+    parameters: { id: "string", severity: "string", state: "string" }, // id is pr_number
     required: [],
-    run: ({ pr_number, severity, state }) => {
+    run: ({ id, severity, state }) => {
       let endpoint = `repos/{owner}/{repo}/code-scanning/alerts?per_page=100`;
-      if (pr_number) endpoint += `&pr=${pr_number}`;
+      if (id) endpoint += `&pr=${id}`;
       if (severity) endpoint += `&severity=${severity}`;
       if (state) endpoint += `&state=${state || 'open'}`;
       const response = runGhApi(endpoint);
@@ -288,9 +285,9 @@ const tools = {
   },
   "github_get_vulnerability_details": {
     description: "Fetch full details for a specific code scanning alert.",
-    parameters: { alert_number: "string" },
-    required: ["alert_number"],
-    run: ({ alert_number }) => runGhApi(`repos/{owner}/{repo}/code-scanning/alerts/${alert_number}`)
+    parameters: { id: "string" },
+    required: ["id"],
+    run: ({ id }) => runGhApi(`repos/{owner}/{repo}/code-scanning/alerts/${id}`)
   },
 
   // --- Safety Hatch ---
@@ -316,7 +313,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "github-mcp", version: "1.0.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "github-mcp", version: "2.0.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);
