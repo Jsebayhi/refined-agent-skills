@@ -47,6 +47,29 @@ function getMrDiffRefs(iid) {
 }
 
 const tools = {
+  "gitlab:create_mr": {
+    description: "Create a new Merge Request.",
+    parameters: { 
+      title: "string", 
+      description: "string", 
+      source_branch: "string", 
+      target_branch: "string", 
+      labels: "string", 
+      fill: "boolean",
+      draft: "boolean"
+    },
+    run: ({ title, description, source_branch, target_branch, labels, fill, draft }) => {
+      const args = ['mr', 'create', '--yes'];
+      if (fill) args.push('--fill');
+      if (title) args.push('--title', `"${title}"`);
+      if (description) args.push('--description', `"${description}"`);
+      if (source_branch) args.push('--source-branch', source_branch);
+      if (target_branch) args.push('--target-branch', target_branch);
+      if (labels) args.push('--label', `"${labels}"`);
+      if (draft) args.push('--draft');
+      return runGlab(args);
+    }
+  },
   "gitlab:get_mr_details": {
     description: "Fetch full details (status, labels, SHAs) for a Merge Request.",
     parameters: { iid: "string" },
@@ -195,7 +218,7 @@ async function main() {
       if (request.method === 'initialize') {
         console.log(JSON.stringify({
           jsonrpc: "2.0", id: request.id,
-          result: { capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "1.3.0" } }
+          result: { capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "1.4.0" } }
         }));
       } else if (request.method === 'list_tools') {
         console.log(JSON.stringify({
@@ -206,7 +229,7 @@ async function main() {
               inputSchema: {
                 type: "object",
                 properties: Object.fromEntries(Object.entries(info.parameters).map(([p, type]) => [p, { type }])),
-                required: (name === "gitlab:update_mr" || name === "gitlab:reply_to_discussion" || name === "gitlab:resolve_discussion") ? ["iid", "discussion_id"] : Object.keys(info.parameters)
+                required: (name === "gitlab:update_mr" || name === "gitlab:reply_to_discussion" || name === "gitlab:resolve_discussion" || name === "gitlab:create_mr") ? ["iid", "discussion_id"] : Object.keys(info.parameters)
               }
             }))
           }

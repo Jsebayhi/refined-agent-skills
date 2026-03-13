@@ -6,12 +6,12 @@ The `gitlab:*` tools handle the complexity of the GitLab API internally, includi
 
 ### Reviewer Feedback Lifecycle
 1. **`gitlab:get_mr_details`**: Fetch MR state and metadata.
-2. **`gitlab:add_comment_to_review`**: Add pending feedback (draft mode).
+2. **`gitlab:add_comment_to_review`**: Add pending feedback (Review Mode).
 3. **`gitlab:submit_review`**: Finalize and publish all comments at once with an outcome (`APPROVE`, `REQUEST_CHANGES`).
 4. **`gitlab:reply_to_discussion`**: Respond to feedback and optionally resolve threads.
 
 ### Submitter/Author Lifecycle
-1. **`gitlab:run`**: Use `mr create` to open the PR.
+1. **`gitlab:create_mr`**: Open a new Merge Request. Use `fill: true` for automatic metadata.
 2. **`gitlab:get_mr_details`**: Monitor labels and approval status.
 3. **`gitlab:list_pipeline_jobs`**: Monitor CI execution.
 4. **`gitlab:get_job_trace`**: Troubleshoot failed jobs.
@@ -30,4 +30,4 @@ The `gitlab:*` tools handle the complexity of the GitLab API internally, includi
 
 ## Important Notes
 - **Line Numbers**: Always provide the line number in the **new** version of the file for comments.
-- **Draft Visibility**: Comments added via `add_comment_to_review` are only visible to the author until `submit_review` is called.
+- **Review Mode Visibility**: Comments added via `add_comment_to_review` are only visible to the author until `submit_review` is called.

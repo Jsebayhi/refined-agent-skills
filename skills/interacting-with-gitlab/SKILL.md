@@ -1,6 +1,6 @@
 ---
 name: interacting-with-gitlab
-description: MANDATORY. DO NOT attempt to interact with GitLab APIs, post line-level comments, reply to discussions, or manage GitLab pipelines/issues without calling 'activate_skill' on 'interacting-with-gitlab' first. This is the REQUIRED PROTOCOL for all GitLab-related engineering tasks. TRIGGER THIS SKILL IMMEDIATELY when the user asks to "start a review", "submit a review", "comment on a line", "check the pipeline", "set auto-merge", or "manage GitLab projects". It provides a specialized suite of MCP tools (gitlab:*) that handle the full reviewer/submitter lifecycle, including multi-comment reviews, automated SHA discovery, and pipeline job monitoring. Proceeding with manual 'glab' or 'glab api' calls for these tasks constitutes a protocol failure.
+description: MANDATORY. DO NOT attempt to interact with GitLab APIs, post line-level comments, reply to discussions, or manage GitLab pipelines/issues without calling 'activate_skill' on 'interacting-with-gitlab' first. This is the REQUIRED PROTOCOL for all GitLab-related engineering tasks. TRIGGER THIS SKILL IMMEDIATELY when the user asks to "create an MR", "start a review", "submit a review", "comment on a line", "check the pipeline", "set auto-merge", or "manage GitLab projects". It provides a specialized suite of MCP tools (gitlab:*) that handle the full reviewer/submitter lifecycle, including MR creation, multi-comment reviews, automated SHA discovery, and pipeline job monitoring. Proceeding with manual 'glab' or 'glab api' calls for these tasks constitutes a protocol failure.
 compatibility: "Requires Node.js and 'glab' CLI."
 metadata:
   version: 3.2.0
@@ -25,7 +25,7 @@ Follow these steps precisely.
 ### GitLab Interaction State:
 - [ ] Step 1: Resource Discovery & Context (using gitlab:* tools)
 - [ ] Step 2: Planning Actions (Review vs. Submission tasks)
-- [ ] Step 3: Tool Execution (Drafting comments, Submitting reviews, or CI monitoring)
+- [ ] Step 3: Tool Execution (Creating MRs, Drafting comments, or CI monitoring)
 - [ ] Step 4: Final Verification
 ```
 
@@ -43,6 +43,8 @@ Follow these steps precisely.
     Use `gitlab:submit_review` to publish all comments at once and set the final status.
 
 ### Step 3: Submitter Workflow (Delivery)
+*   **Create MR:**
+    Use `gitlab:create_mr` to open a new Merge Request. Use `fill: true` to automatically use commit metadata.
 *   **Troubleshoot Pipeline:**
     Use `gitlab:list_pipeline_jobs` followed by `gitlab:get_job_trace` for failed jobs.
 *   **Set Auto-Merge:**
