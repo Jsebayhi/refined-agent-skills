@@ -8,7 +8,7 @@
     "gitlab": {
       "command": "node",
       "args": [
-        "skills/interacting-with-gitlab/scripts/server.js"
+        "${extensionPath}/skills/interacting-with-gitlab/scripts/server.js"
       ],
       "env": {
         "GITLAB_TOKEN": "$GITLAB_TOKEN",
