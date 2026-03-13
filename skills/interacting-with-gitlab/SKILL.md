@@ -56,7 +56,7 @@ Follow these steps precisely.
 *   **Monitor & Wait for CI:**
     Use `gitlab_list_workflow_runs` followed by `gitlab_wait_for_workflow_run` to wait for completion.
 *   **Troubleshoot Pipeline:**
-    Use `gitlab_list_workflow_run_jobs` followed by `gitlab_get_job_logs` for failed jobs.
+    Use `gitlab_get_workflow_run_details({ "id": "<ID>", "failed_logs": true })` to see exactly why jobs failed in a single turn.
 
 ### Step 4: Final Verification
 1. Review the tool output for successful API responses.

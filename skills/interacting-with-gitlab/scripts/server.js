@@ -355,18 +355,34 @@ const tools = {
     run: ({ ref }) => runGlab(['ci', 'run', '--branch', ref])
   },
   "gitlab_get_workflow_run_details": {
-    description: "Fetch pipeline details.",
-    parameters: { id: "string" },
+    description: "Fetch pipeline details. Set 'failed_logs: true' to automatically include traces for failed jobs.",
+    parameters: { id: "string", failed_logs: "boolean" },
     required: ["id"],
-    run: ({ id }) => {
+    run: ({ id, failed_logs }) => {
       const response = runGlabApi(`projects/:id/pipelines/${id}`);
       if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
       try {
         const p = JSON.parse(response);
-        return JSON.stringify({
+        const details = {
           id: p.id, iid: p.iid, project_id: p.project_id, status: p.status, ref: p.ref, web_url: p.web_url,
           created_at: p.created_at, updated_at: p.updated_at, started_at: p.started_at, finished_at: p.finished_at, duration: p.duration
-        }, null, 2);
+        };
+        
+        if (failed_logs && (p.status === 'failed' || p.status === 'success')) {
+          const jobsResp = runGlabApi(`projects/:id/pipelines/${id}/jobs`);
+          if (!jobsResp.startsWith('Error:') && !jobsResp.startsWith('ERROR:')) {
+            const jobs = JSON.parse(jobsResp);
+            const failedJobs = jobs.filter(j => j.status === 'failed');
+            if (failedJobs.length > 0) {
+              details.failed_job_logs = failedJobs.map(j => ({
+                name: j.name,
+                log: runGlabApi(`projects/:id/jobs/${j.id}/trace`)
+              }));
+            }
+          }
+        }
+        
+        return JSON.stringify(details, null, 2);
       } catch (e) { return response; }
     }
   },
@@ -484,7 +500,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "3.0.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "3.1.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);

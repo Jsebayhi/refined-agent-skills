@@ -51,7 +51,7 @@ Follow these steps precisely.
 *   **Monitor & Wait for Actions:**
     Use `github_list_workflow_runs` to check CI progress.
 *   **Troubleshoot Checks:**
-    Use `github_get_workflow_run_details` followed by `github_get_job_logs` for failed jobs.
+    Use `github_get_workflow_run_details({ "id": "<ID>", "failed_logs": true })` to see exactly why jobs failed in a single turn.
 
 ### Step 4: Final Verification
 1. Review the tool output for successful API responses.
