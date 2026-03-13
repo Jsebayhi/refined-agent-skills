@@ -11,7 +11,7 @@ metadata:
 
 ## CRITICAL RULES & GUARDRAILS
 *   **Authentication & Fail-Fast:** The `github_*` tools automatically verify authentication. If a tool returns an "ERROR: GitHub authentication failed" message, you MUST stop immediately, inform the user, and ask them to run `gh auth login` in their terminal.
-*   **Precision Feedback (Line Comments):** When creating comments on specific lines (via `github_post_comment` or specialized review tools), you MUST ensure precision. Use `github_run_command` if specialized line-level tools are needed beyond standard PR comments.
+*   **Precision Feedback (Line Comments):** When creating comments on specific lines, you MUST use `github_add_comment_to_review` to ensure precision and prevent out-of-context feedback. Do not guess line numbers; always use the exact line number from the *new* version in the diff.
 *   **Closing the Loop (Resolution):** For GitHub, use `github_post_comment` to acknowledge fixes. Threaded resolution is handled via the PR UI, but ensure all feedback is addressed.
 *   **Security Auditing:** For every code review or PR inspection, you SHOULD check for vulnerabilities. Use `github_list_vulnerabilities` filtered by the current `id` (PR number) to ensure no new security issues were introduced.
 *   **Discovery & Search Mandate:** You MUST use the `github_search` or `github_list_pull_requests` tools for all resource discovery. Do NOT attempt to run raw `gh pr list` commands in the terminal. The MCP tools are optimized for unpaged output and distilled JSON to save context.
@@ -35,21 +35,21 @@ Follow these steps precisely.
 1. If the resource ID is unknown, use `github_search` or `github_list_pull_requests`.
 2. Use `github_view({ "type": "pr", "id": "<NUMBER>" })` to inspect title, description, and status.
 3. Use `github_get_pull_request_diffs({ "id": "<NUMBER>" })` to see the actual code changes.
-4. Use `github_get_pull_request_details({ "id": "<NUMBER>" })` to check mergeability and CI check status.
+4. Use `github_get_pull_request_details({ "id": "<NUMBER>", "full_context": true })` to check mergeability, bundled security findings, and CI check status in one turn.
 
 ### Step 2: Reviewer Workflow (Review Mode)
 *   **Start/Continue Review:** 
-    Use `github_submit_review` with `outcome: "COMMENT"` for iterative feedback.
+    Use `github_add_comment_to_review` for precise, line-level feedback.
 *   **Security Check:**
-    Run `github_list_vulnerabilities` for the current PR. Focus on `critical` and `high` findings.
+    If not already bundled via `full_context`, run `github_list_vulnerabilities` for the current PR. Focus on `critical` and `high` findings.
 *   **Finish Review:**
-    Use `github_submit_review` with `APPROVE` or `REQUEST_CHANGES` to finalize the review.
+    Use `github_submit_review` with `APPROVE` or `REQUEST_CHANGES` to finalize the review and publish pending line comments.
 
 ### Step 3: Submitter Workflow (Delivery)
 *   **Create PR:**
     Use `github_create_pull_request`. Use `fill: true` for automatic metadata from commits.
 *   **Monitor & Wait for Actions:**
-    Use `github_list_workflow_runs` to check CI progress.
+    Use `github_list_workflow_runs` followed by `github_wait_for_workflow_run` to wait for completion deterministically.
 *   **Troubleshoot Checks:**
     Use `github_get_workflow_run_details({ "id": "<ID>", "failed_logs": true })` to see exactly why jobs failed in a single turn.
 

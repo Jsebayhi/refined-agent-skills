@@ -62,6 +62,14 @@ function distillRepo(repo) {
   };
 }
 
+function distillCode(code) {
+  return {
+    path: code.path,
+    repository: code.repository ? code.repository.nameWithOwner : 'unknown',
+    url: code.url
+  };
+}
+
 function distillVulnerability(v) {
   return {
     id: v.number,
@@ -84,10 +92,7 @@ const tools = {
       const args = ['search', s, query, '--json'];
       if (s === 'prs') args.push('number,title,state,author,url,labels,isDraft');
       if (s === 'repos') args.push('nameWithOwner,description,url,stargazerCount');
-      if (s === 'code') {
-        // gh search code is slightly different, let's keep it robust
-        return runGh(['search', 'code', query]);
-      }
+      if (s === 'code') args.push('path,repository,url');
       
       const response = runGh(args);
       if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
@@ -95,6 +100,7 @@ const tools = {
         const results = JSON.parse(response);
         if (s === 'prs') return JSON.stringify(results.map(distillPr), null, 2);
         if (s === 'repos') return JSON.stringify(results.map(distillRepo), null, 2);
+        if (s === 'code') return JSON.stringify(results.map(distillCode), null, 2);
         return response;
       } catch (e) { return response; }
     }
@@ -242,10 +248,32 @@ const tools = {
     run: ({ note_id }) => runGhApi(`repos/{owner}/{repo}/issues/comments/${note_id}`, 'DELETE')
   },
   "github_post_comment": {
-    description: "Post a comment to a PR/Issue.",
+    description: "Post a top-level comment to a PR/Issue.",
     parameters: { id: "string", message: "string" },
     required: ["id", "message"],
     run: ({ id, message }) => runGh(['pr', 'comment', id, '--body', `"${message}"`])
+  },
+  "github_add_comment_to_review": {
+    description: "Add a precise line-level comment to a PR review.",
+    parameters: { id: "string", path: "string", line: "number", message: "string" },
+    required: ["id", "path", "line", "message"],
+    run: ({ id, path, line, message }) => {
+      try {
+        const prInfoResp = runGh(['pr', 'view', id, '--json', 'commits']);
+        if (prInfoResp.startsWith('Error:') || prInfoResp.startsWith('ERROR:')) return prInfoResp;
+        const prInfo = JSON.parse(prInfoResp);
+        if (!prInfo.commits || prInfo.commits.length === 0) return "ERROR: No commits found in PR.";
+        
+        const latestCommit = prInfo.commits[prInfo.commits.length - 1].oid;
+        const payload = {
+          body: message,
+          commit_id: latestCommit,
+          path: path,
+          line: line
+        };
+        return runGhApi(`repos/{owner}/{repo}/pulls/${id}/comments`, 'POST', payload);
+      } catch (e) { return e.message; }
+    }
   },
   "github_submit_review": {
     description: "Submit a full PR review.",
@@ -287,6 +315,25 @@ const tools = {
       return runGh([...args, '--json', 'number,status,conclusion,url,createdAt,updatedAt,jobs']);
     }
   },
+  "github_wait_for_workflow_run": {
+    description: "Wait for a GitHub Actions workflow run to complete (Polling).",
+    parameters: { id: "string", timeout_minutes: "number" },
+    required: ["id"],
+    run: async ({ id, timeout_minutes }) => {
+      const start = Date.now();
+      const timeoutMs = (timeout_minutes || 10) * 60 * 1000;
+      while (Date.now() - start < timeoutMs) {
+        const resp = runGh(['run', 'view', id, '--json', 'status,conclusion']);
+        if (resp.startsWith('Error:') || resp.startsWith('ERROR:')) return resp;
+        try {
+          const run = JSON.parse(resp);
+          if (run.status === 'completed') return `Workflow run ${id} finished with conclusion: ${run.conclusion}`;
+        } catch (e) { /* ignore parse error on polling */ }
+        await new Promise(r => setTimeout(r, 15000));
+      }
+      return `TIMEOUT: Workflow run ${id} did not complete.`;
+    }
+  },
   "github_get_job_logs": {
     description: "Fetch logs for a specific job.",
     parameters: { id: "string" },
@@ -297,7 +344,7 @@ const tools = {
   // --- Security & Vulnerabilities ---
   "github_list_vulnerabilities": {
     description: "List code scanning alerts for a repository or PR.",
-    parameters: { id: "string", severity: "string", state: "string" },
+    parameters: { id: "string", severity: "string", state: "string" }, // id is pr_number
     required: [],
     run: ({ id, severity, state }) => {
       let endpoint = `repos/{owner}/{repo}/code-scanning/alerts?per_page=100`;
@@ -342,7 +389,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "github-mcp", version: "2.2.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "github-mcp", version: "2.3.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);
