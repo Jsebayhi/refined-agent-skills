@@ -10,9 +10,16 @@ const GLAB_ENV = { ...process.env, GLAB_PAGER: 'cat', PAGER: 'cat' };
 function handleGlabError(error) {
   const stderr = error.stderr ? error.stderr.toString() : '';
   const stdout = error.stdout ? error.stdout.toString() : '';
+  const message = error.message || '';
+  
+  if (message.includes('not found') || stderr.includes('not found')) {
+    return "ERROR: 'glab' CLI is not installed or not in PATH. This MCP server requires the GitLab CLI to function. Please install it from https://gitlab.com/gitlab-org/cli";
+  }
+
   if (stderr.includes('glab auth login') || stdout.includes('glab auth login') || stderr.includes('Invalid token')) {
     return "ERROR: GitLab authentication failed. Please run 'glab auth login' in your terminal.";
   }
+  
   return `Error: ${error.message}\nSTDOUT: ${stdout}\nSTDERR: ${stderr}`;
 }
 
@@ -134,13 +141,9 @@ const tools = {
       if (source_branch) args.push('--source-branch', source_branch);
       if (author) args.push('--author', author);
       if (per_page) args.push('--per-page', per_page.toString());
-      
-      // Map state string to boolean flags
       if (state === 'closed') args.push('--closed');
       else if (state === 'merged') args.push('--merged');
       else if (state === 'all') args.push('--all');
-      // 'opened' is default, no flag needed
-      
       return runGlab(args);
     }
   },
@@ -428,7 +431,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.8.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.9.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);
