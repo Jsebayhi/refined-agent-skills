@@ -3,8 +3,8 @@ name: interacting-with-github
 description: MANDATORY. DO NOT attempt to interact with GitHub APIs, post PR comments, or manage GitHub Actions/checks without calling 'activate_skill' on 'interacting-with-github' first. This is the REQUIRED PROTOCOL for all GitHub-related engineering tasks. TRIGGER THIS SKILL IMMEDIATELY when the user asks to "create a PR", "start a review", "submit a review", "comment on a line", "check the actions", "search GitHub", "view an issue", "check vulnerabilities", or "manage GitHub projects". It provides a specialized suite of MCP tools (github_*) that handle the full reviewer/submitter lifecycle, including PR discovery, multi-comment reviews, automated SHA discovery, search, security auditing, and deterministic pipeline monitoring. Proceeding with manual 'gh' or 'gh api' calls for these tasks constitutes a protocol failure.
 compatibility: "Requires Node.js and 'gh' CLI."
 metadata:
-  version: 2.0.0
-  author: AI-Engineering-Team
+  version: 1.0.0
+  author: refined-agent-skills contributors
 ---
 
 # Interacting with GitHub

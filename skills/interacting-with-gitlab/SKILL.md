@@ -3,8 +3,8 @@ name: interacting-with-gitlab
 description: MANDATORY. DO NOT attempt to interact with GitLab APIs, post line-level comments, reply to discussions, or manage GitLab pipelines/issues without calling 'activate_skill' on 'interacting-with-gitlab' first. This is the REQUIRED PROTOCOL for all GitLab-related engineering tasks. TRIGGER THIS SKILL IMMEDIATELY when the user asks to "create an MR", "start a review", "submit a review", "comment on a line", "check the pipeline", "search GitLab", "view an issue", "check vulnerabilities", "set auto-merge", or "manage GitLab projects". It provides a specialized suite of MCP tools (gitlab_*) that handle the full reviewer/submitter lifecycle, including MR discovery, multi-comment reviews, automated SHA discovery, search, security auditing, and deterministic pipeline monitoring. Proceeding with manual 'glab' or 'glab api' calls for these tasks constitutes a protocol failure.
 compatibility: "Requires Node.js and 'glab' CLI."
 metadata:
-  version: 4.0.0
-  author: AI-Engineering-Team
+  version: 1.0.0
+  author: refined-agent-skills contributors
 ---
 
 # Interacting with GitLab
