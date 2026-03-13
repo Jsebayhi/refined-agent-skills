@@ -11,14 +11,9 @@ metadata:
 
 ## CRITICAL RULES & GUARDRAILS
 *   **Authentication & Fail-Fast:** The `gitlab:*` tools automatically verify authentication. If a tool returns an "ERROR: GitLab authentication failed" message, you MUST stop immediately, inform the user, and ask them to run `glab auth login` in their terminal.
+*   **Precision Feedback (Line Comments):** When creating comments on specific lines (via `add_comment_to_review` or `post_comment`), you MUST provide the `path` and the `line` number as they appear in the **NEW** version of the file (the diff). Do not guess line numbers.
+*   **Closing the Loop (Resolution):** To resolve a discussion thread, use `gitlab:reply_to_discussion` with `resolve: true`. This is the standard way to verify a fix and clean up the MR for merging.
 *   **MCP-First Mandate:** You MUST use the `gitlab:*` MCP tools for all discovery and interaction tasks. These tools are pre-configured to handle non-interactive execution and `GLAB_PAGER=cat` automatically.
-*   **Review Lifecycle (Reviewer):** 
-    1. **Drafting:** Use `gitlab:add_comment_to_review` to add multiple comments. This puts you in "Review Mode"; comments are NOT visible to the author until you submit.
-    2. **Submitting:** Once all comments are ready, use `gitlab:submit_review` with an outcome (`APPROVE`, `REQUEST_CHANGES`, or `COMMENT`). This publishes all your comments in a single batch.
-*   **Submitter Lifecycle:**
-    1. Use `gitlab:run` with `mr create` to open a PR.
-    2. Use `gitlab:list_pipeline_jobs` and `gitlab:get_job_trace` to monitor and troubleshoot CI.
-    3. Use `gitlab:set_auto_merge` once the review is satisfactory to ensure the MR merges as soon as the pipeline passes.
 
 ## WORKFLOW: [Plan-Validate-Execute Pattern]
 
@@ -41,7 +36,9 @@ Follow these steps precisely.
 
 ### Step 2: Reviewer Workflow (Review Mode)
 *   **Start/Continue Review:** 
-    Use `gitlab:add_comment_to_review` for every comment.
+    Use `gitlab:add_comment_to_review` for every comment. Ensure `path` and `line` (new version) are exact.
+*   **Resolve & Reply:**
+    If a reviewer comment is addressed, use `gitlab:reply_to_discussion` with `resolve: true`.
 *   **Finish Review:**
     Use `gitlab:submit_review` to publish all comments at once and set the final status.
 
@@ -56,4 +53,4 @@ Follow these steps precisely.
 2. If a tool fails with a `409 Conflict`, the SHAs for the MR have likely changed; re-fetch details and retry.
 
 ## 📚 References
-*   `references/gitlab-api-cheatsheet.md`: Payload structures and error handling for GitLab API.
+*   `references/gitlab-api-cheatsheet.md`: Workflow orchestration and error handling.
