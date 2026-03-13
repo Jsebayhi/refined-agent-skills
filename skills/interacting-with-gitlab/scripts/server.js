@@ -33,7 +33,10 @@ function runGlabApi(endpoint, method = 'GET', data = null) {
   let cmd = `glab api "${endpoint}"`;
   if (method !== 'GET') cmd += ` --method ${method}`;
   let input = undefined;
-  if (data) { input = JSON.stringify(data); cmd += ` --input -`; }
+  if (data) { 
+    input = JSON.stringify(data); 
+    cmd += ` --input - -H "Content-Type: application/json"`; 
+  }
   try { return execSync(cmd, { input, env: GLAB_ENV, encoding: 'utf-8' }); }
   catch (error) { return handleGlabError(error); }
 }
