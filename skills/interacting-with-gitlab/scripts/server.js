@@ -47,17 +47,42 @@ function getMrDiffRefs(iid) {
 }
 
 const tools = {
+  "gitlab:search": {
+    description: "Search for projects, issues, or merge requests across GitLab.",
+    parameters: { 
+      query: "string", 
+      scope: "string" // projects, issues, merge_requests, milestones, users
+    },
+    run: ({ query, scope }) => {
+      return runGlabApi(`search?scope=${scope || 'projects'}&search=${encodeURIComponent(query)}`);
+    }
+  },
+  "gitlab:view": {
+    description: "View details of a specific Merge Request, Issue, or Repository.",
+    parameters: { 
+      type: "string", // mr, issue, repo
+      id: "string",   // IID for MR/Issue, Project path for repo
+      comments: "boolean" 
+    },
+    run: ({ type, id, comments }) => {
+      const args = [type, 'view'];
+      if (id) args.push(id);
+      if (comments) args.push('--comments');
+      return runGlab(args);
+    }
+  },
+  "gitlab:get_mr_diffs": {
+    description: "Fetch the diffs for a specific Merge Request.",
+    parameters: { iid: "string" },
+    run: ({ iid }) => {
+      return runGlab(['mr', 'diff', iid]);
+    }
+  },
   "gitlab:create_mr": {
     description: "Create a new Merge Request. Can optionally enable auto-merge immediately.",
     parameters: { 
-      title: "string", 
-      description: "string", 
-      source_branch: "string", 
-      target_branch: "string", 
-      labels: "string", 
-      fill: "boolean",
-      draft: "boolean",
-      auto_merge: "boolean"
+      title: "string", description: "string", source_branch: "string", target_branch: "string", 
+      labels: "string", fill: "boolean", draft: "boolean", auto_merge: "boolean"
     },
     run: ({ title, description, source_branch, target_branch, labels, fill, draft, auto_merge }) => {
       const args = ['mr', 'create', '--yes'];
@@ -73,7 +98,6 @@ const tools = {
       if (createResp.startsWith('Error:') || createResp.startsWith('ERROR:')) return createResp;
       
       if (auto_merge) {
-        // Extract IID from creation response (e.g., "!123" or "merge_requests/123")
         const match = createResp.match(/!(\d+)/) || createResp.match(/merge_requests\/(\d+)/);
         if (match) {
           const iid = match[1];
@@ -81,7 +105,6 @@ const tools = {
           return `${createResp}\n\nAUTO-MERGE: ${autoMergeResp}`;
         }
       }
-      
       return createResp;
     }
   },
@@ -208,9 +231,8 @@ const tools = {
         const response = runGlabApi(`projects/:id/pipelines/${pipeline_id}`);
         if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
         const pipeline = JSON.parse(response);
-        const status = pipeline.status;
-        if (['success', 'failed', 'canceled', 'skipped', 'manual'].includes(status)) {
-          return `Pipeline ${pipeline_id} finished with status: ${status}`;
+        if (['success', 'failed', 'canceled', 'skipped', 'manual'].includes(pipeline.status)) {
+          return `Pipeline ${pipeline_id} finished with status: ${pipeline.status}`;
         }
         await new Promise(resolve => setTimeout(resolve, 15000));
       }
@@ -262,7 +284,7 @@ async function main() {
       if (request.method === 'initialize') {
         console.log(JSON.stringify({
           jsonrpc: "2.0", id: request.id,
-          result: { capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "1.6.0" } }
+          result: { capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "1.7.0" } }
         }));
       } else if (request.method === 'list_tools') {
         console.log(JSON.stringify({
@@ -273,7 +295,7 @@ async function main() {
               inputSchema: {
                 type: "object",
                 properties: Object.fromEntries(Object.entries(info.parameters).map(([p, type]) => [p, { type }])),
-                required: (name === "gitlab:update_mr" || name === "gitlab:reply_to_discussion" || name === "gitlab:resolve_discussion" || name === "gitlab:create_mr" || name === "gitlab:wait_for_pipeline") ? ["iid", "discussion_id", "pipeline_id"] : Object.keys(info.parameters)
+                required: (name === "gitlab:update_mr" || name === "gitlab:reply_to_discussion" || name === "gitlab:resolve_discussion" || name === "gitlab:create_mr" || name === "gitlab:wait_for_pipeline" || name === "gitlab:view") ? ["type", "iid", "discussion_id", "pipeline_id"] : Object.keys(info.parameters)
               }
             }))
           }
