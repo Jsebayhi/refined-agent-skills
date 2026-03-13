@@ -46,13 +46,6 @@ function distillMr(mr) {
   };
 }
 
-function distillIssue(issue) {
-  return {
-    iid: issue.iid, title: issue.title, state: issue.state,
-    web_url: issue.web_url, labels: issue.labels
-  };
-}
-
 function distillProject(project) {
   return {
     id: project.id, name: project.name, path_with_namespace: project.path_with_namespace,
@@ -62,7 +55,7 @@ function distillProject(project) {
 }
 
 const tools = {
-  // --- Discovery ---
+  // --- Discovery & Research ---
   "gitlab_search": {
     description: "Search for projects, issues, or merge requests globally.",
     parameters: { query: "string", scope: "string" },
@@ -75,7 +68,6 @@ const tools = {
         if (!Array.isArray(results)) return response;
         const s = scope || 'projects';
         if (s === 'merge_requests') return JSON.stringify(results.map(distillMr), null, 2);
-        if (s === 'issues') return JSON.stringify(results.map(distillIssue), null, 2);
         if (s === 'projects') return JSON.stringify(results.map(distillProject), null, 2);
         return JSON.stringify(results, null, 2);
       } catch (e) { return response; }
@@ -92,54 +84,34 @@ const tools = {
       return runGlab(args);
     }
   },
-
-  // --- Issues ---
-  "gitlab_list_issues": {
-    description: "List project issues with filters.",
-    parameters: { project: "string", state: "string", labels: "string", author: "string", per_page: "number" },
+  "gitlab_list_repository_tree": {
+    description: "List files in a repository directory.",
+    parameters: { path: "string", ref: "string" },
     required: [],
-    run: ({ project, state, labels, author, per_page }) => {
-      const args = ['issue', 'list'];
-      if (project) args.push('--repo', project);
-      if (state) args.push('--state', state);
-      if (labels) args.push('--label', labels);
-      if (author) args.push('--author', author);
-      if (per_page) args.push('--per-page', per_page.toString());
-      return runGlab(args);
+    run: ({ path, ref }) => {
+      let endpoint = `projects/:id/repository/tree`;
+      const params = [];
+      if (path) params.push(`path=${encodeURIComponent(path)}`);
+      if (ref) params.push(`ref=${ref}`);
+      if (params.length > 0) endpoint += `?${params.join('&')}`;
+      const response = runGlabApi(endpoint);
+      if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
+      try {
+        return JSON.stringify(JSON.parse(response).map(i => ({ name: i.name, type: i.type, path: i.path })), null, 2);
+      } catch (e) { return response; }
     }
   },
-  "gitlab_create_issue": {
-    description: "Create a new issue.",
-    parameters: { title: "string", description: "string", labels: "string", confidential: "boolean" },
-    required: ["title"],
-    run: ({ title, description, labels, confidential }) => {
-      const args = ['issue', 'create', '--title', `"${title}"`, '--yes'];
-      if (description) args.push('--description', `"${description}"`);
-      if (labels) args.push('--label', `"${labels}"`);
-      if (confidential) args.push('--confidential');
-      return runGlab(args);
+  "gitlab_get_repository_file": {
+    description: "Fetch raw content of a file from the repository.",
+    parameters: { path: "string", ref: "string" },
+    required: ["path"],
+    run: ({ path, ref }) => {
+      const encodedPath = encodeURIComponent(path);
+      return runGlabApi(`projects/:id/repository/files/${encodedPath}/raw?ref=${ref || 'main'}`);
     }
-  },
-  "gitlab_update_issue": {
-    description: "Update an issue.",
-    parameters: { iid: "string", title: "string", description: "string", labels: "string" },
-    required: ["iid"],
-    run: ({ iid, title, description, labels }) => {
-      const args = ['issue', 'update', iid];
-      if (title) args.push('--title', `"${title}"`);
-      if (description) args.push('--description', `"${description}"`);
-      if (labels) args.push('--label', `"${labels}"`);
-      return runGlab(args);
-    }
-  },
-  "gitlab_close_issue": {
-    description: "Close an issue.",
-    parameters: { iid: "string" },
-    required: ["iid"],
-    run: ({ iid }) => runGlab(['issue', 'close', iid])
   },
 
-  // --- Merge Requests ---
+  // --- PR / Merge Request Management ---
   "gitlab_list_mrs": {
     description: "List Merge Requests with filters.",
     parameters: { project: "string", state: "string", labels: "string", source_branch: "string", author: "string", per_page: "number" },
@@ -217,7 +189,7 @@ const tools = {
     run: ({ iid }) => runGlab(['mr', 'diff', iid])
   },
 
-  // --- Feedback & Discussions ---
+  // --- Feedback & Review Lifecycle ---
   "gitlab_post_comment": {
     description: "Post a comment to an MR that is published IMMEDIATELY.",
     parameters: { iid: "string", path: "string", line: "number", message: "string" },
@@ -303,7 +275,7 @@ const tools = {
     run: ({ iid, discussion_id, resolved }) => runGlabApi(`projects/:id/merge_requests/${iid}/discussions/${discussion_id}?resolved=${resolved}`, 'PUT')
   },
 
-  // --- CI/CD & Pipelines ---
+  // --- CI/CD Monitoring ---
   "gitlab_list_pipelines": {
     description: "List recent CI pipelines.",
     parameters: { status: "string", ref: "string" },
@@ -373,62 +345,14 @@ const tools = {
     required: ["job_id"],
     run: ({ job_id }) => runGlabApi(`projects/:id/jobs/${job_id}/trace`)
   },
-
-  // --- Variables ---
-  "gitlab_list_variables": {
-    description: "List CI/CD variables for a project or group.",
-    parameters: { project: "string", scope: "string" }, // scope: project or group
-    required: [],
-    run: ({ project, scope }) => {
-      const args = ['variable', 'list'];
-      if (project) args.push('--repo', project);
-      if (scope === 'group') args.push('--group', ''); // glab uses --group flag without value if selecting current group
-      return runGlab(args);
-    }
-  },
-  "gitlab_set_variable": {
-    description: "Set a CI/CD variable.",
-    parameters: { key: "string", value: "string", project: "string", scope: "string", protected: "boolean", masked: "boolean" },
-    required: ["key", "value"],
-    run: ({ key, value, project, scope, protected, masked }) => {
-      const args = ['variable', 'set', key, value];
-      if (project) args.push('--repo', project);
-      if (scope === 'group') args.push('--group');
-      if (protected) args.push('--protected');
-      if (masked) args.push('--masked');
-      return runGlab(args);
-    }
+  "gitlab_set_auto_merge": {
+    description: "Enable auto-merge for an MR.",
+    parameters: { iid: "string" },
+    required: ["iid"],
+    run: ({ iid }) => runGlab(['mr', 'merge', iid, '--auto', '--yes'])
   },
 
-  // --- Repository & Files ---
-  "gitlab_list_repository_tree": {
-    description: "List files in a repository directory.",
-    parameters: { path: "string", ref: "string" },
-    required: [],
-    run: ({ path, ref }) => {
-      let endpoint = `projects/:id/repository/tree`;
-      const params = [];
-      if (path) params.push(`path=${encodeURIComponent(path)}`);
-      if (ref) params.push(`ref=${ref}`);
-      if (params.length > 0) endpoint += `?${params.join('&')}`;
-      const response = runGlabApi(endpoint);
-      if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
-      try {
-        return JSON.stringify(JSON.parse(response).map(i => ({ name: i.name, type: i.type, path: i.path })), null, 2);
-      } catch (e) { return response; }
-    }
-  },
-  "gitlab_get_repository_file": {
-    description: "Fetch raw content of a file from the repository.",
-    parameters: { path: "string", ref: "string" },
-    required: ["path"],
-    run: ({ path, ref }) => {
-      const encodedPath = encodeURIComponent(path);
-      return runGlabApi(`projects/:id/repository/files/${encodedPath}/raw?ref=${ref || 'main'}`);
-    }
-  },
-
-  // --- Labels ---
+  // --- Helpers ---
   "gitlab_list_labels": {
     description: "List available project labels.",
     parameters: { project: "string" },
@@ -452,7 +376,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.4.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.5.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);
