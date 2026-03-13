@@ -76,7 +76,7 @@ function distillVulnerability(v) {
 const tools = {
   // --- Discovery & Research ---
   "github_search": {
-    description: "Search for repositories, or pull requests globally.",
+    description: "Search for repositories, pull requests, or code globally.",
     parameters: { query: "string", scope: "string" },
     required: ["query"],
     run: ({ query, scope }) => {
@@ -84,6 +84,10 @@ const tools = {
       const args = ['search', s, query, '--json'];
       if (s === 'prs') args.push('number,title,state,author,url,labels,isDraft');
       if (s === 'repos') args.push('nameWithOwner,description,url,stargazerCount');
+      if (s === 'code') {
+        // gh search code is slightly different, let's keep it robust
+        return runGh(['search', 'code', query]);
+      }
       
       const response = runGh(args);
       if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
@@ -125,7 +129,6 @@ const tools = {
     parameters: { path: "string", branch: "string" },
     required: ["path"],
     run: ({ path, branch }) => {
-      // For raw content, gh api --raw or specific headers are needed.
       return runGh(['api', `repos/{owner}/{repo}/contents/${path}${branch ? '?ref=' + branch : ''}`, '-H', 'Accept: application/vnd.github.v3.raw']);
     }
   },
@@ -174,22 +177,41 @@ const tools = {
     }
   },
   "github_get_pull_request_details": {
-    description: "Fetch full PR details (Distilled summary).",
-    parameters: { id: "string" },
+    description: "Fetch full PR details. Set 'full_context: true' to bundle security and checks.",
+    parameters: { id: "string", full_context: "boolean" },
     required: ["id"],
-    run: ({ id }) => {
+    run: async ({ id, full_context }) => {
       const response = runGh(['pr', 'view', id, '--json', 'number,title,state,author,url,labels,isDraft,body,baseRefName,headRefName,mergeable,statusCheckRollup']);
       if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
       try {
         const pr = JSON.parse(response);
-        return JSON.stringify({
+        const details = {
           ...distillPr(pr),
           body: pr.body ? pr.body.substring(0, 500) + (pr.body.length > 500 ? '...' : '') : '',
           base: pr.baseRefName,
           head: pr.headRefName,
           mergeable: pr.mergeable,
           checks: pr.statusCheckRollup ? pr.statusCheckRollup.map(c => ({ name: c.name || c.context, state: c.state || c.status, status: c.conclusion })) : []
-        }, null, 2);
+        };
+
+        if (full_context) {
+          const [vulnResp, commResp] = await Promise.all([
+            runGhApi(`repos/{owner}/{repo}/code-scanning/alerts?pr=${id}&state=open`),
+            runGhApi(`repos/{owner}/{repo}/issues/${id}/comments?per_page=50`)
+          ]);
+
+          if (!vulnResp.startsWith('Error:')) {
+            const vulns = JSON.parse(vulnResp);
+            details.critical_vulnerabilities = vulns.map(distillVulnerability);
+          }
+
+          if (!commResp.startsWith('Error:')) {
+            const comments = JSON.parse(commResp);
+            details.recent_comments = comments.slice(-5).map(c => ({ author: c.user.login, body: c.body.substring(0, 100) + '...' }));
+          }
+        }
+
+        return JSON.stringify(details, null, 2);
       } catch (e) { return response; }
     }
   },
@@ -203,7 +225,7 @@ const tools = {
   // --- Feedback & Review Lifecycle ---
   "github_get_comment": {
     description: "Fetch details of a specific comment from a PR/Issue.",
-    parameters: { id: "string", note_id: "string" }, // note_id used for consistency with gitlab
+    parameters: { id: "string", note_id: "string" },
     required: ["id", "note_id"],
     run: ({ note_id }) => runGhApi(`repos/{owner}/{repo}/issues/comments/${note_id}`)
   },
@@ -275,7 +297,7 @@ const tools = {
   // --- Security & Vulnerabilities ---
   "github_list_vulnerabilities": {
     description: "List code scanning alerts for a repository or PR.",
-    parameters: { id: "string", severity: "string", state: "string" }, // id is pr_number
+    parameters: { id: "string", severity: "string", state: "string" },
     required: [],
     run: ({ id, severity, state }) => {
       let endpoint = `repos/{owner}/{repo}/code-scanning/alerts?per_page=100`;
@@ -320,7 +342,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "github-mcp", version: "2.1.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "github-mcp", version: "2.2.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);

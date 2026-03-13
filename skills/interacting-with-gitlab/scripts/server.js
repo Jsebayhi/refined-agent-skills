@@ -82,22 +82,34 @@ function distillVulnerability(v) {
   };
 }
 
+function distillBlob(blob) {
+  return {
+    path: blob.path,
+    filename: blob.filename,
+    basename: blob.basename,
+    ref: blob.ref,
+    start_line: blob.start_line,
+    project_id: blob.project_id
+  };
+}
+
 const tools = {
   // --- Discovery & Research ---
   "gitlab_search": {
-    description: "Search for projects, issues, or merge requests globally.",
+    description: "Search for projects, issues, merge requests, or code globally.",
     parameters: { query: "string", scope: "string" },
     required: ["query"],
     run: ({ query, scope }) => {
-      const response = runGlabApi(`search?scope=${scope || 'projects'}&search=${encodeURIComponent(query)}`);
+      const s = scope || 'projects';
+      const response = runGlabApi(`search?scope=${s}&search=${encodeURIComponent(query)}`);
       if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
       try {
         const results = JSON.parse(response);
         if (!Array.isArray(results)) return response;
-        const s = scope || 'projects';
         if (s === 'merge_requests') return JSON.stringify(results.map(distillMr), null, 2);
         if (s === 'issues') return JSON.stringify(results.map(distillIssue), null, 2);
         if (s === 'projects') return JSON.stringify(results.map(distillProject), null, 2);
+        if (s === 'blobs') return JSON.stringify(results.map(distillBlob), null, 2);
         return JSON.stringify(results, null, 2);
       } catch (e) { return response; }
     }
@@ -195,21 +207,43 @@ const tools = {
     }
   },
   "gitlab_get_pull_request_details": {
-    description: "Fetch full MR details via API (Distilled summary).",
-    parameters: { id: "string" },
+    description: "Fetch full MR details via API. Set 'full_context: true' to bundle security and discussions.",
+    parameters: { id: "string", full_context: "boolean" },
     required: ["id"],
-    run: ({ id }) => {
+    run: async ({ id, full_context }) => {
       const response = runGlabApi(`projects/:id/merge_requests/${id}`);
       if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
       try {
         const mr = JSON.parse(response);
-        return JSON.stringify({
+        const details = {
           ...distillMr(mr),
           description: mr.description ? mr.description.substring(0, 500) + (mr.description.length > 500 ? '...' : '') : '',
           diff_refs: mr.diff_refs, merge_status: mr.merge_status, has_conflicts: mr.has_conflicts,
           blocking_discussions_resolved: mr.blocking_discussions_resolved,
           pipeline: mr.pipeline ? { id: mr.pipeline.id, status: mr.pipeline.status } : null
-        }, null, 2);
+        };
+
+        if (full_context) {
+          // Parallel fetch security and discussions
+          const [vulnResp, discResp] = await Promise.all([
+            details.pipeline ? runGlabApi(`projects/:id/vulnerability_findings?pipeline_id=${details.pipeline.id}&severity=high,critical`) : Promise.resolve('[]'),
+            runGlabApi(`projects/:id/merge_requests/${id}/discussions`)
+          ]);
+
+          if (!vulnResp.startsWith('Error:')) {
+            const vulns = JSON.parse(vulnResp);
+            details.critical_vulnerabilities = vulns.map(distillVulnerability);
+          }
+
+          if (!discResp.startsWith('Error:')) {
+            const discs = JSON.parse(discResp);
+            details.unresolved_discussions = discs
+              .filter(d => d.notes.some(n => n.resolvable && !n.resolved))
+              .map(d => ({ id: d.id, notes: d.notes.map(n => ({ author: n.author.username, body: n.body.substring(0, 100) + '...' })) }));
+          }
+        }
+
+        return JSON.stringify(details, null, 2);
       } catch (e) { return response; }
     }
   },
@@ -500,7 +534,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "3.1.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "3.2.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);
