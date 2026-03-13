@@ -51,8 +51,8 @@ This suite follows an **"Orchestrator + Specialized Experts"** architecture. For
 ### 6. Delivery & Collaboration (The "Submission")
 *   **[Collaborating on Git Projects](skills/collaborating-on-git-projects/SKILL.md)**: Dual-platform (gh/glab) support, Conventional Commits, and PRB rationale.
     *   *Triggers*: "create a PR", "open a merge request", "PR standards".
-*   **[Interacting with GitLab](skills/interacting-with-gitlab/SKILL.md)**: Production-grade GitLab management using `gitlab:*` MCP tools. Supports precise line-level feedback, discussion thread management, and pipeline/job monitoring.
-    *   *Triggers*: "comment on a line", "reply to a PR comment", "answer a discussion", "check the pipeline", "list issues".
+*   **[Interacting with GitLab](skills/interacting-with-gitlab/SKILL.md)**: Production-grade GitLab management using `gitlab_*` MCP tools. Supports precise line-level feedback, discussion thread management, security auditing, and pipeline monitoring.
+    *   *Triggers*: "comment on a line", "start a GitLab review", "edit a draft comment", "check vulnerabilities", "answer a discussion", "check the pipeline".
 *   **[Authoring Effective User Documentation](skills/authoring-effective-user-documentation/SKILL.md)**: Enforces Diátaxis and "Documentation is Code."
     *   *Triggers*: "update the readme", "write documentation", "create a user guide".
 

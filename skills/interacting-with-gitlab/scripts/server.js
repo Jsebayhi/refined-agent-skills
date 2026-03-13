@@ -56,6 +56,13 @@ function distillMr(mr) {
   };
 }
 
+function distillIssue(issue) {
+  return {
+    iid: issue.iid, title: issue.title, state: issue.state,
+    web_url: issue.web_url, labels: issue.labels
+  };
+}
+
 function distillProject(project) {
   return {
     id: project.id, name: project.name, path_with_namespace: project.path_with_namespace,
@@ -89,6 +96,7 @@ const tools = {
         if (!Array.isArray(results)) return response;
         const s = scope || 'projects';
         if (s === 'merge_requests') return JSON.stringify(results.map(distillMr), null, 2);
+        if (s === 'issues') return JSON.stringify(results.map(distillIssue), null, 2);
         if (s === 'projects') return JSON.stringify(results.map(distillProject), null, 2);
         return JSON.stringify(results, null, 2);
       } catch (e) { return response; }
@@ -476,7 +484,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.12.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.13.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);
