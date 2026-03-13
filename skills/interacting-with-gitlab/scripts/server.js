@@ -38,15 +38,60 @@ function getMrDiffRefs(iid) {
   return mr.diff_refs;
 }
 
+function distillMr(mr) {
+  return {
+    iid: mr.iid,
+    project_id: mr.project_id,
+    title: mr.title,
+    state: mr.state,
+    author: mr.author ? mr.author.username : 'unknown',
+    web_url: mr.web_url,
+    labels: mr.labels,
+    draft: mr.draft
+  };
+}
+
+function distillIssue(issue) {
+  return {
+    iid: issue.iid,
+    title: issue.title,
+    state: issue.state,
+    web_url: issue.web_url,
+    labels: issue.labels
+  };
+}
+
+function distillProject(project) {
+  return {
+    id: project.id,
+    name: project.name,
+    path_with_namespace: project.path_with_namespace,
+    description: project.description ? project.description.substring(0, 100) + '...' : '',
+    web_url: project.web_url
+  };
+}
+
 const tools = {
   "gitlab_search": {
-    description: "Search projects, issues, or MRs globally across GitLab.",
+    description: "Search for projects, issues, or merge requests globally across GitLab.",
     parameters: { query: "string", scope: "string" },
     required: ["query"],
-    run: ({ query, scope }) => runGlabApi(`search?scope=${scope || 'projects'}&search=${encodeURIComponent(query)}`)
+    run: ({ query, scope }) => {
+      const response = runGlabApi(`search?scope=${scope || 'projects'}&search=${encodeURIComponent(query)}`);
+      if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
+      try {
+        const results = JSON.parse(response);
+        if (!Array.isArray(results)) return response;
+        const s = scope || 'projects';
+        if (s === 'merge_requests') return JSON.stringify(results.map(distillMr), null, 2);
+        if (s === 'issues') return JSON.stringify(results.map(distillIssue), null, 2);
+        if (s === 'projects') return JSON.stringify(results.map(distillProject), null, 2);
+        return JSON.stringify(results, null, 2);
+      } catch (e) { return response; }
+    }
   },
   "gitlab_view": {
-    description: "View details of an MR, Issue, or Repo.",
+    description: "View details of an MR, Issue, or Repo. Returns a formatted text summary.",
     parameters: { type: "string", id: "string", comments: "boolean" },
     required: ["type"],
     run: ({ type, id, comments }) => {
@@ -113,10 +158,25 @@ const tools = {
     }
   },
   "gitlab_get_mr_details": {
-    description: "Fetch full MR details via API.",
+    description: "Fetch full MR details via API (Distilled summary).",
     parameters: { iid: "string" },
     required: ["iid"],
-    run: ({ iid }) => runGlabApi(`projects/:id/merge_requests/${iid}`)
+    run: ({ iid }) => {
+      const response = runGlabApi(`projects/:id/merge_requests/${iid}`);
+      if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
+      try {
+        const mr = JSON.parse(response);
+        return JSON.stringify({
+          ...distillMr(mr),
+          description: mr.description ? mr.description.substring(0, 500) + (mr.description.length > 500 ? '...' : '') : '',
+          diff_refs: mr.diff_refs,
+          merge_status: mr.merge_status,
+          has_conflicts: mr.has_conflicts,
+          blocking_discussions_resolved: mr.blocking_discussions_resolved,
+          pipeline: mr.pipeline ? { id: mr.pipeline.id, status: mr.pipeline.status } : null
+        }, null, 2);
+      } catch (e) { return response; }
+    }
   },
   "gitlab_post_comment": {
     description: "Post a comment to an MR that is published IMMEDIATELY.",
@@ -223,7 +283,17 @@ const tools = {
     description: "Fetch pipeline details.",
     parameters: { pipeline_id: "string" },
     required: ["pipeline_id"],
-    run: ({ pipeline_id }) => runGlabApi(`projects/:id/pipelines/${pipeline_id}`)
+    run: ({ pipeline_id }) => {
+      const response = runGlabApi(`projects/:id/pipelines/${pipeline_id}`);
+      if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
+      try {
+        const p = JSON.parse(response);
+        return JSON.stringify({
+          id: p.id, iid: p.iid, project_id: p.project_id, status: p.status, ref: p.ref, web_url: p.web_url,
+          created_at: p.created_at, updated_at: p.updated_at, started_at: p.started_at, finished_at: p.finished_at, duration: p.duration
+        }, null, 2);
+      } catch (e) { return response; }
+    }
   },
   "gitlab_wait_for_pipeline": {
     description: "Wait for pipeline completion (Polling).",
@@ -249,8 +319,10 @@ const tools = {
     run: ({ pipeline_id }) => {
       const resp = runGlabApi(`projects/:id/pipelines/${pipeline_id}/jobs`);
       if (resp.startsWith('Error:') || resp.startsWith('ERROR:')) return resp;
-      const jobs = JSON.parse(resp);
-      return JSON.stringify(jobs.map(j => ({ id: j.id, name: j.name, status: j.status })), null, 2);
+      try {
+        const jobs = JSON.parse(resp);
+        return JSON.stringify(jobs.map(j => ({ id: j.id, name: j.name, status: j.status, stage: j.stage, web_url: j.web_url })), null, 2);
+      } catch (e) { return resp; }
     }
   },
   "gitlab_get_job_trace": {
@@ -289,7 +361,9 @@ const tools = {
       if (params.length > 0) endpoint += `?${params.join('&')}`;
       const response = runGlabApi(endpoint);
       if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
-      return JSON.stringify(JSON.parse(response).map(i => ({ name: i.name, type: i.type, path: i.path })), null, 2);
+      try {
+        return JSON.stringify(JSON.parse(response).map(i => ({ name: i.name, type: i.type, path: i.path })), null, 2);
+      } catch (e) { return response; }
     }
   },
   "gitlab_get_repository_file": {
@@ -314,7 +388,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.1.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "2.2.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);
