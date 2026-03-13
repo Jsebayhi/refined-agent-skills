@@ -45,16 +45,13 @@ Follow these steps precisely.
 
 ### Step 3: Submitter Workflow (Delivery)
 *   **Create MR:**
-    Use `gitlab:create_mr` to open a new Merge Request.
+    Use `gitlab:create_mr` to open a new Merge Request. Use `fill: true` for automatic metadata and `auto_merge: true` to enable merging when CI succeeds.
 *   **Monitor & Wait for CI:**
     Use `gitlab:list_pipelines` to identify the current pipeline ID, then `gitlab:wait_for_pipeline` to wait for completion.
-    ```json
-    gitlab:wait_for_pipeline({ "pipeline_id": "88888", "timeout_minutes": 15 })
-    ```
 *   **Troubleshoot Pipeline:**
     Use `gitlab:list_pipeline_jobs` followed by `gitlab:get_job_trace` for failed jobs.
-*   **Set Auto-Merge:**
-    Use `gitlab:set_auto_merge({ "iid": "123" })`.
+*   **Set Auto-Merge (Post-Creation):**
+    If the MR was created without auto-merge, use `gitlab:set_auto_merge({ "iid": "123" })`.
 
 ### Step 4: Verification
 1. Review the tool output for successful API responses.

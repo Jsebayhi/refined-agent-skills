@@ -48,7 +48,7 @@ function getMrDiffRefs(iid) {
 
 const tools = {
   "gitlab:create_mr": {
-    description: "Create a new Merge Request.",
+    description: "Create a new Merge Request. Can optionally enable auto-merge immediately.",
     parameters: { 
       title: "string", 
       description: "string", 
@@ -56,9 +56,10 @@ const tools = {
       target_branch: "string", 
       labels: "string", 
       fill: "boolean",
-      draft: "boolean"
+      draft: "boolean",
+      auto_merge: "boolean"
     },
-    run: ({ title, description, source_branch, target_branch, labels, fill, draft }) => {
+    run: ({ title, description, source_branch, target_branch, labels, fill, draft, auto_merge }) => {
       const args = ['mr', 'create', '--yes'];
       if (fill) args.push('--fill');
       if (title) args.push('--title', `"${title}"`);
@@ -67,7 +68,21 @@ const tools = {
       if (target_branch) args.push('--target-branch', target_branch);
       if (labels) args.push('--label', `"${labels}"`);
       if (draft) args.push('--draft');
-      return runGlab(args);
+      
+      const createResp = runGlab(args);
+      if (createResp.startsWith('Error:') || createResp.startsWith('ERROR:')) return createResp;
+      
+      if (auto_merge) {
+        // Extract IID from creation response (e.g., "!123" or "merge_requests/123")
+        const match = createResp.match(/!(\d+)/) || createResp.match(/merge_requests\/(\d+)/);
+        if (match) {
+          const iid = match[1];
+          const autoMergeResp = runGlab(['mr', 'merge', iid, '--auto', '--yes']);
+          return `${createResp}\n\nAUTO-MERGE: ${autoMergeResp}`;
+        }
+      }
+      
+      return createResp;
     }
   },
   "gitlab:get_mr_details": {
@@ -197,7 +212,6 @@ const tools = {
         if (['success', 'failed', 'canceled', 'skipped', 'manual'].includes(status)) {
           return `Pipeline ${pipeline_id} finished with status: ${status}`;
         }
-        // Wait 15 seconds before polling again
         await new Promise(resolve => setTimeout(resolve, 15000));
       }
       return `TIMEOUT: Pipeline ${pipeline_id} did not complete within ${timeout_minutes || 10} minutes.`;
@@ -248,7 +262,7 @@ async function main() {
       if (request.method === 'initialize') {
         console.log(JSON.stringify({
           jsonrpc: "2.0", id: request.id,
-          result: { capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "1.5.0" } }
+          result: { capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "1.6.0" } }
         }));
       } else if (request.method === 'list_tools') {
         console.log(JSON.stringify({
