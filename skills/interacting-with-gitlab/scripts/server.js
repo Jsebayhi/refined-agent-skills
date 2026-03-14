@@ -387,6 +387,20 @@ const tools = {
     required: ["id", "discussion_id", "resolved"],
     run: ({ id, discussion_id, resolved }) => runGlabApi(`projects/:id/merge_requests/${id}/discussions/${discussion_id}?resolved=${resolved}`, 'PUT')
   },
+  "gitlab_resolve_discussions": {
+    description: "Resolve multiple discussion threads at once.",
+    parameters: { id: "string", discussion_ids: "string" }, // list of IDs separated by comma or space
+    required: ["id", "discussion_ids"],
+    run: async ({ id, discussion_ids }) => {
+      const ids = discussion_ids.split(/[\s,]+/).filter(Boolean);
+      const results = [];
+      for (const tid of ids) {
+        const resp = runGlabApi(`projects/:id/merge_requests/${id}/discussions/${tid}?resolved=true`, 'PUT');
+        results.push({ id: tid, success: !resp.startsWith('Error:') });
+      }
+      return JSON.stringify(results, null, 2);
+    }
+  },
 
   // --- CI/CD Monitoring ---
   "gitlab_list_workflow_runs": {
@@ -555,7 +569,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "3.3.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "3.4.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);

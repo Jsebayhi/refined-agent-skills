@@ -12,7 +12,7 @@ metadata:
 ## CRITICAL RULES & GUARDRAILS
 *   **Authentication & Fail-Fast:** The `github_*` tools automatically verify authentication. If a tool returns an "ERROR: GitHub authentication failed" message, you MUST stop immediately, inform the user, and ask them to run `gh auth login` in their terminal.
 *   **Precision Feedback (Line Comments):** When creating comments on specific lines, you MUST use `github_add_comment_to_review` to ensure precision and prevent out-of-context feedback. Do not guess line numbers; always use the exact line number from the *new* version in the diff.
-*   **Closing the Loop (Resolution):** For GitHub, use `github_post_comment` to acknowledge fixes. Threaded resolution is handled via the PR UI, but ensure all feedback is addressed.
+*   **Closing the Loop (Resolution):** Use `github_resolve_discussion` or `github_resolve_discussions` to acknowledge fixes and clean up the PR. For GitHub, this leverages GraphQL for high-fidelity thread management.
 *   **Security Auditing:** For every code review or PR inspection, you SHOULD check for vulnerabilities. Use `github_list_vulnerabilities` filtered by the current `id` (PR number) to ensure no new security issues were introduced.
 *   **Discovery & Search Mandate:** You MUST use the `github_search`, `github_list_pull_requests`, or `github_find_file` tools for all resource discovery. Do NOT attempt to run raw `gh pr list` commands in the terminal. The MCP tools are optimized for unpaged output and distilled JSON to save context.
 *   **Recursive Discovery:** Use `github_find_file` to instantly locate files deep within the repository without crawling the tree manually.
@@ -28,7 +28,7 @@ Follow these steps precisely.
 ### GitHub Interaction State:
 - [ ] Step 1: Resource Discovery & Context (using github_* search/view/find tools)
 - [ ] Step 2: Planning Actions (Review vs. Submission tasks)
-- [ ] Step 3: Tool Execution (Creating PRs, Posting comments, or Security check)
+- [ ] Step 3: Tool Execution (Creating PRs, Resolving threads, or Security check)
 - [ ] Step 4: Final Verification
 ```
 
@@ -44,6 +44,8 @@ Follow these steps precisely.
     Use `github_add_comment_to_review` for precise, line-level feedback.
 *   **Security Check:**
     If not already bundled via `full_context`, run `github_list_vulnerabilities` for the current PR. Focus on `critical` and `high` findings.
+*   **Resolve Threads:**
+    Use `github_resolve_discussions({ "id": "<PR>", "discussion_ids": "id1, id2" })` to bulk-resolve multiple threads once fixes are verified.
 *   **Finish Review:**
     Use `github_submit_review` with `APPROVE` or `REQUEST_CHANGES` to finalize the review and publish pending line comments.
 

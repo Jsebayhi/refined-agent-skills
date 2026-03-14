@@ -41,6 +41,13 @@ function runGhApi(endpoint, method = 'GET', data = null) {
   catch (error) { return handleGhError(error); }
 }
 
+function runGhGraphql(query, variables = {}) {
+  const input = JSON.stringify({ query, variables });
+  try {
+    return execSync(`gh api graphql --input -`, { input, env: GH_ENV, encoding: 'utf-8' });
+  } catch (error) { return handleGhError(error); }
+}
+
 function distillPr(pr) {
   return {
     id: pr.number,
@@ -137,7 +144,6 @@ const tools = {
     parameters: { pattern: "string", branch: "string" },
     required: ["pattern"],
     run: ({ pattern, branch }) => {
-      // Use Git Trees API for recursive search
       const ref = branch || 'HEAD';
       const response = runGhApi(`repos/{owner}/{repo}/git/trees/${ref}?recursive=1`);
       if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
@@ -146,7 +152,7 @@ const tools = {
         const results = data.tree
           .filter(item => item.type === 'blob' && item.path.includes(pattern))
           .map(item => ({ path: item.path, sha: item.sha }));
-        return JSON.stringify(results.slice(0, 50), null, 2); // Limit to 50 results
+        return JSON.stringify(results.slice(0, 50), null, 2);
       } catch (e) { return response; }
     }
   },
@@ -339,22 +345,42 @@ const tools = {
     run: ({ id }) => runGh(['pr', 'review', id, '--comment', '--body', '"Revoking approval."'])
   },
   "github_list_discussions": {
-    description: "List all discussion threads in a PR (Mapped to review comments).",
+    description: "List all discussion threads in a PR (High-fidelity GraphQL).",
     parameters: { id: "string", only_unresolved: "boolean" },
     required: ["id"],
     run: ({ id, only_unresolved }) => {
-      const resp = runGhApi(`repos/{owner}/{repo}/pulls/${id}/comments`);
-      if (resp.startsWith('Error:') || resp.startsWith('ERROR:')) return resp;
+      // Use GraphQL to get actual thread objects and isResolved status
+      const query = `query($num: Int!) {
+        repository(owner: "{owner}", name: "{repo}") {
+          pullRequest(number: $num) {
+            reviewThreads(last: 50) {
+              nodes {
+                id
+                isResolved
+                comments(last: 10) {
+                  nodes {
+                    id
+                    body
+                    author { login }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }`;
+      const response = runGhGraphql(query, { num: parseInt(id) });
+      if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
       try {
-        const comments = JSON.parse(resp);
-        const threads = {};
-        comments.forEach(c => {
-          const tid = c.in_reply_to_id || c.id;
-          if (!threads[tid]) threads[tid] = { id: tid, notes: [] };
-          threads[tid].notes.push({ id: c.id, body: c.body, author: c.user.login });
-        });
-        return JSON.stringify(Object.values(threads), null, 2);
-      } catch (e) { return resp; }
+        const data = JSON.parse(response);
+        let threads = data.data.repository.pullRequest.reviewThreads.nodes;
+        if (only_unresolved) threads = threads.filter(t => !t.isResolved);
+        return JSON.stringify(threads.map(t => ({
+          id: t.id,
+          resolved: t.isResolved,
+          notes: t.comments.nodes.map(c => ({ id: c.id, body: c.body, author: c.author ? c.author.login : 'unknown' }))
+        })), null, 2);
+      } catch (e) { return response; }
     }
   },
   "github_reply_to_discussion": {
@@ -362,16 +388,45 @@ const tools = {
     parameters: { id: "string", discussion_id: "string", message: "string" },
     required: ["id", "discussion_id", "message"],
     run: ({ id, discussion_id, message }) => {
+      // GitHub replies use the database ID usually, but GraphQL threadId is safer for some ops.
+      // For REST, we need the database ID of one of the comments.
+      // If discussion_id is a GraphQL ID (starting with PRRT_), we use GraphQL.
+      if (discussion_id.startsWith('PRRT_')) {
+        const mutation = `mutation($threadId: ID!, $body: String!) {
+          addPullRequestReviewThreadReply(input: {pullRequestReviewThreadId: $threadId, body: $body}) {
+            comment { id body }
+          }
+        }`;
+        return runGhGraphql(mutation, { threadId: discussion_id, body: message });
+      }
       const payload = { body: message, in_reply_to_id: parseInt(discussion_id) };
       return runGhApi(`repos/{owner}/{repo}/pulls/${id}/comments`, 'POST', payload);
     }
   },
   "github_resolve_discussion": {
-    description: "Toggle resolution status of a thread (GraphQL required, using safety hatch).",
+    description: "Toggle resolution status of a thread.",
     parameters: { id: "string", discussion_id: "string", resolved: "boolean" },
     required: ["id", "discussion_id", "resolved"],
     run: ({ discussion_id, resolved }) => {
-      return `NOTE: Resolution for GitHub threads requires GraphQL. Use 'github_run_command' with specialized flags if available. Target: ${discussion_id} -> ${resolved}`;
+      const mutation = resolved 
+        ? `mutation($id: ID!) { resolveReviewThread(input: {threadId: $id}) { thread { isResolved } } }`
+        : `mutation($id: ID!) { unresolveReviewThread(input: {threadId: $id}) { thread { isResolved } } }`;
+      return runGhGraphql(mutation, { id: discussion_id });
+    }
+  },
+  "github_resolve_discussions": {
+    description: "Resolve multiple discussion threads at once.",
+    parameters: { id: "string", discussion_ids: "string" }, // list of IDs separated by comma or space
+    required: ["id", "discussion_ids"],
+    run: async ({ discussion_ids }) => {
+      const ids = discussion_ids.split(/[\s,]+/).filter(Boolean);
+      const results = [];
+      for (const tid of ids) {
+        const mutation = `mutation($id: ID!) { resolveReviewThread(input: {threadId: $id}) { thread { isResolved } } }`;
+        const resp = runGhGraphql(mutation, { id: tid });
+        results.push({ id: tid, success: !resp.startsWith('Error:') });
+      }
+      return JSON.stringify(results, null, 2);
     }
   },
 
@@ -516,7 +571,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "github-mcp", version: "3.3.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "github-mcp", version: "3.4.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);

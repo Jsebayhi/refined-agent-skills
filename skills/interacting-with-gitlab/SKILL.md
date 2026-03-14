@@ -12,7 +12,7 @@ metadata:
 ## CRITICAL RULES & GUARDRAILS
 *   **Authentication & Fail-Fast:** The `gitlab_*` tools automatically verify authentication. If a tool returns an "ERROR: GitLab authentication failed" message, you MUST stop immediately, inform the user, and ask them to run `glab auth login` in their terminal.
 *   **Precision Feedback (Line Comments):** When creating comments on specific lines (via `add_comment_to_review` or `post_comment`), you MUST provide the `path` and the `line` number as they appear in the **NEW** version of the file (the diff). Do not guess line numbers.
-*   **Closing the Loop (Resolution):** To resolve a discussion thread, use `gitlab_reply_to_discussion` with `resolve: true`. This is the standard way to verify a fix and clean up the MR for merging.
+*   **Closing the Loop (Resolution):** To resolve discussion threads, use `gitlab_resolve_discussion` or the bulk `gitlab_resolve_discussions` tool. This is the standard way to verify a fix and clean up the MR for merging.
 *   **Security Auditing:** For every code review or MR inspection, you SHOULD check for vulnerabilities. Use `gitlab_list_vulnerabilities` filtered by the current `workflow_run_id` (pipeline ID) to ensure no high or critical security issues were introduced.
 *   **Discovery & Search Mandate:** You MUST use the `gitlab_search`, `gitlab_list_pull_requests`, or `gitlab_find_file` tools for all resource discovery. Do NOT attempt to run raw `glab mr list` commands in the terminal. The MCP tools are optimized for unpaged output and distilled JSON to save context.
 *   **Recursive Discovery:** Use `gitlab_find_file` to instantly locate files deep within the repository without crawling the tree manually.
@@ -28,7 +28,7 @@ Follow these steps precisely.
 ### GitLab Interaction State:
 - [ ] Step 1: Resource Discovery & Context (using gitlab_* search/view/find tools)
 - [ ] Step 2: Planning Actions (Review vs. Submission tasks)
-- [ ] Step 3: Tool Execution (Creating MRs, Drafting comments, or Security check)
+- [ ] Step 3: Tool Execution (Creating MRs, Resolving threads, or Security check)
 - [ ] Step 4: Final Verification
 ```
 
@@ -48,7 +48,7 @@ Follow these steps precisely.
 *   **Iterative Refinement:**
     Use `gitlab_edit_review_comment` if you need to update a previously posted draft.
 *   **Resolve & Reply:**
-    If a reviewer comment is addressed, use `gitlab_reply_to_discussion` with `resolve: true`.
+    If a reviewer comment is addressed, use `gitlab_resolve_discussions({ "id": "<IID>", "discussion_ids": "id1, id2" })` to bulk-resolve verified fixes.
 *   **Finish Review:**
     Use `gitlab_submit_review` to publish all comments at once and set the final status.
 
