@@ -126,7 +126,9 @@ const tools = {
       const response = runGhApi(endpoint);
       if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
       try {
-        return JSON.stringify(JSON.parse(response).map(i => ({ name: i.name, type: i.type, path: i.path })), null, 2);
+        const items = JSON.parse(response);
+        if (!Array.isArray(items)) return response;
+        return JSON.stringify(items.map(i => ({ name: i.name, type: i.type, path: i.path })), null, 2);
       } catch (e) { return response; }
     }
   },
@@ -247,6 +249,24 @@ const tools = {
     required: ["id", "note_id"],
     run: ({ note_id }) => runGhApi(`repos/{owner}/{repo}/issues/comments/${note_id}`, 'DELETE')
   },
+  "github_list_review_comments": {
+    description: "List all pending/draft comments (Review mode).",
+    parameters: { id: "string" },
+    required: ["id"],
+    run: ({ id }) => runGhApi(`repos/{owner}/{repo}/pulls/${id}/comments`)
+  },
+  "github_edit_review_comment": {
+    description: "Edit a pending/draft comment from an ongoing review.",
+    parameters: { id: "string", note_id: "string", message: "string" },
+    required: ["id", "note_id", "message"],
+    run: ({ note_id, message }) => runGhApi(`repos/{owner}/{repo}/pulls/comments/${note_id}`, 'PATCH', { body: message })
+  },
+  "github_delete_review_comment": {
+    description: "Delete a pending/draft comment from an ongoing review.",
+    parameters: { id: "string", note_id: "string" },
+    required: ["id", "note_id"],
+    run: ({ note_id }) => runGhApi(`repos/{owner}/{repo}/pulls/comments/${note_id}`, 'DELETE')
+  },
   "github_post_comment": {
     description: "Post a top-level comment to a PR/Issue.",
     parameters: { id: "string", message: "string" },
@@ -288,6 +308,56 @@ const tools = {
       return runGh(args);
     }
   },
+  "github_approve": {
+    description: "Approve a PR.",
+    parameters: { id: "string" },
+    required: ["id"],
+    run: ({ id }) => runGh(['pr', 'review', id, '--approve'])
+  },
+  "github_unapprove": {
+    description: "Revoke approval (Set to comment).",
+    parameters: { id: "string" },
+    required: ["id"],
+    run: ({ id }) => runGh(['pr', 'review', id, '--comment', '--body', '"Revoking approval."'])
+  },
+  "github_list_discussions": {
+    description: "List all discussion threads in a PR (Mapped to review comments).",
+    parameters: { id: "string", only_unresolved: "boolean" },
+    required: ["id"],
+    run: ({ id, only_unresolved }) => {
+      const resp = runGhApi(`repos/{owner}/{repo}/pulls/${id}/comments`);
+      if (resp.startsWith('Error:') || resp.startsWith('ERROR:')) return resp;
+      try {
+        const comments = JSON.parse(resp);
+        // GitHub REST API doesn't group by thread as nicely as GitLab, but we can group by in_reply_to_id
+        const threads = {};
+        comments.forEach(c => {
+          const tid = c.in_reply_to_id || c.id;
+          if (!threads[tid]) threads[tid] = { id: tid, notes: [] };
+          threads[tid].notes.push({ id: c.id, body: c.body, author: c.user.login });
+        });
+        return JSON.stringify(Object.values(threads), null, 2);
+      } catch (e) { return resp; }
+    }
+  },
+  "github_reply_to_discussion": {
+    description: "Reply to a thread.",
+    parameters: { id: "string", discussion_id: "string", message: "string" },
+    required: ["id", "discussion_id", "message"],
+    run: ({ id, discussion_id, message }) => {
+      const payload = { body: message, in_reply_to_id: parseInt(discussion_id) };
+      return runGhApi(`repos/{owner}/{repo}/pulls/${id}/comments`, 'POST', payload);
+    }
+  },
+  "github_resolve_discussion": {
+    description: "Toggle resolution status of a thread (GraphQL required, using safety hatch).",
+    parameters: { id: "string", discussion_id: "string", resolved: "boolean" },
+    required: ["id", "discussion_id", "resolved"],
+    run: ({ discussion_id, resolved }) => {
+      // GitHub requires GraphQL to resolve threads. We'll use a placeholder or best effort via gh api.
+      return `NOTE: Resolution for GitHub threads requires GraphQL. Use 'github_run_command' with specialized flags if available. Target: ${discussion_id} -> ${resolved}`;
+    }
+  },
 
   // --- CI/CD Monitoring ---
   "github_list_workflow_runs": {
@@ -301,6 +371,12 @@ const tools = {
       if (branch) args.push('--branch', branch);
       return runGh(args);
     }
+  },
+  "github_run_workflow": {
+    description: "Create/Run a new workflow on a specific branch/ref.",
+    parameters: { ref: "string", workflow: "string" },
+    required: ["ref", "workflow"],
+    run: ({ ref, workflow }) => runGh(['workflow', 'run', workflow, '--ref', ref])
   },
   "github_get_workflow_run_details": {
     description: "Fetch workflow run details. Set 'failed_logs: true' to automatically include logs for failed jobs.",
@@ -332,11 +408,23 @@ const tools = {
       return `TIMEOUT: Workflow run ${id} did not complete.`;
     }
   },
+  "github_list_workflow_run_jobs": {
+    description: "List jobs for a workflow run.",
+    parameters: { id: "string" },
+    required: ["id"],
+    run: ({ id }) => runGh(['run', 'view', id, '--json', 'jobs'])
+  },
   "github_get_job_logs": {
     description: "Fetch logs for a specific job.",
     parameters: { id: "string" },
     required: ["id"],
     run: ({ id }) => runGh(['run', 'view', '--job', id, '--log'])
+  },
+  "github_set_auto_merge": {
+    description: "Enable auto-merge for a PR.",
+    parameters: { id: "string" },
+    required: ["id"],
+    run: ({ id }) => runGh(['pr', 'merge', id, '--auto', '--merge'])
   },
 
   // --- Security & Vulnerabilities ---
@@ -363,6 +451,18 @@ const tools = {
     required: ["id"],
     run: ({ id }) => runGhApi(`repos/{owner}/{repo}/code-scanning/alerts/${id}`)
   },
+  "github_dismiss_vulnerability": {
+    description: "Dismiss a code scanning alert.",
+    parameters: { id: "string", reason: "string" },
+    required: ["id", "reason"],
+    run: ({ id, reason }) => runGhApi(`repos/{owner}/{repo}/code-scanning/alerts/${id}`, 'PATCH', { state: 'dismissed', dismissed_reason: reason })
+  },
+  "github_resolve_vulnerability": {
+    description: "Mark a code scanning alert as fixed (Handled automatically by GitHub usually).",
+    parameters: { id: "string" },
+    required: ["id"],
+    run: ({ id }) => `NOTE: GitHub code scanning alerts are resolved automatically when the fix is merged. Alert ID: ${id}`
+  },
 
   // --- Safety Hatch ---
   "github_run_command": {
@@ -371,6 +471,18 @@ const tools = {
     required: ["command"],
     run: ({ command }) => {
       const args = command.trim().split(/\s+/);
+      return runGh(args);
+    }
+  },
+
+  // --- Helpers ---
+  "github_list_labels": {
+    description: "List available project labels.",
+    parameters: { project: "string" },
+    required: [],
+    run: ({ project }) => {
+      const args = ['label', 'list'];
+      if (project) args.push('--repo', project);
       return runGh(args);
     }
   }
@@ -387,7 +499,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "github-mcp", version: "2.4.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "github-mcp", version: "3.0.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);
