@@ -14,7 +14,8 @@ metadata:
 *   **Precision Feedback (Line Comments):** When creating comments on specific lines (via `add_comment_to_review` or `post_comment`), you MUST provide the `path` and the `line` number as they appear in the **NEW** version of the file (the diff). Do not guess line numbers.
 *   **Closing the Loop (Resolution):** To resolve a discussion thread, use `gitlab_reply_to_discussion` with `resolve: true`. This is the standard way to verify a fix and clean up the MR for merging.
 *   **Security Auditing:** For every code review or MR inspection, you SHOULD check for vulnerabilities. Use `gitlab_list_vulnerabilities` filtered by the current `workflow_run_id` (pipeline ID) to ensure no high or critical security issues were introduced.
-*   **Discovery & Search Mandate:** You MUST use the `gitlab_search` or `gitlab_list_pull_requests` (MRs) tools for all resource discovery. Do NOT attempt to run raw `glab mr list` commands in the terminal. The MCP tools are optimized for unpaged output and distilled JSON to save context.
+*   **Discovery & Search Mandate:** You MUST use the `gitlab_search`, `gitlab_list_pull_requests`, or `gitlab_find_file` tools for all resource discovery. Do NOT attempt to run raw `glab mr list` commands in the terminal. The MCP tools are optimized for unpaged output and distilled JSON to save context.
+*   **Recursive Discovery:** Use `gitlab_find_file` to instantly locate files deep within the repository without crawling the tree manually.
 *   **MCP-First Mandate:** You MUST use the `gitlab_*` MCP tools for all interaction tasks. These tools are pre-configured to handle non-interactive execution and `GLAB_PAGER=cat` automatically.
 
 ## WORKFLOW: [Plan-Validate-Execute Pattern]
@@ -25,18 +26,19 @@ Follow these steps precisely.
 
 ```markdown
 ### GitLab Interaction State:
-- [ ] Step 1: Resource Discovery & Context (using gitlab_* search/view tools)
+- [ ] Step 1: Resource Discovery & Context (using gitlab_* search/view/find tools)
 - [ ] Step 2: Planning Actions (Review vs. Submission tasks)
 - [ ] Step 3: Tool Execution (Creating MRs, Drafting comments, or Security check)
 - [ ] Step 4: Final Verification
 ```
 
 ### Step 1: Resource Discovery & Context
-1. If the resource ID is unknown, use `gitlab_search` or `gitlab_list_pull_requests`.
-2. Use `gitlab_view` to inspect title, description, and status.
-3. Use `gitlab_get_pull_request_diffs({ "id": "<IID>" })` to see the actual code changes.
-4. Use `gitlab_list_discussions` to find active threads.
-5. Use `gitlab_get_comment` if you need the full history of a specific note.
+1. If the file path is unknown but you have a name, use `gitlab_find_file`.
+2. If the resource ID is unknown, use `gitlab_search` or `gitlab_list_pull_requests`.
+3. Use `gitlab_view` to inspect title, description, and status.
+4. Use `gitlab_get_pull_request_diffs({ "id": "<IID>" })` to see the actual code changes.
+5. Use `gitlab_list_discussions` to find active threads.
+6. Use `gitlab_get_comment` if you need the full history of a specific note.
 
 ### Step 2: Reviewer Workflow (Review Mode)
 *   **Start/Continue Review:** 

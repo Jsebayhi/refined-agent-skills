@@ -14,7 +14,8 @@ metadata:
 *   **Precision Feedback (Line Comments):** When creating comments on specific lines, you MUST use `github_add_comment_to_review` to ensure precision and prevent out-of-context feedback. Do not guess line numbers; always use the exact line number from the *new* version in the diff.
 *   **Closing the Loop (Resolution):** For GitHub, use `github_post_comment` to acknowledge fixes. Threaded resolution is handled via the PR UI, but ensure all feedback is addressed.
 *   **Security Auditing:** For every code review or PR inspection, you SHOULD check for vulnerabilities. Use `github_list_vulnerabilities` filtered by the current `id` (PR number) to ensure no new security issues were introduced.
-*   **Discovery & Search Mandate:** You MUST use the `github_search` or `github_list_pull_requests` tools for all resource discovery. Do NOT attempt to run raw `gh pr list` commands in the terminal. The MCP tools are optimized for unpaged output and distilled JSON to save context.
+*   **Discovery & Search Mandate:** You MUST use the `github_search`, `github_list_pull_requests`, or `github_find_file` tools for all resource discovery. Do NOT attempt to run raw `gh pr list` commands in the terminal. The MCP tools are optimized for unpaged output and distilled JSON to save context.
+*   **Recursive Discovery:** Use `github_find_file` to instantly locate files deep within the repository without crawling the tree manually.
 *   **MCP-First Mandate:** You MUST use the `github_*` MCP tools for all interaction tasks. These tools are pre-configured to handle non-interactive execution and `GH_PAGER=cat` automatically.
 
 ## WORKFLOW: [Plan-Validate-Execute Pattern]
@@ -25,17 +26,18 @@ Follow these steps precisely.
 
 ```markdown
 ### GitHub Interaction State:
-- [ ] Step 1: Resource Discovery & Context (using github_* search/view tools)
+- [ ] Step 1: Resource Discovery & Context (using github_* search/view/find tools)
 - [ ] Step 2: Planning Actions (Review vs. Submission tasks)
 - [ ] Step 3: Tool Execution (Creating PRs, Posting comments, or Security check)
 - [ ] Step 4: Final Verification
 ```
 
 ### Step 1: Resource Discovery & Context
-1. If the resource ID is unknown, use `github_search` or `github_list_pull_requests`.
-2. Use `github_view({ "type": "pr", "id": "<NUMBER>" })` to inspect title, description, and status.
-3. Use `github_get_pull_request_diffs({ "id": "<NUMBER>" })` to see the actual code changes.
-4. Use `github_get_pull_request_details({ "id": "<NUMBER>", "full_context": true })` to check mergeability, bundled security findings, and CI check status in one turn.
+1. If the file path is unknown but you have a name, use `github_find_file`.
+2. If the resource ID is unknown, use `github_search` or `github_list_pull_requests`.
+3. Use `github_view({ "type": "pr", "id": "<NUMBER>" })` to inspect title, description, and status.
+4. Use `github_get_pull_request_diffs({ "id": "<NUMBER>" })` to see the actual code changes.
+5. Use `github_get_pull_request_details({ "id": "<NUMBER>", "full_context": true })` to check mergeability, bundled security findings, and CI check status in one turn.
 
 ### Step 2: Reviewer Workflow (Review Mode)
 *   **Start/Continue Review:** 

@@ -132,6 +132,24 @@ const tools = {
       } catch (e) { return response; }
     }
   },
+  "github_find_file": {
+    description: "Recursively search for a file by name or pattern in the repository.",
+    parameters: { pattern: "string", branch: "string" },
+    required: ["pattern"],
+    run: ({ pattern, branch }) => {
+      // Use Git Trees API for recursive search
+      const ref = branch || 'HEAD';
+      const response = runGhApi(`repos/{owner}/{repo}/git/trees/${ref}?recursive=1`);
+      if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
+      try {
+        const data = JSON.parse(response);
+        const results = data.tree
+          .filter(item => item.type === 'blob' && item.path.includes(pattern))
+          .map(item => ({ path: item.path, sha: item.sha }));
+        return JSON.stringify(results.slice(0, 50), null, 2); // Limit to 50 results
+      } catch (e) { return response; }
+    }
+  },
   "github_get_repository_file": {
     description: "Fetch raw content of a file from the repository.",
     parameters: { path: "string", branch: "string" },
@@ -329,7 +347,6 @@ const tools = {
       if (resp.startsWith('Error:') || resp.startsWith('ERROR:')) return resp;
       try {
         const comments = JSON.parse(resp);
-        // GitHub REST API doesn't group by thread as nicely as GitLab, but we can group by in_reply_to_id
         const threads = {};
         comments.forEach(c => {
           const tid = c.in_reply_to_id || c.id;
@@ -354,7 +371,6 @@ const tools = {
     parameters: { id: "string", discussion_id: "string", resolved: "boolean" },
     required: ["id", "discussion_id", "resolved"],
     run: ({ discussion_id, resolved }) => {
-      // GitHub requires GraphQL to resolve threads. We'll use a placeholder or best effort via gh api.
       return `NOTE: Resolution for GitHub threads requires GraphQL. Use 'github_run_command' with specialized flags if available. Target: ${discussion_id} -> ${resolved}`;
     }
   },
@@ -384,7 +400,8 @@ const tools = {
     required: ["id"],
     run: ({ id, failed_logs }) => {
       if (failed_logs) {
-        return runGh(['run', 'view', id, '--log-failed']);
+        const logs = runGh(['run', 'view', id, '--log-failed']);
+        return logs.length > 5000 ? logs.substring(0, 5000) + "\n... [TRUNCATED]" : logs;
       }
       return runGh(['run', 'view', id, '--json', 'number,status,conclusion,url,createdAt,updatedAt,jobs']);
     }
@@ -499,7 +516,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "github-mcp", version: "3.0.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "github-mcp", version: "3.3.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);

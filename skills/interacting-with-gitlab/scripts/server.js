@@ -142,6 +142,24 @@ const tools = {
       } catch (e) { return response; }
     }
   },
+  "gitlab_find_file": {
+    description: "Recursively search for a file by name or pattern in the repository.",
+    parameters: { pattern: "string", ref: "string" },
+    required: ["pattern"],
+    run: ({ pattern, ref }) => {
+      let endpoint = `projects/:id/repository/tree?recursive=true&per_page=100`;
+      if (ref) endpoint += `&ref=${ref}`;
+      const response = runGlabApi(endpoint);
+      if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
+      try {
+        const data = JSON.parse(response);
+        const results = data
+          .filter(item => item.type === 'blob' && item.path.includes(pattern))
+          .map(item => ({ path: item.path, id: item.id }));
+        return JSON.stringify(results.slice(0, 50), null, 2); // Limit to 50 results
+      } catch (e) { return response; }
+    }
+  },
   "gitlab_get_repository_file": {
     description: "Fetch raw content of a file from the repository.",
     parameters: { path: "string", ref: "string" },
@@ -408,10 +426,13 @@ const tools = {
             const jobs = JSON.parse(jobsResp);
             const failedJobs = jobs.filter(j => j.status === 'failed');
             if (failedJobs.length > 0) {
-              details.failed_job_logs = failedJobs.map(j => ({
-                name: j.name,
-                log: runGlabApi(`projects/:id/jobs/${j.id}/trace`)
-              }));
+              details.failed_job_logs = failedJobs.map(j => {
+                const trace = runGlabApi(`projects/:id/jobs/${j.id}/trace`);
+                return {
+                  name: j.name,
+                  log: trace.length > 5000 ? trace.substring(0, 5000) + "\n... [TRUNCATED]" : trace
+                };
+              });
             }
           }
         }
@@ -534,7 +555,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "3.2.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "3.3.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);
