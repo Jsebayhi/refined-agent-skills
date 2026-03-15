@@ -1,4 +1,4 @@
-const { execSync } = require('child_process');
+const { spawnSync } = require('child_process');
 const readline = require('readline');
 
 // All protocol-breaking logs must go to stderr
@@ -7,12 +7,12 @@ log('Server starting...');
 
 const GH_ENV = { ...process.env, GH_PAGER: 'cat', PAGER: 'cat' };
 
-function handleGhError(error) {
-  const stderr = error.stderr ? error.stderr.toString() : '';
-  const stdout = error.stdout ? error.stdout.toString() : '';
-  const message = error.message || '';
+function handleGhError(result) {
+  const stderr = result.stderr ? result.stderr.toString() : '';
+  const stdout = result.stdout ? result.stdout.toString() : '';
+  const message = result.error ? result.error.message : '';
   
-  if (message.includes('not found') || stderr.includes('not found')) {
+  if (message.includes('ENOENT') || stderr.includes('not found')) {
     return "ERROR: 'gh' CLI is not installed or not in PATH. This MCP server requires the GitHub CLI to function. Please install it from https://cli.github.com/";
   }
 
@@ -20,32 +20,35 @@ function handleGhError(error) {
     return "ERROR: GitHub authentication failed. Please run 'gh auth login' in your terminal.";
   }
   
-  return `Error: ${error.message}\nSTDOUT: ${stdout}\nSTDERR: ${stderr}`;
+  return `Error: ${message}\nSTDOUT: ${stdout}\nSTDERR: ${stderr}`;
 }
 
-function runGh(argsArray) {
-  const cmd = `gh ${argsArray.join(' ')}`;
-  try { return execSync(cmd, { env: GH_ENV, encoding: 'utf-8' }); }
-  catch (error) { return handleGhError(error); }
+function runGh(argsArray, input = undefined) {
+  // Direct spawnSync with array is safer than shell strings
+  const result = spawnSync('gh', argsArray, { env: GH_ENV, input, encoding: 'utf-8' });
+  if (result.status !== 0) {
+    return handleGhError(result);
+  }
+  return result.stdout;
 }
 
 function runGhApi(endpoint, method = 'GET', data = null) {
-  let cmd = `gh api "${endpoint}"`;
-  if (method !== 'GET') cmd += ` --method ${method}`;
+  const args = ['api', endpoint];
+  if (method !== 'GET') {
+    args.push('--method', method);
+  }
   let input = undefined;
   if (data) { 
     input = JSON.stringify(data); 
-    cmd += ` --input - -H "Content-Type: application/json"`; 
+    args.push('--input', '-');
+    args.push('-H', 'Content-Type: application/json');
   }
-  try { return execSync(cmd, { input, env: GH_ENV, encoding: 'utf-8' }); }
-  catch (error) { return handleGhError(error); }
+  return runGh(args, input);
 }
 
 function runGhGraphql(query, variables = {}) {
   const input = JSON.stringify({ query, variables });
-  try {
-    return execSync(`gh api graphql --input -`, { input, env: GH_ENV, encoding: 'utf-8' });
-  } catch (error) { return handleGhError(error); }
+  return runGh(['api', 'graphql', '--input', '-'], input);
 }
 
 function distillPr(pr) {
@@ -98,8 +101,8 @@ const tools = {
       const s = scope || 'repos';
       const args = ['search', s, query, '--json'];
       if (s === 'prs') args.push('number,title,state,author,url,labels,isDraft');
-      if (s === 'repos') args.push('nameWithOwner,description,url,stargazerCount');
-      if (s === 'code') args.push('path,repository,url');
+      else if (s === 'repos') args.push('nameWithOwner,description,url,stargazerCount');
+      else if (s === 'code') args.push('path,repository,url');
       
       const response = runGh(args);
       if (response.startsWith('Error:') || response.startsWith('ERROR:')) return response;
@@ -161,7 +164,8 @@ const tools = {
     parameters: { path: "string", branch: "string" },
     required: ["path"],
     run: ({ path, branch }) => {
-      return runGh(['api', `repos/{owner}/{repo}/contents/${path}${branch ? '?ref=' + branch : ''}`, '-H', 'Accept: application/vnd.github.v3.raw']);
+      const endpoint = `repos/{owner}/{repo}/contents/${path}${branch ? '?ref=' + branch : ''}`;
+      return runGh(['api', endpoint, '-H', 'Accept: application/vnd.github.v3.raw']);
     }
   },
 
@@ -187,11 +191,11 @@ const tools = {
     run: ({ title, body, base, head, labels, draft, fill }) => {
       const args = ['pr', 'create'];
       if (fill) args.push('--fill');
-      if (title) args.push('--title', `"${title}"`);
-      if (body) args.push('--body', `"${body}"`);
+      if (title) args.push('--title', title);
+      if (body) args.push('--body', body);
       if (base) args.push('--base', base);
       if (head) args.push('--head', head);
-      if (labels) args.push('--label', `"${labels}"`);
+      if (labels) args.push('--label', labels);
       if (draft) args.push('--draft');
       return runGh(args);
     }
@@ -295,7 +299,7 @@ const tools = {
     description: "Post a top-level comment to a PR/Issue.",
     parameters: { id: "string", message: "string" },
     required: ["id", "message"],
-    run: ({ id, message }) => runGh(['pr', 'comment', id, '--body', `"${message}"`])
+    run: ({ id, message }) => runGh(['pr', 'comment', id, '--body', message])
   },
   "github_add_comment_to_review": {
     description: "Add a precise line-level comment to a PR review.",
@@ -328,7 +332,7 @@ const tools = {
       if (outcome === 'APPROVE') args.push('--approve');
       else if (outcome === 'REQUEST_CHANGES') args.push('--request-changes');
       else args.push('--comment');
-      if (message) args.push('--body', `"${message}"`);
+      if (message) args.push('--body', message);
       return runGh(args);
     }
   },
@@ -342,14 +346,13 @@ const tools = {
     description: "Revoke approval (Set to comment).",
     parameters: { id: "string" },
     required: ["id"],
-    run: ({ id }) => runGh(['pr', 'review', id, '--comment', '--body', '"Revoking approval."'])
+    run: ({ id }) => runGh(['pr', 'review', id, '--comment', '--body', 'Revoking approval.'])
   },
   "github_list_discussions": {
     description: "List all discussion threads in a PR (High-fidelity GraphQL).",
     parameters: { id: "string", only_unresolved: "boolean" },
     required: ["id"],
     run: ({ id, only_unresolved }) => {
-      // Use GraphQL to get actual thread objects and isResolved status
       const query = `query($num: Int!) {
         repository(owner: "{owner}", name: "{repo}") {
           pullRequest(number: $num) {
@@ -388,9 +391,6 @@ const tools = {
     parameters: { id: "string", discussion_id: "string", message: "string" },
     required: ["id", "discussion_id", "message"],
     run: ({ id, discussion_id, message }) => {
-      // GitHub replies use the database ID usually, but GraphQL threadId is safer for some ops.
-      // For REST, we need the database ID of one of the comments.
-      // If discussion_id is a GraphQL ID (starting with PRRT_), we use GraphQL.
       if (discussion_id.startsWith('PRRT_')) {
         const mutation = `mutation($threadId: ID!, $body: String!) {
           addPullRequestReviewThreadReply(input: {pullRequestReviewThreadId: $threadId, body: $body}) {
@@ -416,7 +416,7 @@ const tools = {
   },
   "github_resolve_discussions": {
     description: "Resolve multiple discussion threads at once.",
-    parameters: { id: "string", discussion_ids: "string" }, // list of IDs separated by comma or space
+    parameters: { id: "string", discussion_ids: "string" },
     required: ["id", "discussion_ids"],
     run: async ({ discussion_ids }) => {
       const ids = discussion_ids.split(/[\s,]+/).filter(Boolean);
@@ -502,7 +502,7 @@ const tools = {
   // --- Security & Vulnerabilities ---
   "github_list_vulnerabilities": {
     description: "List code scanning alerts for a repository or PR.",
-    parameters: { id: "string", severity: "string", state: "string" }, // id is pr_number
+    parameters: { id: "string", severity: "string", state: "string" },
     required: [],
     run: ({ id, severity, state }) => {
       let endpoint = `repos/{owner}/{repo}/code-scanning/alerts?per_page=100`;
@@ -571,7 +571,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "github-mcp", version: "3.4.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "github-mcp", version: "3.5.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);

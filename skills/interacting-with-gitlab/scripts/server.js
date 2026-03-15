@@ -1,4 +1,4 @@
-const { execSync } = require('child_process');
+const { spawnSync } = require('child_process');
 const readline = require('readline');
 
 // All protocol-breaking logs must go to stderr
@@ -7,12 +7,12 @@ log('Server starting...');
 
 const GLAB_ENV = { ...process.env, GLAB_PAGER: 'cat', PAGER: 'cat' };
 
-function handleGlabError(error) {
-  const stderr = error.stderr ? error.stderr.toString() : '';
-  const stdout = error.stdout ? error.stdout.toString() : '';
-  const message = error.message || '';
+function handleGlabError(result) {
+  const stderr = result.stderr ? result.stderr.toString() : '';
+  const stdout = result.stdout ? result.stdout.toString() : '';
+  const message = result.error ? result.error.message : '';
   
-  if (message.includes('not found') || stderr.includes('not found')) {
+  if (message.includes('ENOENT') || stderr.includes('not found')) {
     return "ERROR: 'glab' CLI is not installed or not in PATH. This MCP server requires the GitLab CLI to function. Please install it from https://gitlab.com/gitlab-org/cli";
   }
 
@@ -20,25 +20,29 @@ function handleGlabError(error) {
     return "ERROR: GitLab authentication failed. Please run 'glab auth login' in your terminal.";
   }
   
-  return `Error: ${error.message}\nSTDOUT: ${stdout}\nSTDERR: ${stderr}`;
+  return `Error: ${message}\nSTDOUT: ${stdout}\nSTDERR: ${stderr}`;
 }
 
-function runGlab(argsArray) {
-  const cmd = `glab ${argsArray.join(' ')}`;
-  try { return execSync(cmd, { env: GLAB_ENV, encoding: 'utf-8' }); }
-  catch (error) { return handleGlabError(error); }
+function runGlab(argsArray, input = undefined) {
+  const result = spawnSync('glab', argsArray, { env: GLAB_ENV, input, encoding: 'utf-8' });
+  if (result.status !== 0) {
+    return handleGlabError(result);
+  }
+  return result.stdout;
 }
 
 function runGlabApi(endpoint, method = 'GET', data = null) {
-  let cmd = `glab api "${endpoint}"`;
-  if (method !== 'GET') cmd += ` --method ${method}`;
+  const args = ['api', endpoint];
+  if (method !== 'GET') {
+    args.push('--method', method);
+  }
   let input = undefined;
   if (data) { 
     input = JSON.stringify(data); 
-    cmd += ` --input - -H "Content-Type: application/json"`; 
+    args.push('--input', '-');
+    args.push('-H', 'Content-Type: application/json');
   }
-  try { return execSync(cmd, { input, env: GLAB_ENV, encoding: 'utf-8' }); }
-  catch (error) { return handleGlabError(error); }
+  return runGlab(args, input);
 }
 
 function getMrDiffRefs(id) {
@@ -195,11 +199,11 @@ const tools = {
     run: ({ title, description, source_branch, target_branch, labels, fill, draft, auto_merge }) => {
       const args = ['mr', 'create', '--yes'];
       if (fill) args.push('--fill');
-      if (title) args.push('--title', `"${title}"`);
-      if (description) args.push('--description', `"${description}"`);
+      if (title) args.push('--title', title);
+      if (description) args.push('--description', description);
       if (source_branch) args.push('--source-branch', source_branch);
       if (target_branch) args.push('--target-branch', target_branch);
-      if (labels) args.push('--label', `"${labels}"`);
+      if (labels) args.push('--label', labels);
       if (draft) args.push('--draft');
       const createResp = runGlab(args);
       if (createResp.startsWith('Error:') || createResp.startsWith('ERROR:') || !auto_merge) return createResp;
@@ -569,7 +573,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "3.4.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "3.5.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);
