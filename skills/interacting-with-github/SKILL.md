@@ -13,7 +13,7 @@ metadata:
 *   **Authentication & Fail-Fast:** The `github_*` tools automatically verify authentication. If a tool returns an "ERROR: GitHub authentication failed" message, you MUST stop immediately, inform the user, and ask them to run `gh auth login` in their terminal.
 *   **Precision Feedback (Line Comments):** When creating comments on specific lines, you MUST use `github_add_comment_to_review` to ensure precision and prevent out-of-context feedback. Do not guess line numbers; always use the exact line number from the *new* version in the diff.
 *   **Closing the Loop (Resolution):** Use `github_resolve_discussion` or `github_resolve_discussions` to acknowledge fixes and clean up the PR. For GitHub, this leverages GraphQL for high-fidelity thread management.
-*   **Security Auditing:** For every code review or PR inspection, you SHOULD check for vulnerabilities. Use `github_list_vulnerabilities` filtered by the current `id` (PR number) to ensure no new security issues were introduced.
+*   **Semantic Parameters:** Use explicit parameter names (`pull_request_id`, `comment_id`, `thread_id`, `run_id`, `job_id`, `vulnerability_id`) as defined in the tool schemas. The generic `id` is deprecated for clarity.
 *   **Discovery & Search Mandate:** You MUST use the `github_search`, `github_list_pull_requests`, or `github_find_file` tools for all resource discovery. Do NOT attempt to run raw `gh pr list` commands in the terminal. The MCP tools are optimized for unpaged output and distilled JSON to save context.
 *   **Recursive Discovery:** Use `github_find_file` to instantly locate files deep within the repository without crawling the tree manually.
 *   **MCP-First Mandate:** You MUST use the `github_*` MCP tools for all interaction tasks. These tools are pre-configured to handle non-interactive execution and `GH_PAGER=cat` automatically.
@@ -35,9 +35,9 @@ Follow these steps precisely.
 ### Step 1: Resource Discovery & Context
 1. If the file path is unknown but you have a name, use `github_find_file`.
 2. If the resource ID is unknown, use `github_search` or `github_list_pull_requests`.
-3. Use `github_view({ "type": "pr", "id": "<NUMBER>" })` to inspect title, description, and status.
-4. Use `github_get_pull_request_diffs({ "id": "<NUMBER>" })` to see the actual code changes.
-5. Use `github_get_pull_request_details({ "id": "<NUMBER>", "full_context": true })` to check mergeability, bundled security findings, and CI check status in one turn.
+3. Use `github_view({ "type": "pr", "pull_request_id": "<NUMBER>" })` to inspect title, description, and status.
+4. Use `github_get_pull_request_diffs({ "pull_request_id": "<NUMBER>" })` to see the actual code changes.
+5. Use `github_get_pull_request_details({ "pull_request_id": "<NUMBER>", "full_context": true })` to check mergeability, bundled security findings, and CI check status in one turn.
 
 ### Step 2: Reviewer Workflow (Review Mode)
 *   **Start/Continue Review:** 
@@ -45,7 +45,7 @@ Follow these steps precisely.
 *   **Security Check:**
     If not already bundled via `full_context`, run `github_list_vulnerabilities` for the current PR. Focus on `critical` and `high` findings.
 *   **Resolve Threads:**
-    Use `github_resolve_discussions({ "id": "<PR>", "discussion_ids": "id1, id2" })` to bulk-resolve multiple threads once fixes are verified.
+    Use `github_resolve_discussions({ "pull_request_id": "<PR>", "thread_ids": "id1, id2" })` to bulk-resolve multiple threads once fixes are verified.
 *   **Finish Review:**
     Use `github_submit_review` with `APPROVE` or `REQUEST_CHANGES` to finalize the review and publish pending line comments.
 
@@ -55,7 +55,7 @@ Follow these steps precisely.
 *   **Monitor & Wait for Actions:**
     Use `github_list_workflow_runs` followed by `github_wait_for_workflow_run` to wait for completion deterministically.
 *   **Troubleshoot Checks:**
-    Use `github_get_workflow_run_details({ "id": "<ID>", "failed_logs": true })` to see exactly why jobs failed in a single turn.
+    Use `github_get_workflow_run_details({ "run_id": "<ID>", "failed_logs": true })` to see exactly why jobs failed in a single turn.
 
 ### Step 4: Final Verification
 1. Review the tool output for successful API responses.
