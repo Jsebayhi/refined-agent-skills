@@ -299,10 +299,10 @@ const tools = {
     run: ({ pull_request_id, message }) => runGh(['pr', 'comment', pull_request_id, '--body', message])
   },
   "github_add_comment_to_review": {
-    description: "Add a precise line-level comment to a PR review.",
-    parameters: { pull_request_id: "string", path: "string", line: "number", message: "string" },
+    description: "Add a precise line-level comment to a PR review. Supports multi-line if 'start_line' is provided.",
+    parameters: { pull_request_id: "string", path: "string", line: "number", start_line: "number", message: "string" },
     required: ["pull_request_id", "path", "line", "message"],
-    run: ({ pull_request_id, path, line, message }) => {
+    run: ({ pull_request_id, path, line, start_line, message }) => {
       try {
         const prInfoResp = runGh(['pr', 'view', pull_request_id, '--json', 'commits']);
         if (prInfoResp.startsWith('Error:') || prInfoResp.startsWith('ERROR:')) return prInfoResp;
@@ -314,8 +314,15 @@ const tools = {
           body: message,
           commit_id: latestCommit,
           path: path,
-          line: line
+          line: parseInt(line),
+          side: "RIGHT"
         };
+
+        if (start_line) {
+          payload.start_line = parseInt(start_line);
+          payload.start_side = "RIGHT";
+        }
+
         return runGhApi(`repos/{owner}/{repo}/pulls/${pull_request_id}/comments`, 'POST', payload);
       } catch (e) { return e.message; }
     }
@@ -568,7 +575,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "github-mcp", version: "3.6.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "github-mcp", version: "3.7.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);

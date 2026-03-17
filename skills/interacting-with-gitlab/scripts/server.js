@@ -325,13 +325,28 @@ const tools = {
     }
   },
   "gitlab_add_comment_to_review": {
-    description: "Add a comment to an ongoing review (Draft Mode).",
-    parameters: { mr_id: "string", path: "string", line: "number", message: "string" },
+    description: "Add a comment to an ongoing review (Draft Mode). Supports multi-line if 'start_line' is provided.",
+    parameters: { mr_id: "string", path: "string", line: "number", start_line: "number", message: "string" },
     required: ["mr_id", "path", "line", "message"],
-    run: ({ mr_id, path, line, message }) => {
+    run: ({ mr_id, path, line, start_line, message }) => {
       try {
         const diffRefs = getMrDiffRefs(mr_id);
-        const payload = { note: message, position: { base_sha: diffRefs.base_sha, head_sha: diffRefs.head_sha, start_sha: diffRefs.start_sha, position_type: 'text', new_path: path, new_line: line } };
+        const payload = { 
+          note: message, 
+          position: { 
+            base_sha: diffRefs.base_sha, 
+            head_sha: diffRefs.head_sha, 
+            start_sha: diffRefs.start_sha, 
+            position_type: 'text', 
+            new_path: path, 
+            new_line: parseInt(line)
+          } 
+        };
+        
+        if (start_line) {
+          payload.position.start_line = parseInt(start_line);
+        }
+
         return runGlabApi(`projects/:id/merge_requests/${mr_id}/draft_notes`, 'POST', payload);
       } catch (e) { return e.message; }
     }
@@ -571,7 +586,7 @@ rl.on('line', async (line) => {
 
     if (method === 'initialize') {
       log('Handling initialize...');
-      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "3.6.0" } } };
+      const response = { jsonrpc: "2.0", id: request.id, result: { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "gitlab-mcp", version: "3.7.0" } } };
       process.stdout.write(JSON.stringify(response) + '\n');
     } else if (method === 'tools/list' || method === 'list_tools') {
       log(`Handling ${method}...`);
