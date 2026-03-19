@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - 2026-03-19
 
 ### Added
-- **GitHub MCP Server**: Implemented a production-grade GitHub MCP server and skill (`interacting-with-github`) mirroring the GitLab implementation.
-- **Dual-Platform Parity**: Established total tool parity (38 tools each) across both GitHub and GitLab platforms.
+- **Dual-Platform MCP Ecosystem**: Established production-grade GitHub and GitLab MCP servers with total tool parity (38 tools each).
+- **GitHub MCP Server**: Implemented a high-fidelity GitHub MCP server and skill (`interacting-with-github`) mirroring the GitLab implementation.
 - **Semantic Naming Standard**: Introduced explicit, deterministic parameter names (e.g., `pull_request_id`, `mr_id`, `project_id`) across all 76 platform tools.
 - **Instructional Duality**: Introduced `EXTENSION-GEMINI.md` for user-facing instructions, separating them from internal maintenance docs (`GEMINI.md`) via `contextFileName` in `gemini-extension.json`.
 - **Precision Feedback**: Implemented high-fidelity multi-line comment support via `start_line` (GitHub) and `line_range` (GitLab) payloads.
@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - **Context Economy**: Refined response distillation to include code blobs and implemented 5,000-character truncation for pipeline logs to maximize context utility.
-- **Platform Modularity**: Refactored core collaboration and devsecops skills to be strictly platform-agnostic, mandating the use of specialized interaction servers.
+- **Platform Modularity**: Refactored core collaboration, devsecops, and external investigation skills to be strictly platform-agnostic, mandating the use of specialized interaction servers.
 
 ## [0.1.0] - 2026-02-25
 
