@@ -77,5 +77,7 @@ This suite follows an **"Orchestrator + Specialized Experts"** architecture. For
 
 ## 🔍 Analysis & Research Utilities
 
+*   **[Performing Systematic Root Cause Analysis](skills/performing-systematic-root-cause-analysis/SKILL.md)**: The "Debug Detective" hypothesis-driven workflow. Enforces a strict 5-attempt threshold before mandatory checkpoint backtracking.
+    *   *Triggers*: "investigate", "bug", "error", "failure", "root cause".
 *   **[Deep Reading Agent Skill](skills/deep-reading-agent-skill/SKILL.md)**: Section-by-section analysis and reflection on complex resources.
     *   *Triggers*: "read deeply", "analyze the nuances", "reflect on the spirit".
