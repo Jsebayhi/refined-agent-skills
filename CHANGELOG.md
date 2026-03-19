@@ -8,64 +8,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.4.3] - 2026-03-19
 
 ### Added
-- **GitHub MCP Server**: Implemented a production-grade GitHub MCP server and skill (`interacting-with-github`) mirroring the GitLab implementation.
-- **Security Auditing**: Added `gitlab_list_vulnerability_findings` and `github_list_vulnerability_findings` tools to enable automated security checks during reviews.
-- **Draft Management**: Added specialized tools for managing pending review comments (`gitlab_edit_review_comment`, `gitlab_delete_review_comment`, etc.) to prevent API conflicts.
-- **Iterative Feedback**: Added `gitlab_get_comment` and `gitlab_edit_comment` for precise refinement of live feedback.
-- **Safety Hatch**: Introduced `gitlab_run_command` and `github_run_command` for executing custom CLI flags while maintaining environment hygiene.
+- **Dual-Platform MCP Ecosystem**: Established production-grade GitHub and GitLab MCP servers with total tool parity (38 tools each).
+- **GitHub MCP Server**: Implemented a high-fidelity GitHub MCP server and skill (`interacting-with-github`) mirroring the GitLab implementation.
+- **Security Auditing**: Integrated `gitlab_list_vulnerability_findings` and `github_list_vulnerability_findings` for automated security checks.
+- **Draft Management**: Added specialized tools for managing pending review comments (Draft Mode, Bulk Publish) to prevent API conflicts.
+- **Iterative Feedback**: Added precision tools for live feedback refinement (`gitlab_get_comment`, `gitlab_edit_comment`).
+- **Safety Hatch**: Introduced `gitlab_run_command` and `github_run_command` for executing custom CLI flags while maintaining hygiene.
+- **MR/PR Lifecycle**: Full support for reviewer and submitter lifecycles, including auto-merge, thread management, and pipeline monitoring.
 
 ### Changed
-- **Platform Modularity**: Refactored `collaborating-on-git-projects` and `upholding-devsecops-standards` to be strictly platform-agnostic, mandating the use of specialized interaction skills.
-- **Context Optimization**: Implemented response distillation for all search and discovery tools, reducing context token consumption by ~80% for complex MRs/PRs.
-- **Auto-Hygiene**: MCP servers now handle `PAGER=cat` and non-interactive enforcement automatically, removing the need for manual terminal prefixing.
-- **Refined Discovery**: Updated `gitlab_list_mrs` with `project` filtering and correct flag mapping for MR states.
+- **Platform Modularity**: Refactored `collaborating-on-git-projects` and `upholding-devsecops-standards` to be strictly platform-agnostic.
+- **Context Optimization**: Implemented response distillation for all search/discovery tools, reducing token consumption by ~80%.
+- **Auto-Hygiene**: MCP servers now handle `PAGER=cat` and non-interactive enforcement automatically.
+- **Refined Discovery**: Updated MR/PR discovery with improved filtering, `project` scoping, and correct state mapping.
 
 ### Fixed
-- Fixed **HTTP 415** (Unsupported Content-Type) by explicitly setting JSON headers in all API POST/PUT requests.
-- Fixed 404 errors when attempting to delete draft notes using the standard notes API.
+- Fixed **HTTP 415** (Unsupported Content-Type) by enforcing JSON headers in all API requests.
+- Fixed 404 errors during draft note deletion and improved error handling for missing CLI binaries.
 - Fixed invalid `--state` flag usage in GitLab MR discovery.
-- Improved error handling for missing `glab`/`gh` binaries with user-friendly installation guidance.
-
-## [0.4.2] - 2026-03-12
-
-### Added
-- Automated authentication failure detection and user guidance in GitLab MCP tools.
-- Improved "Fail-Fast" behavior in `interacting-with-gitlab` skill for unauthenticated environments.
-
-## [0.4.1] - 2026-03-12
-
-### Added
-- Added mandatory authentication check to `interacting-with-gitlab` skill.
-- Added specialized "Draft Mode" workflow for reviewers using `gitlab:create_draft_note` and `gitlab:submit_review`.
-
-## [0.4.0] - 2026-03-12
-
-### Added
-- Expanded `interacting-with-gitlab` MCP tools to support full reviewer and submitter lifecycles.
-- Added `gitlab:create_draft_note` and `gitlab:submit_review` for multi-comment review workflows.
-- Added `gitlab:set_auto_merge` and `gitlab:update_mr` for MR management.
-- Added `only_unresolved` filter to `gitlab:list_discussions`.
-- Added `gitlab:get_mr_details` for comprehensive MR state inspection.
-
-## [0.3.1] - 2026-03-12
-
-### Added
-- Added `resolved` and `resolvable` status to `gitlab:list_discussions` tool for better thread management.
-
-## [0.3.0] - 2026-03-12
-
-### Changed
-- Upgraded `interacting-with-gitlab` to an MCP-first architecture.
-- Replaced standalone scripts with a zero-dependency Node.js MCP server in `skills/interacting-with-gitlab/scripts/server.js`.
-- Exposed `gitlab:*` tools for precision line comments, discussion management, and pipeline job/log retrieval.
-
-## [0.2.0] - 2026-03-12
-
-### Added
-- Added `interacting-with-gitlab` skill for production-grade GitLab management, including precise line-level feedback and discussion thread management.
-- Added `manage_gitlab.sh` router and `manage_gitlab_internal.js` logic for GitLab API abstraction.
-- Added `Red_Team_Report_&_Evaluation_Plan.md` for the new skill.
-- Updated `README.md` to include the new skill.
 
 ## [0.1.0] - 2026-02-25
 
