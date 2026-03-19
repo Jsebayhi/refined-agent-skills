@@ -33,3 +33,12 @@ When you hit the attempt limit (e.g., 5 failed fixes), your initial hypothesis w
 *   **Analyze the failure:** Why did the fixes fail? What new data did they reveal?
 *   **Reset the state:** Use `git reset --hard` to clean the workspace.
 *   **Iterate:** Return to brainstorming with a "Fresh Eye" mindset.
+
+## Context Economics & Delegation
+The primary session context is a finite and precious resource. Every tool call, log output, and iterative code block consumes tokens and increases "context noise," which can lead to "Instructional Dilution" or the agent losing track of the high-level strategy.
+
+### The Delegation Strategy
+To maintain a high-signal primary session:
+1.  **Strategic Focus:** The main agent acts as the **Orchestrator/Detective**, focusing on evidence analysis, hypothesis generation, and decision-making.
+2.  **Tactical Execution:** High-volume, iterative tasks (like "Try these 5 fixes" or "Run this verbose test suite") are delegated to a **Sub-Agent** (e.g., `generalist`).
+3.  **Context Compression:** The sub-agent's entire execution (potentially dozens of turns) is "compressed" into a single summary in the main agent's history. This keeps the main context lean, fast, and strategically aligned.
