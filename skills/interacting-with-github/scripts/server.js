@@ -119,6 +119,7 @@ const tools = {
     run: ({ type, pull_request_id, comments }) => {
       const args = [type, 'view'];
       if (pull_request_id) args.push(pull_request_id);
+      // Guard: --comments only for PR/Issue
       if (comments && (type === 'pr' || type === 'issue')) args.push('--comments');
       return runGh(args);
     }
@@ -228,8 +229,9 @@ const tools = {
         };
 
         if (full_context) {
+          // Official Fix: Use refs/pull/{num}/head for alerts filtering
           const [vulnResp, commResp] = await Promise.all([
-            runGhApi(`repos/{owner}/{repo}/code-scanning/alerts?pr=${pull_request_id}&state=open`),
+            runGhApi(`repos/{owner}/{repo}/code-scanning/alerts?ref=refs/pull/${pull_request_id}/head&state=open`),
             runGhApi(`repos/{owner}/{repo}/issues/${pull_request_id}/comments?per_page=50`)
           ]);
 
@@ -509,8 +511,9 @@ const tools = {
     parameters: { pull_request_id: "string", severity: "string", state: "string" },
     required: [],
     run: ({ pull_request_id, severity, state }) => {
+      // Official Fix: Use refs/pull/{num}/head for alerts filtering
       let endpoint = `repos/{owner}/{repo}/code-scanning/alerts?per_page=100`;
-      if (pull_request_id) endpoint += `&pr=${pull_request_id}`;
+      if (pull_request_id) endpoint += `&ref=refs/pull/${pull_request_id}/head`;
       if (severity) endpoint += `&severity=${severity}`;
       if (state) endpoint += `&state=${state || 'open'}`;
       const response = runGhApi(endpoint);

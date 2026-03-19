@@ -123,7 +123,8 @@ const tools = {
     run: ({ type, mr_id, comments }) => {
       const args = [type, 'view'];
       if (mr_id) args.push(mr_id);
-      if (comments) args.push('--comments');
+      // Guard: --comments only for MR/Issue
+      if (comments && (type === 'mr' || type === 'issue')) args.push('--comments');
       return runGlab(args);
     }
   },
@@ -158,7 +159,7 @@ const tools = {
         const results = data
           .filter(item => item.type === 'blob' && item.path.includes(pattern))
           .map(item => ({ path: item.path, id: item.id }));
-        return JSON.stringify(results.slice(0, 50), null, 2); // Limit to 50 results
+        return JSON.stringify(results.slice(0, 50), null, 2);
       } catch (e) { return response; }
     }
   },
@@ -331,6 +332,7 @@ const tools = {
     run: ({ mr_id, path, line, start_line, message }) => {
       try {
         const diffRefs = getMrDiffRefs(mr_id);
+        // Correct Official Logic: position.new_line and optional position.line_range for multi-line
         const payload = { 
           note: message, 
           position: { 
@@ -344,7 +346,16 @@ const tools = {
         };
         
         if (start_line) {
-          payload.position.start_line = parseInt(start_line);
+          payload.position.line_range = {
+            start: {
+              type: "new",
+              new_line: parseInt(start_line)
+            },
+            end: {
+              type: "new",
+              new_line: parseInt(line)
+            }
+          };
         }
 
         return runGlabApi(`projects/:id/merge_requests/${mr_id}/draft_notes`, 'POST', payload);
