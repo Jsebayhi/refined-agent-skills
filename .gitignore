@@ -8,9 +8,7 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
-# Artifacts
-# artifacts
-!artifacts/api-reference/
+artifacts
 
 # Python
 __pycache__/

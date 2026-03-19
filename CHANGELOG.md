@@ -10,7 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **Dual-Platform MCP Ecosystem**: Established production-grade GitHub and GitLab MCP servers with total tool parity (38 tools each).
 - **Instructional Duality**: Introduced `EXTENSION-GEMINI.md` for user-facing instructions, separating them from internal maintenance docs (`GEMINI.md`) via `contextFileName` in `gemini-extension.json`.
-- **API Ground Truth**: Authored exhaustive technical specifications and 1:1 API mappings for both platforms in `artifacts/api-reference/`.
 - **Precision Feedback**: Implemented high-fidelity multi-line comment support via `start_line` (GitHub) and `line_range` (GitLab) payloads.
 - **Security & Quality Auditing**: Integrated `list_vulnerabilities` and `get_pull_request_details` (with full context) for automated security checks and review deep-dives.
 - **Resilient Execution Engine**: Transitioned all MCP interactions to a robust `spawnSync` engine to eliminate shell-quoting and argument-splitting errors.
