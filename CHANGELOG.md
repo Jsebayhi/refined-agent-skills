@@ -9,13 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **Dual-Platform MCP Ecosystem**: Established production-grade GitHub and GitLab MCP servers with total tool parity (38 tools each).
+- **Semantic Naming Standard**: Introduced explicit, deterministic parameter names (e.g., `pull_request_id`, `mr_id`, `project_id`) across all 76 platform tools.
 - **Instructional Duality**: Introduced `EXTENSION-GEMINI.md` for user-facing instructions, separating them from internal maintenance docs (`GEMINI.md`) via `contextFileName` in `gemini-extension.json`.
 - **Precision Feedback**: Implemented high-fidelity multi-line comment support via `start_line` (GitHub) and `line_range` (GitLab) payloads.
 - **Security & Quality Auditing**: Integrated `list_vulnerabilities` and `get_pull_request_details` (with full context) for automated security checks and review deep-dives.
 - **Resilient Execution Engine**: Transitioned all MCP interactions to a robust `spawnSync` engine to eliminate shell-quoting and argument-splitting errors.
 
 ### Changed
-- **Semantic Naming Standard**: Refactored all 76 platform tools to use explicit, deterministic parameter names (e.g., `pull_request_id`, `mr_id`, `project_id`).
 - **Context Economy**: Implemented intelligent response distillation for discovery tools and 5,000-character truncation for pipeline logs to maximize context utility.
 - **Terminal Hygiene**: MCP servers now handle `PAGER=cat` and non-interactive enforcement automatically via environment injection.
 - **Platform Modularity**: Refactored core collaboration and devsecops skills to be strictly platform-agnostic, mandating the use of specialized interaction servers.
