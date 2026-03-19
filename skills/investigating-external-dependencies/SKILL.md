@@ -24,7 +24,8 @@ A senior developer doesn't guess how a library works based on documentation; the
 ### 0. Mandatory Priority (The "Source First" Rule)
 **CRITICAL:** When tasked with understanding an external library, third-party repository, or API implementation:
 - **NEVER** use `web_fetch` or `google_web_search` as the primary discovery mechanism if a repository URL or package name is available.
-- **ALWAYS** prioritize `gh search code`, `gh repo view`, and `git clone` (with approval) to find the Ground Truth.
+- **ALWAYS** activate and follow the appropriate platform skill (`interacting-with-github` or `interacting-with-gitlab`).
+- **PRIORITIZE** distilled MCP search tools and `git clone` (with approval) to find the Ground Truth.
 - **HALT** generic discovery immediately if this skill is applicable.
 
 ### 1. Phase 1: Identification & Version Match
@@ -44,9 +45,10 @@ A senior developer doesn't guess how a library works based on documentation; the
 ### 3. Phase 3: The Deep Dive (Troubleshooting)
 **Goal:** Resolve cryptic errors or "magic" behavior.
 - **Local Triage:** Inspect code in `node_modules/`, `venv/`, or equivalent.
-- **Remote Search (`gh`/`glab`):**
-    - Search for error strings: `gh search code "error message" --repo <owner/repo>`.
-    - Browse the file tree: `gh repo view <owner/repo> --web`.
+- **Remote Search (Unified Interface):**
+    - Activate the platform skill (`interacting-with-github` or `interacting-with-gitlab`).
+    - Search for error strings or symbols using `_search`.
+    - Use distilled discovery tools to locate files and definitions without context bloat.
 - **Strategic Clone:** If the library is complex, you may `git clone --depth 1 --branch <version>` into `artifacts/external/`.
     - **STATEFUL HALT:** You MUST ask for user approval before performing a `git clone`.
 

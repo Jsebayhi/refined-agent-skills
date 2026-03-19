@@ -6,13 +6,14 @@ This extension provides a suite of high-signal engineering skills. These instruc
 **MANDATORY:** When asked to analyze, understand, or troubleshoot external libraries, third-party repositories, or implementation details of any dependency:
 1.  **NEVER** rely on `web_fetch` or `google_web_search` as the primary discovery mechanism if the repository URL or package name is available.
 2.  **ALWAYS** activate and follow the `investigating-external-dependencies` skill.
-3.  **PRIORITIZE** `gh search code`, `gh repo view`, and `git clone` (with approval) to find the "Ground Truth" in the actual source code.
+3.  **PRIORITIZE** using platform-specific specialized skills (`interacting-with-github` or `interacting-with-gitlab`) and `git clone` (with approval) to find the "Ground Truth" in the actual source code.
 
 ## Terminal Hygiene: Non-Interactive Mandate
 **MANDATORY:** You MUST use `gh` and `glab` in non-interactive mode to prevent terminal hangs.
-- Prefix all discovery commands with `GH_PAGER=cat` or `GLAB_PAGER=cat`.
-- Forbid usage of `--live`, `--watch`, or any command that continuously refreshes output.
-- Use one-shot discovery commands (e.g., `gh pr checks` instead of `gh pr view --watch`).
+- **GitHub (`gh`):** You **MUST** use the `interacting-with-github` skill. Its MCP tools automatically handle environment hygiene (`GH_PAGER=cat`) and non-interactive enforcement.
+- **GitLab (`glab`):** You **MUST** use the `interacting-with-gitlab` skill. Its MCP tools automatically handle environment hygiene (`GLAB_PAGER=cat`) and non-interactive enforcement.
+- **Forbid usage** of `--live`, `--watch`, or any command that continuously refreshes output.
+- **Use one-shot discovery commands** (e.g., `gh pr checks` instead of `gh pr view --watch`).
 
 ## Operational Mandates: Skill Escalation & Complexity Management
 
@@ -29,8 +30,8 @@ This extension follows an "Orchestrator + Specialized Experts" architecture. To 
 
 ### Recommended Combinations:
 - **Feature Development:** `orchestrating-software-lifecycle` + `deep-brainstorming` + `maintaining-rigorous-architecture-decisions` + `engineering-reliable-software-with-[Language]`.
-- **Quality Assurance:** `orchestrating-software-lifecycle` + `testing-software-efficiently` + `upholding-devsecops-standards`.
-- **Submission:** `orchestrating-software-lifecycle` + `collaborating-on-git-projects` + `authoring-effective-user-documentation`.
+- **Quality Assurance:** `orchestrating-software-lifecycle` + `testing-software-efficiently` + `upholding-devsecops-standards` + `interacting-with-[github/gitlab]`.
+- **Submission:** `orchestrating-software-lifecycle` + `collaborating-on-git-projects` + `authoring-effective-user-documentation` + `interacting-with-[github/gitlab]`.
 
 ### Conflict Resolution:
 1. **Orchestrator (Lifecycle):** Defines the *Current State* and *Phase*.

@@ -24,25 +24,19 @@ Use `type(scope): description` for titles.
 
 ## 🛑 Non-Interactive Mandate (Senior Efficiency)
 To prevent terminal hangs and blocking the user, you MUST strictly adhere to non-interactive CLI usage:
-*   **Disable Pagers:** Prefix all discovery commands with `GH_PAGER=cat` or `GLAB_PAGER=cat` (e.g., `GH_PAGER=cat gh pr view --comments`).
-*   **No Blocking/Watch Flags:** NEVER use `--live`, `--watch`, or any flag that causes the command to continuously monitor or refresh the output (e.g., `glab ci status --live` is FORBIDDEN).
-*   **One-Shot Discovery:** Use commands that return immediately. For CI status:
-    - **GitHub:** `GH_PAGER=cat gh pr checks`
-    - **GitLab:** `GLAB_PAGER=cat glab ci status` (without `--live`) or `glab ci view` (one-shot).
+*   **GitHub Paging:** If the project is on GitHub, you **MUST** load and use all skills that simplify GitHub interaction (e.g., `interacting-with-github`). These skills automatically handle environment hygiene and non-interactive enforcement.
+*   **GitLab Paging:** If the project is on GitLab, you **MUST** load and use all skills that simplify GitLab interaction (e.g., `interacting-with-gitlab`). These skills automatically handle environment hygiene and non-interactive enforcement.
+*   **No Blocking/Watch Flags:** NEVER use `--live`, `--watch`, or any flag that causes the command to continuously monitor or refresh the output.
 
 ## 🛠️ Dual-Platform Cheat Sheet
 
 ### GitHub (`gh`)
-*   **Discovery:** `GH_PAGER=cat gh pr list`, `GH_PAGER=cat gh pr view --comments`
-*   **Creation:** `gh pr create --title "..." --body "..."`
-*   **Feedback:** `gh pr comment --body "..."` (Top-level) or use `gh api` for specific threads.
+*   **Mandatory Protocol:** You MUST load and use all skills that provide specialized GitHub automation.
+*   **Workflow:** Use platform-specific MCP tools for PR creation, discovery, and threaded reviews to ensure high-fidelity interaction.
 
 ### GitLab (`glab`)
-*   **Discovery:** `GLAB_PAGER=cat glab mr list`, `GLAB_PAGER=cat glab mr view --comments`
-*   **Creation:** `glab mr create --title "..." --description "..."`
-*   **Threaded Reply:** 
-    1. Fetch Discussions: `glab api projects/:id/merge_requests/:iid/discussions`
-    2. Post Reply: `glab api -X POST projects/:id/merge_requests/:iid/discussions/:disc_id/notes -f body="Done."`
+*   **Mandatory Protocol:** You MUST load and use all skills that provide specialized GitLab automation.
+*   **Workflow:** Use platform-specific MCP tools for MR creation, discovery, and threaded replies to ensure high-fidelity interaction.
 
 ## 💡 Examples & Best Practices
 
