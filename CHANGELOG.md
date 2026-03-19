@@ -9,23 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **Dual-Platform MCP Ecosystem**: Established production-grade GitHub and GitLab MCP servers with total tool parity (38 tools each).
-- **GitHub MCP Server**: Implemented a high-fidelity GitHub MCP server and skill (`interacting-with-github`) mirroring the GitLab implementation.
-- **Security Auditing**: Integrated `gitlab_list_vulnerability_findings` and `github_list_vulnerability_findings` for automated security checks.
-- **Draft Management**: Added specialized tools for managing pending review comments (Draft Mode, Bulk Publish) to prevent API conflicts.
-- **Iterative Feedback**: Added precision tools for live feedback refinement (`gitlab_get_comment`, `gitlab_edit_comment`).
-- **Safety Hatch**: Introduced `gitlab_run_command` and `github_run_command` for executing custom CLI flags while maintaining hygiene.
-- **MR/PR Lifecycle**: Full support for reviewer and submitter lifecycles, including auto-merge, thread management, and pipeline monitoring.
+- **Instructional Duality**: Introduced `EXTENSION-GEMINI.md` for user-facing instructions, separating them from internal maintenance docs (`GEMINI.md`) via `contextFileName` in `gemini-extension.json`.
+- **API Ground Truth**: Authored exhaustive technical specifications and 1:1 API mappings for both platforms in `artifacts/api-reference/`.
+- **Precision Feedback**: Implemented high-fidelity multi-line comment support via `start_line` (GitHub) and `line_range` (GitLab) payloads.
+- **Security & Quality Auditing**: Integrated `list_vulnerabilities` and `get_pull_request_details` (with full context) for automated security checks and review deep-dives.
+- **Resilient Execution Engine**: Transitioned all MCP interactions to a robust `spawnSync` engine to eliminate shell-quoting and argument-splitting errors.
 
 ### Changed
-- **Platform Modularity**: Refactored `collaborating-on-git-projects` and `upholding-devsecops-standards` to be strictly platform-agnostic.
-- **Context Optimization**: Implemented response distillation for all search/discovery tools, reducing token consumption by ~80%.
-- **Auto-Hygiene**: MCP servers now handle `PAGER=cat` and non-interactive enforcement automatically.
-- **Refined Discovery**: Updated MR/PR discovery with improved filtering, `project` scoping, and correct state mapping.
+- **Semantic Naming Standard**: Refactored all 76 platform tools to use explicit, deterministic parameter names (e.g., `pull_request_id`, `mr_id`, `project_id`).
+- **Context Economy**: Implemented intelligent response distillation for discovery tools and 5,000-character truncation for pipeline logs to maximize context utility.
+- **Terminal Hygiene**: MCP servers now handle `PAGER=cat` and non-interactive enforcement automatically via environment injection.
+- **Platform Modularity**: Refactored core collaboration and devsecops skills to be strictly platform-agnostic, mandating the use of specialized interaction servers.
 
 ### Fixed
-- Fixed **HTTP 415** (Unsupported Content-Type) by enforcing JSON headers in all API requests.
-- Fixed 404 errors during draft note deletion and improved error handling for missing CLI binaries.
-- Fixed invalid `--state` flag usage in GitLab MR discovery.
+- Fixed **HTTP 415** (Unsupported Content-Type) by enforcing explicit JSON headers in all API POST/PUT requests.
+- Fixed 404 errors during draft note deletion and improved error handling for missing platform CLI binaries.
+- Fixed invalid `--state` flag usage and inconsistent state mapping in GitLab MR discovery.
 
 ## [0.1.0] - 2026-02-25
 
