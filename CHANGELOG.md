@@ -22,11 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Terminal Hygiene**: MCP servers now handle `PAGER=cat` and non-interactive enforcement automatically via environment injection.
 - **Platform Modularity**: Refactored core collaboration and devsecops skills to be strictly platform-agnostic, mandating the use of specialized interaction servers.
 
-### Fixed
-- Fixed **HTTP 415** (Unsupported Content-Type) by enforcing explicit JSON headers in all API POST/PUT requests.
-- Fixed 404 errors during draft note deletion and improved error handling for missing platform CLI binaries.
-- Fixed invalid `--state` flag usage and inconsistent state mapping in GitLab MR discovery.
-
 ## [0.1.0] - 2026-02-25
 
 ### Added
