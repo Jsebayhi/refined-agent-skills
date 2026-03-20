@@ -1,5 +1,5 @@
 ---
-name: navigating-complex-supervised
+name: navigating-complex-task-supervised
 description: MANDATORY. DO NOT attempt complex tasks with human oversight without calling 'activate_skill' on 'navigating-complex-supervised' first. This is the REQUIRED PROTOCOL for 'Supervised Complex' tasks (Architectural Sparring). It enforces human-in-the-loop gates for Hypotheses and Solutions to ensure architectural alignment.
 ---
 

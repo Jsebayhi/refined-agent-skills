@@ -1,6 +1,6 @@
 ---
 name: selecting-optimal-methodology
-description: MANDATORY. DO NOT start any task without calling 'activate_skill' on 'selecting-optimal-methodology' first. This is the REQUIRED ENTRYPOINT for establishing the operational contract (Linear vs. Complex, Supervised vs. Autonomous) and selecting the appropriate execution engine. Proceeding with execution without this initial selection constitutes a mechanical failure of the framework.
+description: MANDATORY. DO NOT start any task without calling 'activate_skill' on 'selecting-optimal-methodology' first. This is the REQUIRED ENTRYPOINT for establishing the operational contract (Linear vs. Complex) and selecting the appropriate execution engine. Proceeding with execution without this initial selection constitutes a mechanical failure of the framework.
 ---
 
 # Selecting Optimal Methodology
@@ -12,10 +12,10 @@ Use the following matrix to select the appropriate **Primary Engine**:
 
 | Task Nature | Operational Mode | Primary Engine |
 | :--- | :--- | :--- |
-| **Linear** | **Supervised** | `executing-linear-supervised` |
-| **Linear** | **Autonomous** | `executing-linear-autonomous` |
-| **Complex** | **Supervised** | `navigating-complex-supervised` |
-| **Complex** | **Autonomous** | `navigating-complex-autonomous` |
+| **Linear** | **Supervised** | `executing-linear-task-supervised` |
+| **Linear** | **Autonomous** | `executing-linear-task-autonomous` |
+| **Complex** | **Supervised** | `navigating-complex-task-supervised` |
+| **Complex** | **Autonomous** | `navigating-complex-task-autonomous` |
 
 ### 2. DEFINITIONS
 *   **Linear:** Trivial pattern-match, <20 lines of code, zero logic flow changes.

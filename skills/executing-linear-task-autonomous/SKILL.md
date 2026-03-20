@@ -1,5 +1,5 @@
 ---
-name: executing-linear-autonomous
+name: executing-linear-task-autonomous
 description: MANDATORY. DO NOT attempt automated, low-risk updates without calling 'activate_skill' on 'executing-linear-autonomous' first. This is the REQUIRED PROTOCOL for 'Autonomous Linear' tasks (Mechanical Loop + Hard Signal). It enforces a self-correcting loop that terminates only when the success signal is achieved.
 ---
 

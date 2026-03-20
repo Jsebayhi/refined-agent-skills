@@ -1,5 +1,5 @@
 ---
-name: navigating-complex-autonomous
+name: navigating-complex-task-autonomous
 description: MANDATORY. DO NOT attempt complex tasks autonomously without calling 'activate_skill' on 'navigating-complex-autonomous' first. This is the REQUIRED PROTOCOL for 'Autonomous Complex' tasks (Scientific Loop + Reviewer Proxy). It enforces nested convergence loops for Hypotheses, Solutions, and Implementation with a mandatory 5-attempt backtrack threshold.
 ---
 

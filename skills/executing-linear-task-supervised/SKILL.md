@@ -1,5 +1,5 @@
 ---
-name: executing-linear-supervised
+name: executing-linear-task-supervised
 description: MANDATORY. DO NOT attempt predictable, low-risk updates without calling 'activate_skill' on 'executing-linear-supervised' first. This is the REQUIRED PROTOCOL for 'Supervised Linear' tasks (Pattern Matching + Human Sign-off). It enforces a high-velocity "Analyze -> Implement -> Validate -> Review -> Approval" loop.
 ---
 
