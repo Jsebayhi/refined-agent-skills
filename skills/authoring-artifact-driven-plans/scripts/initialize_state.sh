@@ -5,7 +5,7 @@
 SKILL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TARGET_DIR=".gemini/skills/current-task-state"
 ASSET_FILE="$SKILL_DIR/assets/task-state-template.md"
-PREFIX="${1:-TASK}"
+PREFIX="${1:-STEP}"
 
 # 1. Create directory structure
 mkdir -p "$TARGET_DIR/references"

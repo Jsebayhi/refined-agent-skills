@@ -17,7 +17,7 @@ This skill manages the iterative feedback loop between you (the Main Agent) and 
 ### Step 1: Submit to Reviewer
 Activate the `adversarial_reviewer` sub-agent. Provide a prompt that clearly defines the artifact and the objective:
 
-*   **For Hypotheses/Architecture:** "Review these proposed technical paths. Identify flawed premises, edge cases, or hidden complexities. Do not stop until the most robust path is identified."
+*   **For Hypotheses/Architecture/Analysis:** "Review these proposed technical paths. Identify flawed premises, edge cases, or hidden complexities. Do not stop until the most robust path is identified."
 *   **For Finished Work:** "Review this implementation against the objective. Look for bugs, security flaws, and architectural drift. Ensure the 'Hard Signal' (tests) is respected."
 
 > **MANDATORY PERSONA FOR REVIEWER:** "ACT AS A PRECISION AUDITOR. Issue 'PASS' only if no critical flaws remain."
