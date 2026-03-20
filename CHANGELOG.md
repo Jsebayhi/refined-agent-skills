@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-03-20
+
+### Added
+- **Mode Matrix Framework**: Implemented a new "Mode-Aware Stateful Orchestration" architecture.
+- **Orchestrating Decision Router**: New entrypoint skill for task quadrant establishment.
+- **Artifact-Driven State Machine**: Implemented disk-based task memory in `.gemini/state/` to eliminate context bloat.
+- **Dual-Piston Engines**: Introduced `executing-linear-tasks` (Fast Track) and `navigating-complex-implementations` (Scientific Loop).
+- **Adversarial Convergence**: New protocol for iterative agent-reviewer hardening before human gatekeeping.
+- **Brainstorming Sub-Routine**: Specialized `brainstorming-multiple-options` skill for automated engine use.
+
+### Changed
+- **System Standards**: Updated `EXTENSION-GEMINI.md` with Quadrant mandates and "Step Back" escalations.
+- **Skill Hierarchy**: Refactored `deep-brainstorming` and `maintaining-rigorous-architecture-decisions` to integrate with the new engines.
+
+### Removed
+- **Legacy Lifecycle**: Deprecated `orchestrating-software-lifecycle`.
+- **Legacy RCA**: Deprecated `performing-systematic-root-cause-analysis` (merged into Exploration Engine).
+
 ## [0.3.0] - 2026-03-19
 
 ### Added

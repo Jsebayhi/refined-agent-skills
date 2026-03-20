@@ -20,21 +20,22 @@ This extension provides a suite of high-signal engineering skills. These instruc
 ### ⚠️ The "Step Back" Mandate: Resilience Over Persistence
 Complexity is often invisible until it resists. If any task requires more than **one corrective iteration** (e.g., a fix for a failed automated test, a second attempt at a build, or a failed runtime validation), you MUST treat this as a signal that the task's complexity was initially underestimated.
 
-1.  **Cease Tactical Fixes:** Immediately stop "patching" symptoms. Do not attempt a third iteration using a low-complexity "Research -> Execution" loop.
-2.  **Contextual Escalation:** You are MANDATED to activate a specialized expert skill (e.g., `orchestrating-software-lifecycle`, `testing-software-efficiently`, or `performing-systematic-root-cause-analysis`).
-3.  **Reset to Strategy:** Use the activated skill to perform a dedicated **Architecture or Root-Cause Phase**. Re-analyze the underlying system before attempting further modifications.
-4.  **Acknowledge Bias:** Explicitly state in your next response that you are escalating due to persistent resistance to maintain transparency with the user.
+1.  **Cease Tactical Fixes:** Immediately stop "patching" symptoms.
+2.  **Contextual Escalation:** You are MANDATED to activate the **`navigating-complex-implementations`** skill.
+3.  **Reset to Strategy:** Use the Exploration Engine to perform a dedicated **Scientific Loop** (Hypothesis -> Solution -> Implementation). Re-analyze the underlying system before attempting further modifications.
+4.  **Acknowledge Bias:** Explicitly state in your next response that you are escalating to the Exploration Engine due to persistent resistance.
 
 ## Modular Engineering & Multi-Skill Activation
 This extension follows an "Orchestrator + Specialized Experts" architecture. To ensure high-quality production engineering, agents are encouraged and expected to activate multiple skills simultaneously.
 
-### Recommended Combinations:
-- **Bug Investigation:** `orchestrating-software-lifecycle` + `performing-systematic-root-cause-analysis` + `testing-software-efficiently`.
-- **Feature Development:** `orchestrating-software-lifecycle` + `deep-brainstorming` + `maintaining-rigorous-architecture-decisions` + `engineering-reliable-software-with-[Language]`.
-- **Quality Assurance:** `orchestrating-software-lifecycle` + `testing-software-efficiently` + `upholding-devsecops-standards` + `interacting-with-[github/gitlab]`.
-- **Submission:** `orchestrating-software-lifecycle` + `collaborating-on-git-projects` + `authoring-effective-user-documentation` + `interacting-with-[github/gitlab]`.
+### The Mode Matrix Combinations:
+- **Linear Execution:** `orchestrating-decision-router` -> `executing-linear-tasks` + `conducting-adversarial-convergence`.
+- **Complex Exploration:** `orchestrating-decision-router` -> `navigating-complex-implementations` + `brainstorming-multiple-options` + `conducting-adversarial-convergence`.
+- **Validation Philosophy:** Always use `testing-software-efficiently` as the underlying verification standard.
+- **Quality Assurance:** `testing-software-efficiently` + `upholding-devsecops-standards` + `interacting-with-[github/gitlab]`.
+- **Submission:** `collaborating-on-git-projects` + `authoring-effective-user-documentation` + `interacting-with-[github/gitlab]`.
 
 ### Conflict Resolution:
-1. **Orchestrator (Lifecycle):** Defines the *Current State* and *Phase*.
+1. **Orchestrator (Router/Engine):** Defines the *Current State* and *Mode*.
 2. **Specialized Experts:** Define the *Quality Bar* and *Standards* for that state.
 3. **Language Experts:** Provide the *Syntax* and *Tools* to achieve the standards.
