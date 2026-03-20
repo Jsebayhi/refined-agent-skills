@@ -31,6 +31,12 @@ Activate the `adversarial_reviewer` sub-agent. Provide the following prompt stru
 ### Step 3: Iterate
 Repeat Step 1 with the hardened work. Continue until the reviewer issues a definitive "PASS."
 
+**PASS CRITERIA:**
+A "PASS" is only valid if:
+1.  The Reviewer explicitly confirms all identified flaws are resolved.
+2.  The Reviewer identifies ZERO new critical flaws.
+3.  The agent provides proof (logs/output) that the "Hard Signal" is passing.
+
 ### Step 4: Human Gatekeeping
 Once passed, present the final, converged result to the human for final approval.
 

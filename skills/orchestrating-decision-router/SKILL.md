@@ -21,7 +21,7 @@ Briefly analyze the request to determine its nature. Do NOT perform deep researc
 *   **Complex:** The path is unknown, requires exploration, architectural changes, or the agent has hit resistance (e.g., "Implement feature X," "Fix obscure bug Y").
 
 ### Step 2: Establish the Mode Matrix Contract
-Present the following contract to the human and wait for approval:
+Present the following contract to the human (or reviewer in Autonomous mode) and wait for approval:
 
 > **MODE MATRIX CONTRACT**
 > *   **Task Nature:** [Linear | Complex]
@@ -29,7 +29,9 @@ Present the following contract to the human and wait for approval:
 > *   **Primary Engine:** [executing-linear-tasks | navigating-complex-implementations]
 > *   **Success Signal:** [Name of test/script/condition that defines 'Done']
 
-**HALT AND WAIT FOR USER TO TYPE 'APPROVE' OR PROVIDE ALTERNATIVE MODES.**
+**APPROVAL GATE:**
+- **Supervised Mode:** HALT AND WAIT FOR USER TO TYPE 'APPROVE'.
+- **Autonomous Mode:** Activate the `adversarial_reviewer`. If the reviewer confirms the contract is logical and the engine choice is correct, proceed.
 
 ### Step 3: Initialize State & Handover
 Once approved:

@@ -9,8 +9,9 @@ This skill provides the "Disk-Based Memory" for the agent. By sharding the task 
 
 ## CRITICAL RULES
 1.  **DISK IS TRUTH:** The `.gemini/state/plan.md` file is the sole source of truth for the session progress. You MUST read it before every step and update it after every tool call.
-2.  **PERSISTENCE FIDELITY (150-LINE LIMIT):** No state file in `.gemini/state/` shall exceed 150 lines. If a plan or hypothesis list grows beyond this, you MUST shard it into specialized sub-files (e.g., `hypotheses-v2.md`).
-3.  **GIT HYGIENE:** You MUST ensure `.gemini/state/` is added to the project's `.gitignore` to avoid repository pollution.
+2.  **PERSISTENCE FIDELITY (150-LINE LIMIT):** No state file in `.gemini/state/` shall exceed 150 lines.
+3.  **THE STATE INDEX:** If you shard files (e.g., create `hypotheses-v2.md`), you MUST maintain a `.gemini/state/index.md` file that acts as a manifest of all active shards and their current purpose.
+4.  **GIT HYGIENE:** You MUST ensure `.gemini/state/` is added to the project's `.gitignore` to avoid repository pollution.
 
 ## WORKFLOW: [Initialization -> Execution -> Synchronization]
 

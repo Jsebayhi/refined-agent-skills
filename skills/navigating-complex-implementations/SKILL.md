@@ -25,7 +25,10 @@ This skill provides the "Exploration Engine." It is designed to navigate uncerta
 2.  **Implement:** Apply the chosen strategy surgically.
 3.  **Validate:** Run the Hard Signal.
 4.  **CONVERGENCE REVIEW:** Debate the implementation with the `adversarial_reviewer`.
-5.  **BACKTRACK MANDATE:** If validation fails after 5 corrective attempts, you MUST execute `git reset --hard HEAD` and return to Phase 1.
+5.  **BACKTRACK MANDATE:** If validation fails after 5 corrective attempts, you MUST preserve the evidence and reset:
+    *   `git add . && git commit -m "temp: failed exploration evidence"`
+    *   `git reset --hard [CHECKPOINT_HASH]`
+    *   Return to Phase 1 to re-evaluate premises with the new evidence.
 
 ## CRITICAL RULES
 1.  **NO YAK SHAVING:** If the "Hard Signal" doesn't exist, your first micro-task in the plan MUST be to create it (TDD).

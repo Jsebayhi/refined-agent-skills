@@ -11,6 +11,7 @@ This skill provides the "Execution Engine" for straightforward work. It is desig
 1.  **NO BRUTE FORCE:** You MUST identify an existing pattern in the codebase before implementing a change.
 2.  **MANDATORY VALIDATION:** You are PROHIBITED from committing until local tests or linting scripts pass.
 3.  **CONVERGENCE MANDATE:** You MUST call the `adversarial_reviewer` via the `conducting-adversarial-convergence` protocol before presenting the work to the human.
+4.  **COMPLEXITY ESCALATION:** If local validation fails more than 2 times, you MUST stop, backtrack to the `orchestrating-decision-router`, and upgrade the task nature to **Complex**.
 
 ## WORKFLOW: [Analyze -> Act -> Validate -> Review]
 
