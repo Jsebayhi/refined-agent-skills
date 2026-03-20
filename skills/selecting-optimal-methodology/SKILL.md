@@ -9,9 +9,7 @@ This skill is the mandatory entrypoint for all agent operations. It forces the s
 
 ### CRITICAL RULES
 1.  **NO ACTION WITHOUT CONTRACT:** Execution of implementation or discovery tools is PROHIBITED until the Mode Matrix Contract is established and approved.
-2.  **MANDATORY SUB-SKILL CHAINING:** Once the contract is approved, you MUST deactivate this skill and activate both the **state-management skill** (`authoring-artifact-driven-plans`) and the specific **Engine skill** indicated in the contract:
-    *   For **Linear** tasks: Activate **`executing-linear-tasks`**.
-    *   For **Complex** tasks: Activate **`navigating-complex-implementations`**.
+2.  **MANDATORY SUB-SKILL CHAINING:** Once the contract is approved, you MUST deactivate this skill and activate both the **state-management skill** (`authoring-artifact-driven-plans`) and the **Primary Engine** skill explicitly named in your contract.
 3.  **OBJECTIVE JUSTIFICATION:** You must explicitly justify why a task is "Linear" based on the technical constraints below. If in doubt, you MUST default to "Complex."
 
 ### WORKFLOW: [Discovery -> Selection -> Handover]
@@ -39,5 +37,5 @@ Present the following contract to the human (or reviewer in Autonomous mode) and
 Once approved:
 1.  State: "Contract established. Handing over to [Engine Skill] and initializing state."
 2.  Deactivate this skill.
-3.  Activate the **state-management skill** (`authoring-artifact-driven-plans`) and the chosen **Engine skill**.
+3.  Activate the **state-management skill** (`authoring-artifact-driven-plans`) and the chosen **Engine skill** as defined in the contract.
 4.  Follow the state-management protocol to initialize task memory and begin execution.
