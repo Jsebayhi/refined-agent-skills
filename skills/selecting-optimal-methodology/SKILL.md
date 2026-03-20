@@ -14,8 +14,11 @@ Select your **Primary Engine** based on task complexity and required oversight. 
 | :--- | :--- | :--- | :--- |
 | **Linear** | **Supervised** | Trivial update (<20 lines, zero logic changes) + Human Sign-off. | `executing-linear-task-supervised` |
 | **Linear** | **Autonomous** | Trivial update + Mechanical Signal (lint/tests) only. | `executing-linear-task-autonomous` |
-| **Complex** | **Supervised** | Decisions/Features/Bugs + Human Architectural control. | `navigating-complex-task-supervised` |
+| **Complex** | **Supervised** | Decisions/Features/Bugs + **Reviewer convergence** + Human control. | `navigating-complex-task-supervised` |
 | **Complex** | **Autonomous** | Decisions/Features/Bugs + Reviewer Proxy gatekeeping. | `navigating-complex-task-autonomous` |
+
+### ESCALATION GUARDRAIL
+If a task is initially classified as **Linear** but local validation fails more than 2 times, you MUST immediately halt, return to this skill, and upgrade the task nature to **Complex** using the appropriate engine.
 
 ### MANDATORY PROTOCOL
 
@@ -35,6 +38,5 @@ Analyze the request, select the quadrant, and present the following contract for
 
 #### 2. Handover
 Once approved:
-1. Deactivate this skill.
-2. Activate **`authoring-artifact-driven-plans`** and the selected **Primary Engine**.
-3. Follow the state-management protocol to initialize task memory and begin execution.
+1. Activate **`authoring-artifact-driven-plans`** and the selected **Primary Engine**.
+2. Follow the state-management protocol to initialize task memory and begin execution.
