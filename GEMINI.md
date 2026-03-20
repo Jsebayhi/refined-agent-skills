@@ -44,12 +44,6 @@ This extension provides a collection of distilled, high-signal experts for the G
 - Forbid usage of `--live`, `--watch`, or any command that continuously refreshes output.
 - Use one-shot discovery commands (e.g., `gh pr checks` instead of `gh pr view --watch`).
 
-### README Maintenance
-When adding a new skill to the `skills/` directory:
-1. Update the `Available Skills` section in `README.md`.
-2. Include the skill name, a brief description, and its primary trigger phrases.
-3. Provide the specific installation and linking commands for that skill, matching the existing examples.
-
 ### Adding a New Skill
 Create a new directory in `skills/` with a `SKILL.md` file following the kebab-case naming convention.
 
