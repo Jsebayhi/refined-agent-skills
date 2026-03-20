@@ -5,37 +5,43 @@ description: MANDATORY. DO NOT start any task without calling 'activate_skill' o
 
 # Selecting Optimal Methodology
 
-This skill is the mandatory entrypoint for all agent operations. It forces the selection of the specific operational loop (Linear or Complex) required to achieve the user's goal with maximum fidelity.
+This skill is the mandatory entrypoint for all agent operations. It forces the selection of the specific operational engine required to achieve the user's goal with maximum fidelity.
 
-### CRITICAL RULES
+### 1. THE DECISION MATRIX
+Use the following matrix to select the appropriate **Primary Engine**:
+
+| Task Nature | Definition | Primary Engine |
+| :--- | :--- | :--- |
+| **Linear** | Trivial pattern-match, <20 lines of code, zero logic flow changes. | `executing-linear-tasks` |
+| **Complex** | New features, bug investigations, or any change requiring decision-making. | `navigating-complex-implementations` |
+
+### 2. CRITICAL RULES
 1.  **NO ACTION WITHOUT CONTRACT:** Execution of implementation or discovery tools is PROHIBITED until the Mode Matrix Contract is established and approved.
-2.  **MANDATORY SUB-SKILL CHAINING:** Once the contract is approved, you MUST deactivate this skill and activate both the **state-management skill** (`authoring-artifact-driven-plans`) and the **Primary Engine** skill explicitly named in your contract.
-3.  **OBJECTIVE JUSTIFICATION:** You must explicitly justify why a task is "Linear" based on the technical constraints below. If in doubt, you MUST default to "Complex."
+2.  **MANDATORY SUB-SKILL CHAINING:** Once the contract is approved, you MUST deactivate this skill and activate both the **state-management skill** (`authoring-artifact-driven-plans`) and the **Primary Engine** skill selected from the matrix.
+3.  **DEFAULT TO COMPLEX:** If a task nature is ambiguous, you MUST select **Complex**.
 
-### WORKFLOW: [Discovery -> Selection -> Handover]
+### 3. WORKFLOW: [Discovery -> Selection -> Handover]
 
-#### 1. Discovery & Analysis
-Analyze the request to determine its nature based on the following definitions:
-*   **Linear (Trivial):** The path is a brainless update (e.g., surgical one-line fixes, documentation updates, or applying lint fixes). It involves <20 lines of code and zero logic flow changes.
-*   **Complex (Standard/Exploration):** Any task requiring decision-making. This includes implementing new features, multi-step investigations, or any change that alters logic flow or creates new files.
+#### Step 1: Discovery & Analysis
+Analyze the request against the Decision Matrix definitions above.
 
-#### 2. Establish the Mode Matrix Contract
-Present the following contract to the human (or reviewer in Autonomous mode) and wait for approval:
+#### Step 2: Establish the Mode Matrix Contract
+Present the following contract to the human (or reviewer in Autonomous mode) with your selections and wait for approval:
 
 > **MODE MATRIX CONTRACT**
 > *   **Task Nature:** [Linear | Complex]
 > *   **Operational Mode:** [Supervised (Human Review) | Autonomous (Reviewer Proxy)]
-> *   **Primary Engine:** [executing-linear-tasks | navigating-complex-implementations]
+> *   **Primary Engine:** [Name of the selected engine from the Matrix]
 > *   **Success Signal:** [Technical name of test/script/condition that defines success]
-> *   **Justification:** [Technical reason for this selection]
+> *   **Justification:** [Brief technical reason for this selection]
 
 **APPROVAL GATE:**
 - **Supervised Mode:** HALT AND WAIT FOR USER TO TYPE 'APPROVE'.
 - **Autonomous Mode:** Call the `adversarial_reviewer`. If the reviewer confirms the contract logic and engine choice, proceed.
 
-#### 3. Handover & Initialization
+#### Step 3: Handover & Initialization
 Once approved:
-1.  State: "Contract established. Handing over to [Engine Skill] and initializing state."
+1.  State: "Contract established. Handing over to [Selected Engine] and initializing state."
 2.  Deactivate this skill.
-3.  Activate the **state-management skill** (`authoring-artifact-driven-plans`) and the chosen **Engine skill** as defined in the contract.
+3.  Activate **`authoring-artifact-driven-plans`** and the selected **Engine skill**.
 4.  Follow the state-management protocol to initialize task memory and begin execution.
