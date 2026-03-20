@@ -1,46 +1,39 @@
 ---
 name: authoring-artifact-driven-plans
-description: MANDATORY. DO NOT attempt to execute a multi-step task without calling 'activate_skill' on 'authoring-artifact-driven-plans' first. This is the REQUIRED PROTOCOL for initializing and maintaining disk-based state in '.gemini/state/'. It eliminates context accumulation by offloading task memory to the filesystem. Proceeding with ephemeral checklists in the prompt constitutes a protocol failure.
+description: MANDATORY. DO NOT attempt to execute a multi-step task without calling 'activate_skill' on 'authoring-artifact-driven-plans' first. This is the REQUIRED PROTOCOL for initializing and maintaining persistent task memory via the ".gemini/skills/current-task-state/" directory. It leverages deterministic sharding and CLI skill-loading to prevent amnesia and instructional dilution.
 ---
 
 # Authoring Artifact-Driven Plans
 
-This skill provides the "Disk-Based Memory" for the agent. By sharding the task state across files in `.gemini/state/`, the agent maintains full instructional saliency and prevents context bloat.
+This skill manages the persistent "Task Skill" that ensures continuity across sessions. It shards task memory by placing high-level state in `SKILL.md` and verbose evidence in the `references/` directory using a standardized naming convention.
 
-## CRITICAL RULES
-1.  **DISK IS TRUTH:** The `.gemini/state/plan.md` file is the sole source of truth for the session progress. You MUST read it before every step and update it after every tool call.
-2.  **PERSISTENCE FIDELITY (150-LINE LIMIT):** No state file in `.gemini/state/` shall exceed 150 lines.
-3.  **THE STATE INDEX:** If you shard files (e.g., create `hypotheses-v2.md`), you MUST maintain a `.gemini/state/index.md` file that acts as a manifest of all active shards and their current purpose.
-4.  **GIT HYGIENE:** You MUST ensure `.gemini/state/` is added to the project's `.gitignore` to avoid repository pollution.
+### CRITICAL RULES
+1. **DETERMINISTIC SETUP:** You MUST use `scripts/initialize_state.sh [PREFIX]` to create the environment. Do NOT create directories manually.
+2. **TASK CONTINUITY:** If `.gemini/skills/current-task-state/` exists, you MUST load it and resume the plan. Do NOT re-initialize.
+3. **PREFIX-BASED NAMING:** All files in `references/` MUST follow: `[PREFIX]_[FILE_NAME].md`.
+4. **SHARDED SYNCHRONIZATION:** 
+    * First, update the detailed reference shards in `references/`.
+    * Then, update the high-level `SKILL.md` checklist and "Current Context".
+5. **PERSISTENCE LIMIT (100 LINES):** The `SKILL.md` MUST remain under 100 lines. Verbose data belongs in reference shards.
 
-## WORKFLOW: [Initialization -> Execution -> Synchronization]
+### WORKFLOW: [Recovery -> Initialization -> Synchronization]
 
-### Step 1: Initialize State
-1.  Ensure the `.gemini/state/` directory exists.
-2.  Add `.gemini/state/` to `.gitignore`.
-3.  Create the initial `plan.md` using the template below.
+#### 1. Recovery & Adoption
+Before starting any work, check for `.gemini/skills/current-task-state/`.
+* **Exists:** Execute `read_file` on `SKILL.md` and the relevant `references/[PREFIX]_plan.md` to adopt state. Resume immediately.
+* **Missing:** Proceed to Initialization.
 
-### Step 2: The Synchronization Loop
-Before taking any action:
-1.  **READ:** `read_file(".gemini/state/plan.md")` to identify the next micro-task.
-2.  **ACT:** Execute the tool call for that task.
-3.  **UPDATE:** Use `replace` or `write_file` to mark the task as `[x]` and update the "Current Context" section.
+#### 2. Initialization
+1. **DETERMINE PREFIX:** Identify the **Task Prefix** (e.g., `bug-123` or `feature-x`).
+2. **EXECUTE SETUP:** Run `bash skills/authoring-artifact-driven-plans/scripts/initialize_state.sh [PREFIX]`.
+3. **POPULATE SKILL:** Immediately open the new `.gemini/skills/current-task-state/SKILL.md` and populate the metadata (Task Name, Prefix, Engine).
+4. **POPULATE PLAN:** Update `references/[PREFIX]_plan.md` with the full micro-task list.
 
-## THE PLAN TEMPLATE
-```markdown
-# Current Task: [Short Name]
-**Status:** [In Progress | Completed | Backtracking]
-**Mode:** [Linear | Exploration]
+#### 3. Synchronization
+After every tool call or milestone:
+1. **Update Shards:** Write logs/evidence to `references/[PREFIX]_[type].md` following the naming convention.
+2. **Update Checkpoint:** Update the `SKILL.md` to reflect progress and the "Next Step."
 
-## Execution Plan
-- [ ] [Micro-task 1]
-- [ ] [Micro-task 2]
-
-## Current Context
-- [Latest Evidence/Logs]
-- [Next immediate action]
-```
-
-## INTERACTION STYLE
-*   **Mechanical Precision:** Focus on high-fidelity write operations. 
-*   **Fidelity Check:** If you feel you are losing track of details, STOP and re-read the state files.
+### RESOURCES
+* `scripts/initialize_state.sh`: Functional utility for environment setup.
+* `assets/task-state-template.md`: The "Iron-Clad" template for the injected state skill.
