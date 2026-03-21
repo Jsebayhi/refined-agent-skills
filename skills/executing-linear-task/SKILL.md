@@ -1,42 +1,30 @@
 ---
 name: executing-linear-task
-description: MANDATORY. DO NOT attempt predictable updates without calling 'activate_skill' on 'executing-linear-task' first. This is the REQUIRED PROTOCOL for 'Linear' tasks (Pattern Matching). It enforces a high-velocity "Decompose -> Analyze -> Implement -> Validate -> Review -> Commit" loop with a 10-attempt threshold.
+description: MANDATORY. DO NOT attempt predictable updates without calling 'activate_skill' on 'executing-linear-task' first. This is the REQUIRED PROTOCOL for 'Linear' tasks. It enforces a high-velocity "Micro-Loop" with mandatory Flight Deck Headers and a 10-attempt threshold.
 ---
 
 # Executing Linear Tasks
 
-This skill provides the unified "Execution Engine" for straightforward, pattern-based work. It is designed for maximum velocity, using Git as a persistent checkpointing mechanism.
-
 ### CRITICAL RULES
-1. **DECOMPOSITION:** Your first action MUST be to decompose the task into specific micro-tasks following the State Maintenance Rules.
-2. **10-ATTEMPT THRESHOLD:** You are allowed up to 10 corrective iterations to achieve a passing validation state.
-3. **LINEAR ESCALATION:** If validation fails after the 10th attempt, you MUST stop, return to `selecting-optimal-methodology`, and upgrade the task to **Complex** to trigger the scientific loop.
-4. **CONVERGENCE MANDATE:** You MUST achieve a "PASS" from the `adversarial_reviewer` via the convergence protocol before committing.
-5. **CHECKPOINT PHILOSOPHY:** No human halt is required at the commit stage. Commits serve as valuable reversible checkpoints.
+1. **FLIGHT DECK HEADER:** Every response MUST begin with: `STEP_ID: 3.[TASK].[SUB] | STATE_REF: [PATH] | PROGRESS: [X of Y] | APPROVAL: N/A`.
+2. **10-ATTEMPT THRESHOLD:** You are allowed 10 corrective iterations to achieve a passing signal. At the 11th attempt, you MUST stop and escalate to the **Complex** engine.
+3. **FEEDBACK INTERCEPT:** Human feedback is a system interrupt. Halt the loop, output `REASONING_RESET: TACTIC`, and re-evaluate the task nature.
+4. **CONVERGENCE MANDATE:** Achieve a Reviewer "PASS" before every commit.
 
-### WORKFLOW: [Decompose -> Analyze -> Act -> Validate -> Review -> Commit]
+### WORKFLOW: [Phase 3 Micro-Loop]
 
-#### 1. Initial Decomposition
-* Translate the workflow into micro-tasks.
-* Update the task state (checklist and context) in the `current-task-state` skill.
+#### 1. Initial Setup
+* Decompose surgical micro-tasks. Update the `current-task-state` checklist.
+* Establish the Hard Signal (test/lint).
 
-#### 2. Analyze & Pattern Match
-* Identify target files and the existing pattern to follow.
-* Document the findings in the task state references.
+#### 2. The Execution Loop
+For every micro-task in the checklist:
+1. **Read:** Read the plan and relevant task intelligence.
+2. **Act:** Implement the surgical change.
+3. **Validate:** Run the Hard Signal. Apply up to 10 corrective fixes.
+4. **Converge:** Achive a Reviewer "PASS" via the convergence protocol.
+5. **Sync:** Mark the task as `[x]` and update the Flight Deck header progress.
 
-#### 3. Implement (Surgical Action)
-* Apply the change surgically.
-* Update the task state immediately.
-
-#### 4. Local Validation & Iteration
-* Run project-specific tests/lint. 
-* If fails: Apply a fix and repeat (up to 10 total implementation attempts). 
-* **Note:** Track every attempt in the reference shards.
-
-#### 5. Convergence Review
-* Activate `conducting-adversarial-convergence`.
-* Spar with the Reviewer until a "PASS" is achieved.
-
-#### 6. Finalize & Commit
-* Stage changes and commit using `authoring-high-signal-git-commits`.
+#### 3. Finalize
+* Commit using `authoring-high-signal-git-commits`.
 * Report completion to the human.

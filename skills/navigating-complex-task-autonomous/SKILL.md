@@ -1,41 +1,34 @@
 ---
 name: navigating-complex-task-autonomous
-description: MANDATORY. DO NOT attempt complex tasks autonomously without calling 'activate_skill' on 'navigating-complex-task-autonomous' first. This is the REQUIRED PROTOCOL for 'Autonomous Complex' tasks. It enforces nested convergence loops and Two-Stage Decomposition with a Reviewer Proxy.
+description: MANDATORY. DO NOT attempt complex tasks autonomously without calling 'activate_skill' on 'navigating-complex-task-autonomous' first. It enforces nested convergence loops, Two-Stage Decomposition, and mandatory Flight Deck Headers.
 ---
 
 # Navigating Complex Implementations (Autonomous)
 
-This engine handles autonomous problem-solving using the Reviewer as a proxy for the human gatekeeper. It enforces a strict scientific method to search the solution space and prove results through hard signals.
-
 ### CRITICAL RULES
-1. **REVIEWER PROXY:** The `adversarial_reviewer` acts as the definitive gatekeeper for all design and implementation phases. You MUST achieve a "PASS" at every stage.
-2. **TWO-STAGE DECOMPOSITION:** 
-    * Stage 1: Decompose Hard Signal and Hypothesis steps ONLY.
-    * Stage 2: Decompose Implementation steps ONLY after the Strategy is verified.
-3. **DIAGNOSTIC RCA GATE:** If validation fails, you MUST perform a Root Cause Analysis (RCA) to determine if the failure is in the Implementation, Strategy, or Hypothesis.
-4. **BACKTRACK MANDATE:** If validation fails after 5 attempts or at the Diagnostic Gate, preserve evidence (`git commit -m "failed evidence"`) and reset to checkpoint.
+1. **FLIGHT DECK HEADER:** Every response MUST begin with the header: `STEP_ID: [ID] | STATE_REF: [PATH] | PROGRESS: [X of Y] | APPROVAL: PROXY`.
+2. **TOOL-GATING:** You are PROHIBITED from calling implementation tools (`write_file`, `replace`) unless you have called `read_file` on the strategy shard (`_strategies.md`) in the last 3 turns.
+3. **REVIEWER PROXY:** The Reviewer acts as the definitive gatekeeper for all designs. Achieve a Reviewer "PASS" at every gate.
+4. **FEEDBACK INTERCEPT:** Human feedback is a system interrupt. Halt the loop, output `REASONING_RESET: [GOAL|ARCH]`, and step back to Phase 1 or 2.
 
-### THE ROBUST SCIENTIFIC LOOP
+### WORKFLOW: [Discovery -> Strategy -> Execution Loop]
 
-#### 1. Discovery Planning
-* Decompose micro-tasks for Hard Signal definition and Hypothesis Generation.
-* Initialize task state following the **State Maintenance Rules**.
+#### Phase 1: Discovery (Discovery Plan -> Hypotheses -> Reviewer PASS)
+* Decompose Discovery micro-tasks. 
+* Converge on Hypothesis with Reviewer.
 
-#### 2. Hypothesis Convergence
-* Define the **Hard Signal**.
-* Generate exactly 3 falsifiable hypotheses using `brainstorming-multiple-options`.
-* **Loop:** Debate with Reviewer until hardened ("PASS").
+#### Phase 2: Strategy (Strategy ToT -> Reviewer PASS)
+* Converge on Solution Strategy with Reviewer.
 
-#### 3. Strategy Convergence
-* Generate 3 distinct strategies using `brainstorming-multiple-options`.
-* **Loop:** Debate with Reviewer until hardened ("PASS").
+#### Phase 3: Execution Loop (Sub-task -> Validate -> Reviewer -> Sync)
+1. **Decompose:** Only now decompose specific implementation micro-tasks. Update checklist.
+2. **Read:** Read approved strategy (last 3 turns).
+3. **Act:** Implement surgical micro-task.
+4. **Validate & Diagnostic:** Run Hard Signal. 
+    * If fail: Perform RCA. Use up to 4 corrective fixes if Implementation-based; otherwise, trigger **Backtrack**.
+5. **Converge:** Achieve Reviewer "PASS".
+6. **Sync:** Mark task as `[x]` in `current-task-state`. 
+7. **Analyze:** Ask if gathered knowledge invalidates the plan. If yes, re-decompose.
 
-#### 4. Implementation Planning
-* NOW decompose the specific implementation micro-tasks based on the winning strategy.
-* Update the plan shard and sync the task-state skill.
-
-#### 5. Implementation & Diagnostic Gate
-* **COMMIT CHECKPOINT:** `git commit --allow-empty -m "checkpoint: [Strategy]"`.
-* Implement and run the Hard Signal.
-* If Signal passes: Converge with Reviewer until final "PASS".
-* If Signal fails: Perform Diagnostic RCA. Use up to 4 corrective fixes if Implementation-based; otherwise, trigger **Backtrack**.
+### BACKTRACK MANDATE
+If validation fails after 5 attempts or at the Diagnostic Gate, preserve evidence (`git commit -m "failed evidence"`) and reset (`git reset --hard [CHECKPOINT]`). Return to Phase 1 or 2 based on RCA.

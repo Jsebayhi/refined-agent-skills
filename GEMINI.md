@@ -11,9 +11,17 @@ This extension provides a collection of distilled, high-signal experts for the G
     - `deep-brainstorming/`: Guides the agent through a rigorous brainstorming process.
     - `working-with-gitlab-mr/`: Enforces a high-transparency Merge Request lifecycle (Opening, Handling Feedback, Reviewing) on GitLab.
 
-## Configuration
+## Project Standards
 
-- `gemini-extension.json`: Extension metadata for Gemini CLI.
+### The Flight Deck Mandate
+To prevent "Head-First" execution and ensure state synchronization, all agent responses MUST begin with the following mechanical header:
+> **STEP_ID:** [PHASE].[TASK].[SUB] | **STATE_REF:** [FILE_PATH] | **PROGRESS:** [X of Y] | **APPROVAL:** [PENDING|RECEIVED]
+
+### STEP_ID Schema: `[PHASE_NUM].[TASK_NUM].[SUB_NUM]`
+*   **PHASE 1 (Discovery):** Research, Hypothesis, and Analysis.
+*   **PHASE 2 (Strategy):** Solution design and architectural alignment.
+*   **PHASE 3 (Execution):** Surgical implementation and validation.
+*   *Example:* `3.2.1` represents Phase 3 (Execution), Task 2, Sub-task 1.
 
 ## Workflows
 
@@ -32,7 +40,7 @@ This extension provides a collection of distilled, high-signal experts for the G
 *   **Stdout Isolation:** The `stdout` stream is reserved for JSON-RPC messages only. All logging, debugging, or standard command output MUST be redirected to `stderr`. Failure to do so will corrupt the JSON-RPC stream and break the connection.
 *   **Non-Interactive Enforcement:** All underlying CLI commands (e.g., `glab`, `gh`) MUST be executed with flags that disable interactive prompts (e.g., `--yes`, `--fill`) and suppress pagers (`GLAB_PAGER=cat`, `GH_PAGER=cat`).
 *   **Line-Buffered Stdio:** Use a line-by-line reading interface (like `readline`) for `stdin` to ensure the server processes each JSON-RPC request atomically.
-*   **Response Distillation:** All discovery and search tools MUST distill raw API responses to return only the essential fields (e.g., `id`, `title`, `state`, `url`). This prevents agent context window bloat.
+*   **Response Dilution:** All discovery and search tools MUST distill raw API responses to return only the essential fields (e.g., `id`, `title`, `state`, `url`). This prevents agent context window bloat.
 
 ### Git Conventions
 **MANDATORY:** One commit per skill. A commit must never touch multiple skills. 
