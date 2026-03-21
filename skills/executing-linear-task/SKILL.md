@@ -23,7 +23,7 @@ For every micro-task in the checklist:
 1. **Read:** Read the plan and relevant task intelligence.
 2. **Act:** Implement the surgical change.
 3. **Validate:** Run the Hard Signal. Apply up to 10 corrective fixes.
-4. **Converge:** Achive a Reviewer "PASS" via the convergence protocol.
+4. **Converge:** Achieve a Reviewer "PASS" via the convergence protocol.
 5. **Sync:** Mark the task as `[x]` and update the Flight Deck header progress.
 
 #### 3. Finalize

@@ -24,12 +24,10 @@ if [ ! -f "$TARGET_DIR/SKILL.md" ]; then
         echo "ERROR: Template asset not found at $ASSET_FILE"
         exit 1
     fi
-else
-    echo "NOTICE: $TARGET_DIR/SKILL.md already exists. Skipping template copy."
 fi
 
 # 4. Initialize Core Shards safely (No overwrite)
-declare -a shards=("original_goal" "human_intel" "autonomous_intel" "plan")
+declare -a shards=("original_goal" "human_intel" "autonomous_intel" "plan" "strategies")
 
 for shard in "${shards[@]}"; do
     FILE="$TARGET_DIR/references/${STEP_ID}_${shard}.md"
@@ -39,9 +37,8 @@ for shard in "${shards[@]}"; do
             "human_intel") echo "# Human Intelligence (Guaranteed)" > "$FILE" ;;
             "autonomous_intel") echo "# Autonomous Intelligence (Scrutinized Evidence)" > "$FILE" ;;
             "plan") echo "# Detailed Execution Plan" > "$FILE" ;;
+            "strategies") echo "# Solution Strategies (Hardened)" > "$FILE" ;;
         esac
         echo "SUCCESS: Created $FILE"
-    else
-        echo "NOTICE: $FILE already exists. Skipping initialization."
     fi
 done

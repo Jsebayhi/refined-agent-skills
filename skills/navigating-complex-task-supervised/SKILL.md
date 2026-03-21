@@ -28,5 +28,5 @@ description: MANDATORY. DO NOT attempt complex tasks with human oversight withou
 4. **Validate:** Run Hard Signal. Apply up to 5 fixes.
 5. **Converge:** Achieve Reviewer "PASS".
 6. **Sync:** Mark task as `[x]` in `current-task-state`. 
-7. **Analyze:** Ask if gathered knowledge invalidates the plan. If yes, re-decomose.
+7. **Analyze:** Ask if gathered knowledge invalidates the plan. If yes, re-decompose.
 8. **Present:** Present final result to human. **WAIT FOR APPROVAL.**
