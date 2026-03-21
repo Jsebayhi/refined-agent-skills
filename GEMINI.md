@@ -15,7 +15,7 @@ This extension provides a collection of distilled, high-signal experts for the G
 
 ### The Flight Deck Mandate
 To prevent "Head-First" execution and ensure state synchronization, all agent responses MUST begin with the following mechanical header:
-> **STEP_ID:** [PHASE].[TASK].[SUB] | **STATE_REF:** [FILE_PATH] | **PROGRESS:** [X of Y] | **APPROVAL:** [PENDING|RECEIVED]
+> **STEP_ID:** [PHASE].[TASK].[SUB] | **STATE_REF:** [FILE_PATH] | **PROGRESS:** [X of Y] | **APPROVAL:** [PENDING|RECEIVED|PROXY|N/A]
 
 ### STEP_ID Schema: `[PHASE_NUM].[TASK_NUM].[SUB_NUM]`
 *   **PHASE 1 (Discovery):** Research, Hypothesis, and Analysis.

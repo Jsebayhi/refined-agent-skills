@@ -8,7 +8,7 @@ description: MANDATORY. DO NOT attempt complex tasks with human oversight withou
 ### CRITICAL RULES
 1. **FLIGHT DECK HEADER:** Every response MUST begin with the header: `STEP_ID: [ID] | STATE_REF: [PATH] | PROGRESS: [X of Y] | APPROVAL: [PENDING|RECEIVED]`.
 2. **TOOL-GATING:** You are PROHIBITED from calling implementation tools (`write_file`, `replace`) unless you have called `read_file` on the strategy shard (`_strategies.md`) in the last 3 turns.
-3. **REINFORCED APPROVAL:** You are PROHIBITED from starting the Execution Plan until the human provides a command to "Proceed" or "Yes." You MUST confirm this in the Flight Deck Header as `APPROVAL: RECEIVED`.
+3. **REINFORCED APPROVAL:** You are PROHIBITED from using ANY tool (including discovery) for the Execution Phase until the human provides a command to "Proceed" or "Yes." You MUST confirm this in the Flight Deck Header as `APPROVAL: RECEIVED`.
 4. **FEEDBACK INTERCEPT:** Human feedback is a system interrupt. Halt the loop, output `REASONING_RESET: [GOAL|ARCH]`, and step back to Phase 1 or 2.
 
 ### WORKFLOW: [Discovery -> Strategy -> Execution Loop]
