@@ -1,39 +1,37 @@
 ---
 name: navigating-complex-task-supervised
-description: MANDATORY. DO NOT attempt complex tasks with human oversight without calling 'activate_skill' on 'navigating-complex-task-supervised' first. This is the REQUIRED PROTOCOL for 'Supervised Complex' tasks (Architectural Sparring). It enforces human-in-the-loop gates and Two-Stage Decomposition.
+description: MANDATORY. DO NOT attempt complex tasks with human oversight without calling 'activate_skill' on 'navigating-complex-task-supervised' first. This is the REQUIRED PROTOCOL for 'Supervised Complex' tasks. It enforces human-in-the-loop gates and Two-Stage Decomposition.
 ---
 
 # Navigating Complex Implementations (Supervised)
 
-This skill provides the engine for complex, human-led engineering. It focuses on collaborative design, using the agent as a rigorous researcher and the human as the final architect.
+This engine handles human-led engineering. It focuses on collaborative design, using the human as the architect and the agent as the rigorous researcher.
 
 ### CRITICAL RULES
-1. **TWO-STAGE DECOMPOSITION:** 
-    * Stage 1: Decompose only Discovery (Research/Design) micro-tasks upon entry.
-    * Stage 2: Decompose Implementation micro-tasks ONLY after the Strategy is approved.
-2. **SOURCE SEPARATION:** Store findings in the correct `human_intel` vs. `autonomous_intel` shards following the rules in `current-task-state`.
-3. **GATEKEEPING:** You MUST halt and wait for human approval after generating Hypotheses and after generating Solutions.
-4. **CONVERGENCE:** Before presenting to the human, you MUST achieve a "PASS" from the `adversarial_reviewer`.
+1. **STAGE 1 DECOMPOSITION:** Plan only Research and Hypothesis steps. Proposing a Strategy is the *output* of this stage, not a task.
+2. **STAGE 2 DECOMPOSITION:** Decompose specific Implementation micro-tasks ONLY after the Strategy is approved.
+3. **SOURCE SEPARATION:** Use `human_intel` for guidance and `autonomous_intel` for findings.
+4. **GATEKEEPING:** Halt for approval after generating Hypotheses AND after generating Solutions.
+5. **CONVERGENCE:** Achieve a Reviewer "PASS" before presenting anything to the human.
 
-### WORKFLOW: [Discovery Plan -> Research -> Design -> Implementation Plan -> Act]
+### WORKFLOW: [Discovery Plan -> Research -> Strategy -> Implementation Plan -> Act]
 
-#### 1. Discovery Decomposition
-* Decompose micro-tasks for Research, Hypothesis Generation, and Solution Strategy.
-* Initialize the task state following the **State Maintenance Rules**.
+#### 1. Discovery Planning
+* Decompose micro-tasks for Research and Hypothesis Generation.
+* Initialize task state with `selecting-optimal-methodology` contract details.
 
-#### 2. Evidence Gathering & Hypothesizing
-* Use `codebase_investigator` to map the problem space.
-* Generate exactly 3 falsifiable hypotheses using `brainstorming-multiple-options`.
+#### 2. Hypothesis Convergence
+* Research the codebase and generate exactly 3 falsifiable hypotheses.
 * Converge with Reviewer -> Present to human -> **WAIT FOR APPROVAL.**
 
-#### 3. Solution Design
-* Generate 3 solution strategies using `brainstorming-multiple-options`.
+#### 3. Strategy Convergence
+* Generate 3 solution strategies for the winning hypothesis.
 * Converge with Reviewer -> Present to human -> **WAIT FOR APPROVAL.**
 
-#### 4. Implementation Decomposition
-* ONLY NOW decompose specific micro-tasks for the surgical implementation.
-* Update the task plan shard and `SKILL.md`.
+#### 4. Implementation Planning
+* **NOW** decompose the surgical implementation plan into micro-tasks.
+* Update the plan shard and sync the task-state skill.
 
-#### 5. Implementation & Validation
+#### 5. Execution & Validation
 * Act -> Validate -> Converge with Reviewer -> Present final diff to human.
-* **WAIT FOR APPROVAL** -> Finalize with high-signal commit.
+* **WAIT FOR APPROVAL.**

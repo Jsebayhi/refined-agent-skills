@@ -1,29 +1,47 @@
 #!/bin/bash
-# initialize_state.sh: Router for task-state initialization
+# initialize_state.sh: Safe, deterministic task-state initialization
 
-# Resolve the absolute path to the skill directory
+# Resolve absolute path to the skill directory
 SKILL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TARGET_DIR=".gemini/skills/current-task-state"
 ASSET_FILE="$SKILL_DIR/assets/task-state-template.md"
-PREFIX="${1:-STEP}"
+STEP_ID="${1:-discovery}"
 
 # 1. Create directory structure
 mkdir -p "$TARGET_DIR/references"
 
-# 2. Update .gitignore if needed
+# 2. Update .gitignore safely
 if ! grep -q "$TARGET_DIR/" .gitignore 2>/dev/null; then
     echo "$TARGET_DIR/" >> .gitignore
 fi
 
-# 3. Copy the template
-if [ -f "$ASSET_FILE" ]; then
-    cp "$ASSET_FILE" "$TARGET_DIR/SKILL.md"
+# 3. Copy/Initialize SKILL.md safely
+if [ ! -f "$TARGET_DIR/SKILL.md" ]; then
+    if [ -f "$ASSET_FILE" ]; then
+        cp "$ASSET_FILE" "$TARGET_DIR/SKILL.md"
+        echo "SUCCESS: Task state initialized at $TARGET_DIR/SKILL.md"
+    else
+        echo "ERROR: Template asset not found at $ASSET_FILE"
+        exit 1
+    fi
 else
-    exit 1
+    echo "NOTICE: $TARGET_DIR/SKILL.md already exists. Skipping template copy."
 fi
 
-# 4. Initialize Core Shards
-echo "# Original Goal" > "$TARGET_DIR/references/${PREFIX}_original_goal.md"
-echo "# Human Intelligence (Guaranteed)" > "$TARGET_DIR/references/${PREFIX}_human_intel.md"
-echo "# Autonomous Intelligence (Scrutinized)" > "$TARGET_DIR/references/${PREFIX}_autonomous_intel.md"
-echo "# Detailed Execution Plan" > "$TARGET_DIR/references/${PREFIX}_plan.md"
+# 4. Initialize Core Shards safely (No overwrite)
+declare -a shards=("original_goal" "human_intel" "autonomous_intel" "plan")
+
+for shard in "${shards[@]}"; do
+    FILE="$TARGET_DIR/references/${STEP_ID}_${shard}.md"
+    if [ ! -f "$FILE" ]; then
+        case $shard in
+            "original_goal") echo "# Original Goal" > "$FILE" ;;
+            "human_intel") echo "# Human Intelligence (Guaranteed)" > "$FILE" ;;
+            "autonomous_intel") echo "# Autonomous Intelligence (Scrutinized Evidence)" > "$FILE" ;;
+            "plan") echo "# Detailed Execution Plan" > "$FILE" ;;
+        esac
+        echo "SUCCESS: Created $FILE"
+    else
+        echo "NOTICE: $FILE already exists. Skipping initialization."
+    fi
+done
