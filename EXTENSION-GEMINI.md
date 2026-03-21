@@ -34,8 +34,8 @@ Complexity is often invisible until it resists. If any task requires more than *
 This extension follows an "Orchestrator + Specialized Experts" architecture. To ensure high-quality production engineering, agents are encouraged and expected to activate multiple skills simultaneously.
 
 ### The Mode Matrix Combinations:
-- **Linear Supervised:** `selecting-optimal-methodology` -> `executing-linear-task-supervised` + `conducting-adversarial-convergence`.
-- **Linear Autonomous:** `selecting-optimal-methodology` -> `executing-linear-task-autonomous` + `conducting-adversarial-convergence`.
+- **Linear Supervised:** `selecting-optimal-methodology` -> `executing-linear-task` + `conducting-adversarial-convergence`.
+- **Linear Autonomous:** `selecting-optimal-methodology` -> `executing-linear-task` + `conducting-adversarial-convergence`.
 - **Complex Supervised:** `selecting-optimal-methodology` -> `navigating-complex-task-supervised` + `brainstorming-multiple-options` + `conducting-adversarial-convergence`.
 - **Complex Autonomous:** `selecting-optimal-methodology` -> `navigating-complex-task-autonomous` + `brainstorming-multiple-options` + `conducting-adversarial-convergence`.
 

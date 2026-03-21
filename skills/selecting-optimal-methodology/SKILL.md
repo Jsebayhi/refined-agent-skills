@@ -21,8 +21,7 @@ Once the nature is decided, select your **Primary Engine** based on the required
 
 | Task Nature | Operational Mode | Primary Engine |
 | :--- | :--- | :--- |
-| **Linear** | **Supervised** (Human sign-off required) | `executing-linear-task-supervised` |
-| **Linear** | **Autonomous** (Reviewer Proxy only) | `executing-linear-task-autonomous` |
+| **Linear** | **Any** (Supervised or Autonomous) | `executing-linear-task` |
 | **Complex** | **Supervised** (Human architectural gatekeeping) | `navigating-complex-task-supervised` |
 | **Complex** | **Autonomous** (Reviewer Proxy only) | `navigating-complex-task-autonomous` |
 
@@ -55,4 +54,4 @@ Once approved:
 2. Follow the state-management protocol to initialize task memory and begin execution.
 
 ### ESCALATION GUARDRAIL
-If local validation fails more than 2 times in a **Linear** engine, you MUST immediately halt, return to this skill, and upgrade the task nature to **Complex**.
+If local validation fails more than 10 times in the **Linear** engine, you MUST immediately halt, return to this skill, and upgrade the task nature to **Complex**.

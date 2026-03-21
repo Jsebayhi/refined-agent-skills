@@ -27,8 +27,8 @@ This repository follows a **"Mode-Aware Stateful Orchestration"** architecture. 
     *   *Triggers*: "plan the work", "initialize state", "task memory".
 
 ### 2. The 4-Quadrant Engines (The "Dual-Piston" Prowess)
-*   **[Executing Linear Task (Supervised)](skills/executing-linear-task-supervised/SKILL.md)**: Pattern matching with human sign-off.
-*   **[Executing Linear Task (Autonomous)](skills/executing-linear-task-autonomous/SKILL.md)**: Background worker driven by hard signals.
+*   **[Executing Linear Task (Supervised)](skills/executing-linear-task/SKILL.md)**: Pattern matching with human sign-off.
+*   **[Executing Linear Task (Autonomous)](skills/executing-linear-task/SKILL.md)**: Background worker driven by hard signals.
 *   **[Navigating Complex Task (Supervised)](skills/navigating-complex-task-supervised/SKILL.md)**: Architectural sparring with human control.
 *   **[Navigating Complex Task (Autonomous)](skills/navigating-complex-task-autonomous/SKILL.md)**: Scientific loop with Reviewer-Proxy gatekeeping.
 
