@@ -8,17 +8,19 @@ description: MANDATORY. DO NOT start any task without calling 'activate_skill' o
 This skill is the mandatory entrypoint for all agent operations. You MUST select your operational quadrant from the matrix below before executing any implementation tools.
 
 ### THE QUADRANT MATRIX
-Select your **Primary Engine** based on task complexity and required oversight. Default to **Complex** if nature is ambiguous.
+Select your **Primary Engine** based on task complexity and required oversight.
 
-| Task Nature | Operational Mode | Selection Criteria | Primary Engine |
+| Quadrant | Selection Criteria (Task Nature) | Operational Mode | Primary Engine |
 | :--- | :--- | :--- | :--- |
-| **Linear** | **Supervised** | Trivial update (<20 lines, zero logic changes) + Human Sign-off. | `executing-linear-task-supervised` |
-| **Linear** | **Autonomous** | Trivial update + Mechanical Signal (lint/tests) only. | `executing-linear-task-autonomous` |
-| **Complex** | **Supervised** | Decisions/Features/Bugs + **Reviewer convergence** + Human control. | `navigating-complex-task-supervised` |
-| **Complex** | **Autonomous** | Decisions/Features/Bugs + Reviewer Proxy gatekeeping. | `navigating-complex-task-autonomous` |
+| **Q1** | **Trivial:** <20 lines of code, zero logic flow changes, surgical pattern match. | **Supervised** | `executing-linear-task-supervised` |
+| **Q2** | **Trivial:** Mechanical fixes (lint/docs) with a hard deterministic success signal. | **Autonomous** | `executing-linear-task-autonomous` |
+| **Q3** | **Complex:** Decisions/Features/Bugs or any task requiring architectural consideration. | **Supervised** | `navigating-complex-task-supervised` |
+| **Q4** | **Complex:** High-uncertainty tasks where the agent searches the solution space. | **Autonomous** | `navigating-complex-task-autonomous` |
 
-### ESCALATION GUARDRAIL
-If a task is initially classified as **Linear** but local validation fails more than 2 times, you MUST immediately halt, return to this skill, and upgrade the task nature to **Complex** using the appropriate engine.
+### CRITICAL GUARDRAILS
+1.  **DEFAULT TO COMPLEX:** If a task nature is ambiguous or you cannot find a 100% pattern match, you MUST select **Complex**.
+2.  **ESCALATION:** If a task is initially classified as **Linear** but local validation fails more than 2 times, you MUST immediately halt and upgrade to **Complex**.
+3.  **REVIEWER MANDATE:** ALL quadrants require a final convergence review via `conducting-adversarial-convergence` before completion.
 
 ### MANDATORY PROTOCOL
 
@@ -30,7 +32,7 @@ Analyze the request, select the quadrant, and present the following contract for
 > - **Mode:** [Supervised | Autonomous]
 > - **Engine:** [Engine name from Matrix]
 > - **Signal:** [Test/Script defining success]
-> - **Rationale:** [Brief justification for this selection]
+> - **Rationale:** [Technical justification for this selection]
 
 **APPROVAL GATE:**
 - **Supervised Mode:** HALT. Wait for user to type 'APPROVE'.
