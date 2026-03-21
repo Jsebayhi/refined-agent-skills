@@ -5,54 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.4.0] - 2026-03-20
+## [0.4.1] - 2026-03-20
 
 ### Added
 - **Mode Matrix Framework**: Implemented a new "Mode-Aware Stateful Orchestration" architecture.
-- **Orchestrating Decision Router**: New entrypoint skill for task quadrant establishment.
-- **Artifact-Driven State Machine**: Implemented disk-based task memory in `.gemini/state/` to eliminate context bloat.
-- **Dual-Piston Engines**: Introduced `executing-linear-tasks` (Fast Track) and `navigating-complex-implementations` (Scientific Loop).
-- **Adversarial Convergence**: New protocol for iterative agent-reviewer hardening before human gatekeeping.
-- **Brainstorming Sub-Routine**: Specialized `brainstorming-multiple-options` skill for automated engine use.
+- **Selecting Optimal Methodology**: Mandatory entrypoint for task quadrant establishment.
+- **Artifact-Driven State Machine**: Implemented sharded task memory in `.gemini/skills/current-task-state/`.
+- **4-Quadrant Engines**: Specialized skills for `linear-task-supervised`, `linear-task-autonomous`, `complex-task-supervised`, and `complex-task-autonomous`.
+- **Adversarial Convergence**: New protocol for iterative agent-reviewer hardening.
+- **Intelligence Split**: Formalized separation between Human (Guaranteed) and Autonomous (Scrutinized) intelligence.
+- **Two-Stage Decomposition**: Enforced sequential planning (Discovery then Implementation) for complex tasks.
 
 ### Changed
-- **System Standards**: Updated `EXTENSION-GEMINI.md` with Quadrant mandates and "Step Back" escalations.
-- **Skill Hierarchy**: Refactored `deep-brainstorming` and `maintaining-rigorous-architecture-decisions` to integrate with the new engines.
+- **Hardened Reviewer**: Updated `adversarial-reviewer.md` to forbid shadow coding and require explicit PASS criteria.
+- **Standardized Naming**: Unified `STEP_ID` across all scripts, skills, and documentation.
 
 ### Removed
 - **Legacy Lifecycle**: Deprecated `orchestrating-software-lifecycle`.
-- **Legacy RCA**: Deprecated `performing-systematic-root-cause-analysis` (merged into Exploration Engine).
+- **Legacy RCA**: Deprecated `performing-systematic-root-cause-analysis`.
 
 ## [0.3.0] - 2026-03-19
-
-### Added
-- **Root Cause Analysis Skill**: Implemented `performing-systematic-root-cause-analysis`, a hypothesis-driven "Debug Detective" workflow.
-- **Backtrack Protocol**: Integrated a mandatory "Checkpoint & Backtrack" mechanism that enforces a `git reset --hard` after 5 failed corrective attempts.
-- **Escalation Protocol Integration**: Updated the "Step Back" mandate in `EXTENSION-GEMINI.md` to recommend the RCA skill for complex bug investigations.
-
-## [0.2.0] - 2026-03-19
-
-### Added
-- **Dual-Platform MCP Ecosystem**: Established production-grade GitHub and GitLab MCP servers with total tool parity (38 tools each).
-- **GitHub MCP Server**: Implemented a high-fidelity GitHub MCP server and skill (`interacting-with-github`) mirroring the GitLab implementation.
-- **Semantic Naming Standard**: Introduced explicit, deterministic parameter names (e.g., `pull_request_id`, `mr_id`, `project_id`) across all 76 platform tools.
-- **Instructional Duality**: Introduced `EXTENSION-GEMINI.md` for user-facing instructions, separating them from internal maintenance docs (`GEMINI.md`) via `contextFileName` in `gemini-extension.json`.
-- **Precision Feedback**: Implemented high-fidelity multi-line comment support via `start_line` (GitHub) and `line_range` (GitLab) payloads.
-- **Security & Quality Auditing**: Integrated automated security checks (`list_vulnerabilities`) and deep-dive review tools (`get_pull_request_details` with full context).
-- **Resilient Execution Engine**: Transitioned all MCP interactions to a robust `spawnSync` engine to eliminate shell-quoting and argument-splitting errors.
-- **MR/PR Lifecycle**: Full support for reviewer and submitter lifecycles, including auto-merge, thread management, and pipeline monitoring.
-
-### Changed
-- **Context Economy**: Refined response distillation to include code blobs and implemented 5,000-character truncation for pipeline logs to maximize context utility.
-- **Terminal Hygiene**: MCP servers now handle `PAGER=cat` and non-interactive enforcement automatically via environment injection.
-- **Platform Modularity**: Refactored core collaboration, devsecops, and external investigation skills to be strictly platform-agnostic, mandating the use of specialized interaction servers.
-
-## [0.1.0] - 2026-02-25
-
-### Added
-- Initial extension setup.
-- Added `gemini-extension.json` manifest.
-- Added `package.json` for Node.js compatibility.
-- Added `GEMINI.md` for project documentation.
-- Added `universal-skill-architect` skill.
-- Added `LICENSE` (MIT) and `CHANGELOG.md`.
+...

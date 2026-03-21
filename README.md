@@ -16,27 +16,25 @@ gemini skills link /path/to/refined-agent-skills
 
 ---
 
-## 🏗️ The Mode Matrix Framework
+## 🏗️ The Mode Matrix Framework (v0.4.1)
 
 This repository follows a **"Mode-Aware Stateful Orchestration"** architecture. It eliminates "Instructional Dilution" by forcing the agent to establish an operational contract before work begins.
 
 ### 1. Orchestration & State (The Foundation)
-*   **[Orchestrating Decision Router](skills/orchestrating-decision-router/SKILL.md)**: The required entrypoint for establishing the task contract (Linear vs. Complex).
+*   **[Selecting Optimal Methodology](skills/selecting-optimal-methodology/SKILL.md)**: The required entrypoint for establishing the task contract (Linear vs. Complex).
     *   *Triggers*: "fix", "implement", "build", "update", "investigate".
-*   **[Authoring Artifact-Driven Plans](skills/authoring-artifact-driven-plans/SKILL.md)**: Enforces disk-based task memory in `.gemini/state/`.
+*   **[Authoring Artifact-Driven Plans](skills/authoring-artifact-driven-plans/SKILL.md)**: Enforces sharded task memory in `.gemini/skills/current-task-state/`.
     *   *Triggers*: "plan the work", "initialize state", "task memory".
 
-### 2. The Engines (The "Dual-Piston" Prowess)
-*   **[Executing Linear Tasks](skills/executing-linear-tasks/SKILL.md)**: High-velocity "Fast Track" for predictable work.
-    *   *Triggers*: "fast path", "pattern implementation", "predictable task".
-*   **[Navigating Complex Implementations](skills/navigating-complex-implementations/SKILL.md)**: The Robust Scientific Loop for exploration and uncertainty.
-    *   *Triggers*: "complex feature", "obscure bug", "exploration loop".
-*   **[Brainstorming Multiple Options](skills/brainstorming-multiple-options/SKILL.md)**: Mechanical sub-routine for generating exactly 3 technical paths.
-    *   *Triggers*: "generate hypotheses", "solution strategies", "3-option path".
+### 2. The 4-Quadrant Engines (The "Dual-Piston" Prowess)
+*   **[Executing Linear Task (Supervised)](skills/executing-linear-task-supervised/SKILL.md)**: Pattern matching with human sign-off.
+*   **[Executing Linear Task (Autonomous)](skills/executing-linear-task-autonomous/SKILL.md)**: Background worker driven by hard signals.
+*   **[Navigating Complex Task (Supervised)](skills/navigating-complex-task-supervised/SKILL.md)**: Architectural sparring with human control.
+*   **[Navigating Complex Task (Autonomous)](skills/navigating-complex-task-autonomous/SKILL.md)**: Scientific loop with Reviewer-Proxy gatekeeping.
 
-### 3. The Convergence Layer (The Filter)
+### 3. Sub-Routines & Convergence
 *   **[Conducting Adversarial Convergence](skills/conducting-adversarial-convergence/SKILL.md)**: Orchestrates the iterative debate between the Main Agent and the Reviewer.
-    *   *Triggers*: "converge with reviewer", "pre-human filter", "logic/quality pass".
+*   **[Brainstorming Multiple Options](skills/brainstorming-multiple-options/SKILL.md)**: Mechanical sub-routine for generating exactly 3 technical paths.
 
 ---
 
