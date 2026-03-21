@@ -21,17 +21,17 @@ Once the nature is decided, select your **Primary Engine** based on the required
 
 | Task Nature | Operational Mode | Primary Engine |
 | :--- | :--- | :--- |
-| **Linear** | **Supervised** (Human Sign-off required) | `executing-linear-task-supervised` |
-| **Linear** | **Autonomous** (Background/Mechanical work) | `executing-linear-task-autonomous` |
-| **Complex** | **Supervised** (Architectural Sparring) | `navigating-complex-task-supervised` |
-| **Complex** | **Autonomous** (Scientific Loop) | `navigating-complex-task-autonomous` |
+| **Linear** | **Supervised** (Human sign-off required) | `executing-linear-task-supervised` |
+| **Linear** | **Autonomous** (Reviewer Proxy only) | `executing-linear-task-autonomous` |
+| **Complex** | **Supervised** (Human architectural gatekeeping) | `navigating-complex-task-supervised` |
+| **Complex** | **Autonomous** (Reviewer Proxy only) | `navigating-complex-task-autonomous` |
 
 ---
 
 ### MANDATORY PROTOCOL
 
 #### 1. Propose Contract
-Present the following contract for approval:
+Present the following contract for convergence:
 
 > **MODE MATRIX CONTRACT**
 > - **Nature:** [Linear | Complex]
@@ -40,11 +40,16 @@ Present the following contract for approval:
 > - **Signal:** [Test/Script defining success]
 > - **Rationale:** [Brief justification based on Step 1 criteria]
 
-**APPROVAL GATE:**
-- **Supervised Mode:** HALT. Wait for user to type 'APPROVE'.
-- **Autonomous Mode:** Call `adversarial_reviewer`. Proceed only if the contract logic is validated.
+#### 2. Convergence & Approval Gate
+The contract MUST be validated by the Reviewer first to ensure strategic alignment.
 
-#### 2. Handover
+1.  **Reviewer Validation:** Call the `adversarial_reviewer`. Provide the contract and objective. 
+2.  **Wait for PASS:** If the Reviewer fails the contract logic, adjust and re-submit.
+3.  **Mode-Based Exit:**
+    *   **Autonomous Mode:** If Reviewer issues "PASS", proceed immediately to Handover.
+    *   **Supervised Mode:** If Reviewer issues "PASS", you MUST HALT and wait for the human to type 'APPROVE'.
+
+#### 3. Handover
 Once approved:
 1. Activate **`authoring-artifact-driven-plans`** and the selected **Primary Engine**.
 2. Follow the state-management protocol to initialize task memory and begin execution.
