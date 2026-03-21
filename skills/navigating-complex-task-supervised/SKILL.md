@@ -8,7 +8,7 @@ description: MANDATORY. DO NOT attempt complex tasks with human oversight withou
 This skill provides the engine for complex, human-led engineering. It focuses on collaborative design, using the agent as a rigorous researcher and the human as the final architect.
 
 ### CRITICAL RULES
-1. **DECOMPOSITION FIRST:** Your very first action MUST be to decompose the task into micro-tasks within the sharded plan (`references/[STEP_ID]_plan.md`).
+1. **DECOMPOSITION FIRST:** Your very first action MUST be to decompose the task into specific micro-tasks. Follow the **State Maintenance Rules** defined in the `current-task-state` skill to record this plan.
 2. **NO CODE WITHOUT DESIGN:** You are PROHIBITED from implementation until the Strategy is approved by the human.
 3. **GATEKEEPING:** You MUST halt and wait for human approval after generating Hypotheses and after generating Solutions.
 4. **CONVERGENCE PREREQUISITE:** Before presenting Hypotheses or Solutions to the human, you MUST harden them via a convergence loop with the `adversarial_reviewer`.
@@ -17,7 +17,7 @@ This skill provides the engine for complex, human-led engineering. It focuses on
 
 #### 1. Initial Decomposition
 * Translate the "Architectural Sparring" workflow into specific micro-tasks for the current goal.
-* Update `references/[STEP_ID]_plan.md` and the high-level task state `SKILL.md`.
+* Update the task state (checklist and context) following the sharding and prefixing rules defined in the `current-task-state` skill.
 
 #### 2. Evidence Gathering
 Use `codebase_investigator` and `investigating-external-dependencies` to map the problem space.

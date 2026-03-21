@@ -11,28 +11,25 @@ This skill provides the engine for autonomous problem-solving. It uses the `adve
 
 #### 1. Initial Decomposition
 * Translate the "Scientific Loop" workflow into specific micro-tasks for the current goal.
-* Update `references/[STEP_ID]_plan.md` and the high-level task state `SKILL.md`.
+* Initialize the task state following the **State Maintenance Rules** defined in the `current-task-state` skill.
 
 #### 2. Hypothesis Convergence
 * Define the **Hard Signal** (test/script). If it doesn't exist, create it immediately.
 * Generate exactly 3 falsifiable hypotheses using `brainstorming-multiple-options`.
-* Debate with the Reviewer until a "PASS" is achieved on the winning hypothesis.
+* Debate with the Reviewer until a "PASS" is achieved on the winning hypothesis. Update the task state with findings.
 
 #### 3. Solution Convergence
 * Generate 3 distinct strategies using `brainstorming-multiple-options`.
-* Debate with the Reviewer until a "PASS" is achieved on the winning strategy.
+* Debate with the Reviewer until a "PASS" is achieved on the winning strategy. Update the task state with the chosen strategy.
 
 #### 4. Implementation Convergence
 * **COMMIT CHECKPOINT:** `git commit --allow-empty -m "checkpoint: [Strategy]"`.
 * Implement the solution.
 * Run the Hard Signal.
 * If Signal passes: Debate the final implementation with the Reviewer until "PASS".
-* If Signal fails: Attempt up to 4 corrective fixes.
+* If Signal fails: Attempt up to 4 corrective fixes. Update the task state immediately after each attempt.
 
 ### CRITICAL RULES
-1. **DECOMPOSITION FIRST:** Your very first action MUST be to decompose the task into micro-tasks within the sharded plan (`references/[STEP_ID]_plan.md`).
+1. **DECOMPOSITION FIRST:** Your very first action MUST be to decompose the task into micro-tasks.
 2. **BACKTRACK MANDATE:** If validation fails after 5 attempts, you MUST preserve evidence (`git commit -m "failed evidence"`) and reset (`git reset --hard [CHECKPOINT]`), then return to Phase 1.
-3. **SYNC LOOP:** Update detailed reference shards FIRST, then update the high-level task state skill.
-
-### WORKFLOW: [Decompose -> Hypothesize -> Strategize -> Implement -> Validate -> Revert]
-(Follow the loops defined above with mechanical precision.)
+3. **SYNC LOOP:** Follow the **State Maintenance Rules** in `current-task-state` to update reference shards FIRST, then update the high-level task state skill.

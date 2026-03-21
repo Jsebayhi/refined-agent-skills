@@ -8,7 +8,7 @@ description: MANDATORY. DO NOT attempt predictable, low-risk updates without cal
 This skill provides the engine for straightforward, human-supervised work. It focuses on surgical pattern-matching and high-velocity implementation with final human gatekeeping.
 
 ### CRITICAL RULES
-1. **DECOMPOSITION FIRST:** Your very first action MUST be to decompose the task into micro-tasks within the sharded plan (`references/[STEP_ID]_plan.md`).
+1. **DECOMPOSITION FIRST:** Your very first action MUST be to decompose the task into specific micro-tasks. Follow the **State Maintenance Rules** defined in the `current-task-state` skill to record this plan.
 2. **NO BRUTE FORCE:** You MUST identify an existing pattern in the codebase before implementing a change.
 3. **LOCAL VALIDATION:** You are PROHIBITED from presenting work until local tests or linting scripts pass.
 4. **CONVERGENCE MANDATE:** You MUST achieve a "PASS" from the `adversarial_reviewer` via the convergence protocol before presenting the final diff to the human.
@@ -18,15 +18,15 @@ This skill provides the engine for straightforward, human-supervised work. It fo
 
 #### 1. Initial Decomposition
 * Translate the "Fast Track" workflow into specific micro-tasks for the current goal.
-* Update `references/[STEP_ID]_plan.md` and the high-level task state `SKILL.md`.
+* Update the task state (checklist and context) following the sharding and prefixing rules defined in the `current-task-state` skill.
 
 #### 2. Analyze & Pattern Match
 * Identify target files and existing patterns.
-* Document the pattern in the task state references.
+* Document the findings in the task state references.
 
 #### 3. Implement (Surgical Action)
 * Apply the change surgically.
-* Update the task state skill and references.
+* Update the task state immediately after implementation.
 
 #### 4. Local Validation
 * Run project-specific tests/lint. Fix any failures immediately.

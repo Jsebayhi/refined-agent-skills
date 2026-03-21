@@ -8,7 +8,7 @@ description: MANDATORY. DO NOT attempt automated, low-risk updates without calli
 This skill provides the engine for predictable, background tasks. It relies on hard mechanical signals (lint passing, tests green) to drive a self-correcting loop, concluding with a mandatory convergence review.
 
 ### CRITICAL RULES
-1. **DECOMPOSITION FIRST:** Your very first action MUST be to decompose the task into micro-tasks within the sharded plan (`references/[STEP_ID]_plan.md`).
+1. **DECOMPOSITION FIRST:** Your very first action MUST be to decompose the task into specific micro-tasks. Follow the **State Maintenance Rules** defined in the `current-task-state` skill to record this plan.
 2. **MECHANICAL TERMINATION:** The implementation loop ends ONLY when the "Success Signal" (test/script) passes 100%.
 3. **FAIL-FAST:** If the "Success Signal" remains red after 5 attempts, you MUST stop and escalate to the human.
 4. **CONVERGENCE MANDATE:** Once the mechanical signal is green, you MUST achieve a "PASS" from the `adversarial_reviewer` via the convergence protocol before committing.
@@ -17,7 +17,7 @@ This skill provides the engine for predictable, background tasks. It relies on h
 
 #### 1. Initial Decomposition
 * Translate the "Background Worker" workflow into specific micro-tasks for the current goal.
-* Update `references/[STEP_ID]_plan.md` and the high-level task state `SKILL.md`.
+* Update the task state (checklist and context) following the sharding and prefixing rules defined in the `current-task-state` skill.
 
 #### 2. Define Signal
 Identify the deterministic test or script that defines success (e.g., `pytest tests/test_style.py`).
@@ -29,7 +29,7 @@ Identify the deterministic test or script that defines success (e.g., `pytest te
 
 #### 4. Iterative Correction
 * Repeat Step 3. 
-* Track every attempt in the task state references (`[STEP_ID]_evidence.md`).
+* Track every attempt in the task state references following the prefix-based naming convention.
 * Apply the **Fail-Fast** limit (5 attempts).
 
 #### 5. Convergence Review
