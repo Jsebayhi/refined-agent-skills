@@ -1,35 +1,39 @@
 ---
 name: navigating-complex-task-autonomous
-description: MANDATORY. DO NOT attempt complex tasks autonomously without calling 'activate_skill' on 'navigating-complex-task-autonomous' first. This is the REQUIRED PROTOCOL for 'Autonomous Complex' tasks (Scientific Loop + Reviewer Proxy). It enforces nested convergence loops for Hypotheses, Solutions, and Implementation with a mandatory 5-attempt backtrack threshold.
+description: MANDATORY. DO NOT attempt complex tasks autonomously without calling 'activate_skill' on 'navigating-complex-task-autonomous' first. This is the REQUIRED PROTOCOL for 'Autonomous Complex' tasks (Scientific Loop + Reviewer Proxy). It enforces nested convergence loops and Two-Stage Decomposition.
 ---
 
 # Navigating Complex Implementations (Autonomous)
 
-This skill provides the engine for autonomous problem-solving. It uses the `adversarial_reviewer` as a proxy for the human gatekeeper, enforcing a strict scientific method to search the solution space and prove results through hard signals.
+This skill provides the engine for autonomous problem-solving. It uses the `adversarial_reviewer` as a proxy for the human gatekeeper, enforcing Two-Stage Decomposition and strict source separation of intelligence.
 
 ### THE ROBUST SCIENTIFIC LOOP
 
-#### 1. Initial Decomposition
-* Translate the "Scientific Loop" workflow into specific micro-tasks for the current goal.
-* Initialize the task state following the **State Maintenance Rules** defined in the `current-task-state` skill.
+#### 1. Discovery Decomposition
+* Decompose micro-tasks for Hard Signal definition, Hypothesis Generation, and Solution Strategy.
+* Initialize the task state following the **State Maintenance Rules**.
 
 #### 2. Hypothesis Convergence
-* Define the **Hard Signal** (test/script). If it doesn't exist, create it immediately.
+* Define the **Hard Signal**. If it doesn't exist, create it (TDD).
 * Generate exactly 3 falsifiable hypotheses using `brainstorming-multiple-options`.
-* Debate with the Reviewer until a "PASS" is achieved on the winning hypothesis. Update the task state with findings.
+* Debate with the Reviewer until a "PASS" is achieved on the winning hypothesis.
 
 #### 3. Solution Convergence
 * Generate 3 distinct strategies using `brainstorming-multiple-options`.
-* Debate with the Reviewer until a "PASS" is achieved on the winning strategy. Update the task state with the chosen strategy.
+* Debate with the Reviewer until a "PASS" is achieved on the winning strategy.
 
-#### 4. Implementation Convergence
+#### 4. Implementation Decomposition
+* ONLY NOW decompose specific micro-tasks for the surgical implementation based on the winning strategy.
+* Update the task plan shard and `SKILL.md`.
+
+#### 5. Implementation Convergence
 * **COMMIT CHECKPOINT:** `git commit --allow-empty -m "checkpoint: [Strategy]"`.
 * Implement the solution.
 * Run the Hard Signal.
 * If Signal passes: Debate the final implementation with the Reviewer until "PASS".
-* If Signal fails: Attempt up to 4 corrective fixes. Update the task state immediately after each attempt.
+* If Signal fails: Attempt up to 4 corrective fixes.
 
 ### CRITICAL RULES
-1. **DECOMPOSITION FIRST:** Your very first action MUST be to decompose the task into micro-tasks.
-2. **BACKTRACK MANDATE:** If validation fails after 5 attempts, you MUST preserve evidence (`git commit -m "failed evidence"`) and reset (`git reset --hard [CHECKPOINT]`), then return to Phase 1.
-3. **SYNC LOOP:** Follow the **State Maintenance Rules** in `current-task-state` to update reference shards FIRST, then update the high-level task state skill.
+1. **TWO-STAGE DECOMPOSITION:** Never plan implementation micro-tasks until Stage 3 (Solution Convergence) is verified.
+2. **SOURCE SEPARATION:** Store findings in the correct `human_intel` vs. `autonomous_intel` shards. Only humans can invalidate Human Intel.
+3. **BACKTRACK MANDATE:** If validation fails after 5 attempts, preserve evidence, reset to checkpoint, and return to Phase 1.

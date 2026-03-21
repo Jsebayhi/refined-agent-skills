@@ -13,23 +13,17 @@ mkdir -p "$TARGET_DIR/references"
 # 2. Update .gitignore if needed
 if ! grep -q "$TARGET_DIR/" .gitignore 2>/dev/null; then
     echo "$TARGET_DIR/" >> .gitignore
-    echo "Added $TARGET_DIR/ to .gitignore"
 fi
 
 # 3. Copy the template
 if [ -f "$ASSET_FILE" ]; then
     cp "$ASSET_FILE" "$TARGET_DIR/SKILL.md"
-    echo "SUCCESS: Task state initialized at $TARGET_DIR/SKILL.md"
 else
-    echo "ERROR: Template asset not found at $ASSET_FILE"
     exit 1
 fi
 
-# 4. Initialize sharded plan
-PLAN_SHARD="$TARGET_DIR/references/${PREFIX}_plan.md"
-if [ ! -f "$PLAN_SHARD" ]; then
-    echo "# Execution Plan: $PREFIX" > "$PLAN_SHARD"
-    echo "## Detailed Micro-Tasks" >> "$PLAN_SHARD"
-    echo "- [ ] Initial Research" >> "$PLAN_SHARD"
-    echo "SUCCESS: Initial plan shard created at $PLAN_SHARD"
-fi
+# 4. Initialize Core Shards
+echo "# Original Goal" > "$TARGET_DIR/references/${PREFIX}_original_goal.md"
+echo "# Human Intelligence (Guaranteed)" > "$TARGET_DIR/references/${PREFIX}_human_intel.md"
+echo "# Autonomous Intelligence (Scrutinized)" > "$TARGET_DIR/references/${PREFIX}_autonomous_intel.md"
+echo "# Detailed Execution Plan" > "$TARGET_DIR/references/${PREFIX}_plan.md"

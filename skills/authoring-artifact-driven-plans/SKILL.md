@@ -1,39 +1,37 @@
 ---
 name: authoring-artifact-driven-plans
-description: MANDATORY. DO NOT attempt to execute a multi-step task without calling 'activate_skill' on 'authoring-artifact-driven-plans' first. This is the REQUIRED PROTOCOL for initializing and maintaining persistent task memory via the ".gemini/skills/current-task-state/" directory. It leverages deterministic sharding and CLI skill-loading to prevent amnesia and instructional dilution.
+description: MANDATORY. DO NOT attempt to execute a multi-step task without calling 'activate_skill' on 'authoring-artifact-driven-plans' first. This is the REQUIRED PROTOCOL for initializing and maintaining persistent task memory via the ".gemini/skills/current-task-state/" directory. It enforces source separation between Human and Autonomous intelligence.
 ---
 
 # Authoring Artifact-Driven Plans
 
-This skill manages the persistent "Task Skill" that ensures continuity across sessions. It shards task memory by placing high-level state in `SKILL.md` and verbose evidence in the `references/` directory using a standardized naming convention based on the current step.
+This skill manages the persistent "Task Skill" that ensures continuity across sessions. It enforces a strict separation between Human Intelligence (Guaranteed) and Autonomous Intelligence (Scrutinized).
 
 ### CRITICAL RULES
-1. **DETERMINISTIC SETUP:** You MUST use `scripts/initialize_state.sh [STEP_PREFIX]` to create the environment. Do NOT create directories manually.
-2. **TASK CONTINUITY:** If `.gemini/skills/current-task-state/` exists, you MUST load it and resume the plan. Do NOT re-initialize.
-3. **STEP-BASED PREFIXING:** All files in `references/` MUST follow the current step prefix: `[STEP_ID]_[FILE_NAME].md`. This allows for tracing the history of steps taken to achieve the task.
-4. **SHARDED SYNCHRONIZATION:** 
-    * First, update the detailed reference shards in `references/`.
-    * Then, update the high-level `SKILL.md` checklist and "Current Context".
-5. **PERSISTENCE LIMIT (100 LINES):** The `SKILL.md` MUST remain under 100 lines. Verbose data belongs in reference shards.
+1. **DETERMINISTIC SETUP:** Use `scripts/initialize_state.sh [STEP_PREFIX]` to create the environment.
+2. **SOURCE SEPARATION:** You MUST store Human Guidance in `references/[PREFIX]_human_intel.md` and Autonomous Findings in `references/[PREFIX]_autonomous_intel.md`. Never mix them.
+3. **ONLY HUMANS INVALIDATE:** Human Intel is immutable by the agent. If you identify a contradiction in the code, flag it but wait for human approval before updating the human_intel shard.
+4. **ORIGINAL GOAL:** You MUST log the user's initial request and subsequent refinements in `references/[PREFIX]_original_goal.md`.
+5. **SHARDED SYNCHRONIZATION:** Update reference shards FIRST, then sync the high-level `SKILL.md`.
 
 ### WORKFLOW: [Recovery -> Initialization -> Synchronization]
 
 #### 1. Recovery & Adoption
-Before starting any work, check for `.gemini/skills/current-task-state/`.
-* **Exists:** Execute `read_file` on `SKILL.md` and the relevant `references/[STEP_ID]_plan.md` to adopt state. Resume immediately.
-* **Missing:** Proceed to Initialization.
+If `.gemini/skills/current-task-state/` exists, load `SKILL.md` and all shards. Resume immediately.
 
 #### 2. Initialization
-1. **DETERMINE STEP PREFIX:** Identify the **Step Prefix** (e.g., `step-1` or `discovery`).
-2. **EXECUTE SETUP:** Run `bash skills/authoring-artifact-driven-plans/scripts/initialize_state.sh [STEP_PREFIX]`.
-3. **POPULATE SKILL:** Immediately open the new `.gemini/skills/current-task-state/SKILL.md` and populate the metadata (Task Name, Step Prefix, Engine).
-4. **POPULATE PLAN:** Update `references/[STEP_ID]_plan.md` with the full micro-task list for this step.
+1. **PREFIX:** Identify the Step Prefix (e.g., `discovery`).
+2. **SETUP:** Run `bash skills/authoring-artifact-driven-plans/scripts/initialize_state.sh [PREFIX]`.
+3. **LOG GOAL:** Populate `references/[PREFIX]_original_goal.md` with the full task description.
+4. **LOG GUIDANCE:** Populate `references/[PREFIX]_human_intel.md` with all context provided by the human so far.
+5. **POPULATE SKILL:** Update the metadata in the new `.gemini/skills/current-task-state/SKILL.md`.
 
 #### 3. Synchronization
-After every tool call or milestone:
-1. **Update Shards:** Write logs/evidence to `references/[STEP_ID]_[type].md` following the naming convention.
-2. **Update Checkpoint:** Update the `SKILL.md` to reflect progress and the "Next Step."
+After every tool call:
+1. **Distill Intel:** Determine if the finding is Human Guidance (e.g., "I want X") or Autonomous Evidence (e.g., "Grep shows Y").
+2. **Write to Shards:** Update the appropriate `[PREFIX]_intel.md` file using prefix-based naming.
+3. **Sync Checkpoint:** Update the `SKILL.md` checklist and "Next Step."
 
 ### RESOURCES
-* `scripts/initialize_state.sh`: Functional utility for environment setup.
-* `assets/task-state-template.md`: The "Iron-Clad" template for the injected state skill.
+* `scripts/initialize_state.sh`: Environment setup.
+* `assets/task-state-template.md`: Injected memory template.
