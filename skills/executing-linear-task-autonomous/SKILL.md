@@ -8,30 +8,35 @@ description: MANDATORY. DO NOT attempt automated, low-risk updates without calli
 This skill provides the engine for predictable, background tasks. It relies on hard mechanical signals (lint passing, tests green) to drive a self-correcting loop, concluding with a mandatory convergence review.
 
 ### CRITICAL RULES
-1. **MECHANICAL TERMINATION:** The implementation loop ends ONLY when the "Success Signal" (test/script) passes 100%.
-2. **FAIL-FAST:** If the "Success Signal" remains red after 5 attempts, you MUST stop and escalate to the human.
-3. **CONVERGENCE MANDATE:** Once the mechanical signal is green, you MUST achieve a "PASS" from the `adversarial_reviewer` via the `conducting-adversarial-convergence` protocol before committing.
+1. **DECOMPOSITION FIRST:** Your very first action MUST be to decompose the task into micro-tasks within the sharded plan (`references/[STEP_ID]_plan.md`).
+2. **MECHANICAL TERMINATION:** The implementation loop ends ONLY when the "Success Signal" (test/script) passes 100%.
+3. **FAIL-FAST:** If the "Success Signal" remains red after 5 attempts, you MUST stop and escalate to the human.
+4. **CONVERGENCE MANDATE:** Once the mechanical signal is green, you MUST achieve a "PASS" from the `adversarial_reviewer` via the convergence protocol before committing.
 
-### WORKFLOW: [Looping Execution -> Review]
+### WORKFLOW: [Decompose -> Looping Execution -> Review]
 
-#### 1. Define Signal
+#### 1. Initial Decomposition
+* Translate the "Background Worker" workflow into specific micro-tasks for the current goal.
+* Update `references/[STEP_ID]_plan.md` and the high-level task state `SKILL.md`.
+
+#### 2. Define Signal
 Identify the deterministic test or script that defines success (e.g., `pytest tests/test_style.py`).
 
-#### 2. Execute & Observe
+#### 3. Execute & Observe
 * Run the signal. 
 * If red: Analyze the raw error and apply a surgical fix.
-* If green: Proceed to Step 4.
+* If green: Proceed to Step 5.
 
-#### 3. Iterative Correction
-* Repeat Step 2. 
+#### 4. Iterative Correction
+* Repeat Step 3. 
 * Track every attempt in the task state references (`[STEP_ID]_evidence.md`).
 * Apply the **Fail-Fast** limit (5 attempts).
 
-#### 4. Convergence Review
+#### 5. Convergence Review
 * Activate `conducting-adversarial-convergence`.
 * Spar with the Reviewer until a "PASS" is achieved.
 
-#### 5. Finalize
+#### 6. Finalize
 * Stage all changes.
 * Execute the commit using `authoring-high-signal-git-commits`.
 * Report "Autonomous Task Complete" to the human.

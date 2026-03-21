@@ -1,6 +1,6 @@
 ---
 name: navigating-complex-task-supervised
-description: MANDATORY. DO NOT attempt complex tasks with human oversight without calling 'activate_skill' on 'navigating-complex-supervised' first. This is the REQUIRED PROTOCOL for 'Supervised Complex' tasks (Architectural Sparring). It enforces human-in-the-loop gates for Hypotheses and Solutions to ensure architectural alignment.
+description: MANDATORY. DO NOT attempt complex tasks with human oversight without calling 'activate_skill' on 'navigating-complex-task-supervised' first. This is the REQUIRED PROTOCOL for 'Supervised Complex' tasks (Architectural Sparring). It enforces human-in-the-loop gates for Hypotheses and Solutions to ensure architectural alignment.
 ---
 
 # Navigating Complex Implementations (Supervised)
@@ -8,26 +8,31 @@ description: MANDATORY. DO NOT attempt complex tasks with human oversight withou
 This skill provides the engine for complex, human-led engineering. It focuses on collaborative design, using the agent as a rigorous researcher and the human as the final architect.
 
 ### CRITICAL RULES
-1. **NO CODE WITHOUT DESIGN:** You are PROHIBITED from implementation until the Strategy is approved by the human.
-2. **GATEKEEPING:** You MUST halt and wait for human approval after generating Hypotheses and after generating Solutions.
-3. **CONVERGENCE PREREQUISITE:** Before presenting Hypotheses or Solutions to the human, you MUST harden them via a convergence loop with the `adversarial_reviewer`.
+1. **DECOMPOSITION FIRST:** Your very first action MUST be to decompose the task into micro-tasks within the sharded plan (`references/[STEP_ID]_plan.md`).
+2. **NO CODE WITHOUT DESIGN:** You are PROHIBITED from implementation until the Strategy is approved by the human.
+3. **GATEKEEPING:** You MUST halt and wait for human approval after generating Hypotheses and after generating Solutions.
+4. **CONVERGENCE PREREQUISITE:** Before presenting Hypotheses or Solutions to the human, you MUST harden them via a convergence loop with the `adversarial_reviewer`.
 
-### WORKFLOW: [Research -> Hypothesize -> Strategize -> Implement]
+### WORKFLOW: [Decompose -> Research -> Hypothesize -> Strategize -> Implement]
 
-#### 1. Evidence Gathering
+#### 1. Initial Decomposition
+* Translate the "Architectural Sparring" workflow into specific micro-tasks for the current goal.
+* Update `references/[STEP_ID]_plan.md` and the high-level task state `SKILL.md`.
+
+#### 2. Evidence Gathering
 Use `codebase_investigator` and `investigating-external-dependencies` to map the problem space.
 
-#### 2. Hypothesis Design
+#### 3. Hypothesis Design
 * Generate exactly 3 falsifiable hypotheses using `brainstorming-multiple-options`.
 * Converge with the Reviewer until hardened.
 * Present to the human. **WAIT FOR APPROVAL.**
 
-#### 3. Strategy Design
+#### 4. Strategy Design
 * For the approved hypothesis, generate 3 solution strategies using `brainstorming-multiple-options`.
 * Converge with the Reviewer until hardened.
 * Present to the human. **WAIT FOR APPROVAL.**
 
-#### 4. Implementation & Validation
+#### 5. Implementation & Validation
 * Apply the approved solution.
 * Local validate against the Hard Signal.
 * Final convergence review with the `adversarial_reviewer`.
