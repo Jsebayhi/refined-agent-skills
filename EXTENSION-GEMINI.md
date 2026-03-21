@@ -17,23 +17,27 @@ This extension provides a suite of high-signal engineering skills. These instruc
 
 ## Operational Mandates: Skill Escalation & Complexity Management
 
+### 🏗️ The Mode Matrix Mandate
+**MANDATORY:** You MUST establish the operational contract before executing any task.
+1.  **Entrypoint:** Always activate **`selecting-optimal-methodology`** first.
+2.  **State Management:** Always activate **`authoring-artifact-driven-plans`** to initialize persistent memory.
+
 ### ⚠️ The "Step Back" Mandate: Resilience Over Persistence
 Complexity is often invisible until it resists. If any task requires more than **one corrective iteration** (e.g., a fix for a failed automated test, a second attempt at a build, or a failed runtime validation), you MUST treat this as a signal that the task's complexity was initially underestimated.
 
 1.  **Cease Tactical Fixes:** Immediately stop "patching" symptoms.
-2.  **Contextual Escalation:** You are MANDATED to activate the **`navigating-complex-implementations`** skill.
-3.  **Reset to Strategy:** Use the Exploration Engine to perform a dedicated **Scientific Loop** (Hypothesis -> Solution -> Implementation). Re-analyze the underlying system before attempting further modifications.
-4.  **Acknowledge Bias:** Explicitly state in your next response that you are escalating to the Exploration Engine due to persistent resistance.
+2.  **Contextual Escalation:** You are MANDATED to return to **`selecting-optimal-methodology`** and upgrade the task to **Complex**.
+3.  **Reset to Strategy:** Use the **`navigating-complex-task-*`** engines to perform a dedicated **Scientific Loop** (Hypothesis -> Solution -> Implementation).
+4.  **Acknowledge Bias:** Explicitly state in your next response that you are escalating due to persistent resistance.
 
 ## Modular Engineering & Multi-Skill Activation
 This extension follows an "Orchestrator + Specialized Experts" architecture. To ensure high-quality production engineering, agents are encouraged and expected to activate multiple skills simultaneously.
 
 ### The Mode Matrix Combinations:
-- **Linear Execution:** `orchestrating-decision-router` -> `executing-linear-tasks` + `conducting-adversarial-convergence`.
-- **Complex Exploration:** `orchestrating-decision-router` -> `navigating-complex-implementations` + `brainstorming-multiple-options` + `conducting-adversarial-convergence`.
-- **Validation Philosophy:** Always use `testing-software-efficiently` as the underlying verification standard.
-- **Quality Assurance:** `testing-software-efficiently` + `upholding-devsecops-standards` + `interacting-with-[github/gitlab]`.
-- **Submission:** `collaborating-on-git-projects` + `authoring-effective-user-documentation` + `interacting-with-[github/gitlab]`.
+- **Linear Supervised:** `selecting-optimal-methodology` -> `executing-linear-task-supervised` + `conducting-adversarial-convergence`.
+- **Linear Autonomous:** `selecting-optimal-methodology` -> `executing-linear-task-autonomous` + `conducting-adversarial-convergence`.
+- **Complex Supervised:** `selecting-optimal-methodology` -> `navigating-complex-task-supervised` + `brainstorming-multiple-options` + `conducting-adversarial-convergence`.
+- **Complex Autonomous:** `selecting-optimal-methodology` -> `navigating-complex-task-autonomous` + `brainstorming-multiple-options` + `conducting-adversarial-convergence`.
 
 ### Conflict Resolution:
 1. **Orchestrator (Router/Engine):** Defines the *Current State* and *Mode*.
