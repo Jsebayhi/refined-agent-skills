@@ -1,6 +1,6 @@
 ---
 name: selecting-optimal-methodology
-description: MANDATORY. DO NOT start any task without calling 'activate_skill' on 'selecting-optimal-methodology' first. This is the REQUIRED ENTRYPOINT for establishing the operational contract (Linear vs. Complex) and selecting the appropriate execution engine. Proceeding with execution without this initial selection constitutes a mechanical failure of the framework.
+description: MANDATORY. DO NOT start any task without calling 'activate_skill' on 'selecting-optimal-methodology' first. This is the REQUIRED ENTRYPOINT for establishing the operational contract (Linear vs. Complex) and selecting the appropriate execution engine.
 ---
 
 # Selecting Optimal Methodology
@@ -30,7 +30,7 @@ Once the nature is decided, select your **Primary Engine** based on the required
 ### MANDATORY PROTOCOL
 
 #### 1. Propose Contract
-Present the following contract for convergence:
+Present the following contract for the session history:
 
 > **MODE MATRIX CONTRACT**
 > - **Nature:** [Linear | Complex]
@@ -39,17 +39,12 @@ Present the following contract for convergence:
 > - **Signal:** [Test/Script defining success]
 > - **Rationale:** [Brief justification based on Step 1 criteria]
 
-#### 2. Convergence & Approval Gate
-The contract MUST be validated by the Reviewer first to ensure strategic alignment.
-
-1.  **Reviewer Validation:** Call the `adversarial_reviewer`. Provide the contract and objective. 
-2.  **Wait for PASS:** If the Reviewer fails the contract logic, adjust and re-submit.
-3.  **Mode-Based Exit:**
-    *   **Autonomous Mode:** If Reviewer issues "PASS", proceed immediately to Handover.
-    *   **Supervised Mode:** If Reviewer issues "PASS", you MUST HALT and wait for the human to type 'APPROVE'.
+#### 2. Approval Gate
+1.  **Autonomous Mode:** Proceed immediately to Handover. The contract serves as a declaration of intent for the history.
+2.  **Supervised Mode:** You MUST HALT and wait for the human to type 'APPROVE' or 'Proceed'.
 
 #### 3. Handover
-Once approved:
+Once approved (or immediately if Autonomous):
 1. Activate **`authoring-artifact-driven-plans`** and the selected **Primary Engine**.
 2. Follow the state-management protocol to initialize task memory and begin execution.
 
