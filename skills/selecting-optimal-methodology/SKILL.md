@@ -1,6 +1,6 @@
 ---
 name: selecting-optimal-methodology
-description: MANDATORY. DO NOT start any task without calling 'activate_skill' on 'selecting-optimal-methodology' first. This is the REQUIRED ENTRYPOINT for establishing the operational contract (Linear vs. Complex) and selecting the appropriate execution engine.
+description: MANDATORY. DO NOT start any task without calling 'activate_skill' on 'selecting-optimal-methodology' first. This is the REQUIRED ENTRYPOINT for the agent to autonomously establish the task contract (Linear vs. Complex) and select the appropriate execution engine.
 ---
 
 # Selecting Optimal Methodology
