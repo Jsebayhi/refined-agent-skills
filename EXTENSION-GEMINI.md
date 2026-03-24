@@ -21,6 +21,8 @@ This extension provides a suite of high-signal engineering skills. These instruc
 **MANDATORY:** You MUST establish the operational contract before executing any task.
 1.  **Entrypoint:** Always activate **`selecting-optimal-methodology`** first.
 2.  **State Management:** Always activate **`authoring-artifact-driven-plans`** to initialize persistent memory.
+3.  **Visual Progress:** You MUST prepend the Flight Deck header with a **Visual Map** to every response.
+4.  **Prefix-Based Sharding:** Use `human_gathered_` and `auto_gathered_` prefixes for all intelligence shards.
 
 ### ⚠️ The "Step Back" Mandate: Resilience Over Persistence
 Complexity is often invisible until it resists. If any task requires more than **one corrective iteration** (e.g., a fix for a failed automated test, a second attempt at a build, or a failed runtime validation), you MUST treat this as a signal that the task's complexity was initially underestimated.

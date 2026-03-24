@@ -5,23 +5,29 @@ This extension provides a collection of distilled, high-signal experts for the G
 ## Project Structure
 
 - `skills/`: Contains the individual skills.
-    - `engineering-agent-skills/`: Expert system for building and designing agent skills.
-    - `deep-reading-agent-skill/`: Teaches agents to deeply analyze and reflect on resources (PDFs, docs, web pages) section by section.
-    - `git-commit-convention/`: Commits staged changes conventionally.
-    - `deep-brainstorming/`: Guides the agent through a rigorous brainstorming process.
-    - `working-with-gitlab-mr/`: Enforces a high-transparency Merge Request lifecycle (Opening, Handling Feedback, Reviewing) on GitLab.
+    - `selecting-optimal-methodology/`: Entrypoint for task classification.
+    - `authoring-artifact-driven-plans/`: Disk-based state machine.
+    - `executing-linear-task/`: Consolidated high-velocity engine.
+    - `navigating-complex-task-supervised/`: HITL architectural sparring.
+    - `navigating-complex-task-autonomous/`: Reviewer-Proxy scientific loop.
+    - `engineering-agent-skills/`: Expert system for building agent skills.
 
 ## Project Standards
 
 ### The Flight Deck Mandate
-To prevent "Head-First" execution and ensure state synchronization, all agent responses MUST begin with the following mechanical header:
-> **STEP_ID:** [PHASE].[TASK].[SUB] | **STATE_REF:** [FILE_PATH] | **PROGRESS:** [X of Y] | **APPROVAL:** [PENDING|RECEIVED|PROXY|N/A]
+To prevent "Head-First" execution and ensure state synchronization, all agent responses MUST begin with the following mechanical header including a Visual Map:
+> **STEP_ID:** [PHASE].[TASK].[SUB] | **STATE_REF:** [FILE_PATH] | **APPROVAL:** [Status] | **MAP:** [x][x][>][ ][ ] (Discovery > Strategy > Execution)
 
 ### STEP_ID Schema: `[PHASE_NUM].[TASK_NUM].[SUB_NUM]`
 *   **PHASE 1 (Discovery):** Research, Hypothesis, and Analysis.
 *   **PHASE 2 (Strategy):** Solution design and architectural alignment.
 *   **PHASE 3 (Execution):** Surgical implementation and validation.
 *   *Example:* `3.2.1` represents Phase 3 (Execution), Task 2, Sub-task 1.
+
+### Intelligence Sharding Schema
+To prevent "One-Big-File" syndrome and ensure source separation, all intelligence shards MUST use these prefixes:
+*   **Human Intelligence:** `human_gathered_[topic].md` (Guaranteed Guidance).
+*   **Autonomous Intelligence:** `auto_gathered_[topic].md` (Scrutinized Evidence).
 
 ## Workflows
 

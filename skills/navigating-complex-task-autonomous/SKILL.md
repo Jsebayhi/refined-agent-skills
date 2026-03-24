@@ -6,7 +6,7 @@ description: MANDATORY. DO NOT attempt complex tasks autonomously without callin
 # Navigating Complex Implementations (Autonomous)
 
 ### CRITICAL RULES
-1. **FLIGHT DECK HEADER:** Every response MUST begin with the header: `STEP_ID: [ID] | STATE_REF: [FILE_PATH] | PROGRESS: [X of Y] | APPROVAL: PROXY`.
+1. **FLIGHT DECK HEADER:** Every response MUST begin with the header: `STEP_ID: [ID] | STATE_REF: [FILE_PATH] | APPROVAL: PROXY | MAP: [x][x][>][ ][ ]`.
 2. **TOOL-GATING:** You are PROHIBITED from calling implementation tools (`write_file`, `replace`) unless you have called `read_file` on the strategy shard (`_strategies.md`) in the last 3 turns.
 3. **REVIEWER PROXY:** The Reviewer acts as the definitive gatekeeper for all designs. Achieve a Reviewer "PASS" at every gate.
 4. **FEEDBACK INTERCEPT:** Human feedback is a system interrupt. Halt the loop, output `REASONING_RESET: [GOAL|ARCH]`, and step back to Phase 1 or 2.

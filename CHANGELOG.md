@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.5] - 2026-03-21
+
+### Added
+- **Visual Progress Map**: Integrated high-density progress tracking into the Flight Deck header.
+- **Prefix-Based Sharding**: Mandated `human_gathered_` and `auto_gathered_` prefixes for intelligence shards.
+
+### Changed
+- **Hardened Handover**: Simplified `selecting-optimal-methodology` by removing the redundant Reviewer gate.
+- **Header Standardization**: Unified all engine headers to use `FILE_PATH` and expanded `APPROVAL` enums.
+
 ## [0.4.1] - 2026-03-20
 
 ### Added

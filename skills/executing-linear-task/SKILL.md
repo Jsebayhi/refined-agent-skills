@@ -6,7 +6,7 @@ description: MANDATORY. DO NOT attempt predictable updates without calling 'acti
 # Executing Linear Tasks
 
 ### CRITICAL RULES
-1. **FLIGHT DECK HEADER:** Every response MUST begin with: `STEP_ID: 3.[TASK].[SUB] | STATE_REF: [FILE_PATH] | PROGRESS: [X of Y] | APPROVAL: N/A`.
+1. **FLIGHT DECK HEADER:** Every response MUST begin with: `STEP_ID: 3.[TASK].[SUB] | STATE_REF: [FILE_PATH] | APPROVAL: N/A | MAP: [x][x][>][ ][ ]`.
 2. **TOOL-GATING:** You are PROHIBITED from calling implementation tools (`write_file`, `replace`) unless you have called `read_file` on the plan shard (`_plan.md`) in the last 3 turns.
 3. **10-ATTEMPT THRESHOLD:** You are allowed 10 corrective iterations to achieve a passing signal. At the 11th attempt, you MUST stop and escalate to the **Complex** engine.
 4. **FEEDBACK INTERCEPT:** Human feedback is a system interrupt. Halt the loop, output `REASONING_RESET: TACTIC`, and re-evaluate the task nature.

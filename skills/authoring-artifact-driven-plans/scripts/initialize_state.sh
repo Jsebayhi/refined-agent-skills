@@ -27,18 +27,24 @@ if [ ! -f "$TARGET_DIR/SKILL.md" ]; then
 fi
 
 # 4. Initialize Core Shards safely (No overwrite)
-declare -a shards=("original_goal" "human_intel" "autonomous_intel" "plan" "strategies")
+declare -a shards=("original_goal" "plan" "strategies")
 
 for shard in "${shards[@]}"; do
     FILE="$TARGET_DIR/references/${STEP_ID}_${shard}.md"
     if [ ! -f "$FILE" ]; then
         case $shard in
             "original_goal") echo "# Original Goal" > "$FILE" ;;
-            "human_intel") echo "# Human Intelligence (Guaranteed)" > "$FILE" ;;
-            "autonomous_intel") echo "# Autonomous Intelligence (Scrutinized Evidence)" > "$FILE" ;;
             "plan") echo "# Detailed Execution Plan" > "$FILE" ;;
             "strategies") echo "# Solution Strategies (Hardened)" > "$FILE" ;;
         esac
         echo "SUCCESS: Created $FILE"
     fi
 done
+
+# 5. Initialize First Intelligence Shards
+if [ ! -f "$TARGET_DIR/references/human_gathered_context.md" ]; then
+    echo "# Human Intelligence (Guaranteed)" > "$TARGET_DIR/references/human_gathered_context.md"
+fi
+if [ ! -f "$TARGET_DIR/references/auto_gathered_initial_research.md" ]; then
+    echo "# Autonomous Intelligence (Scrutinized Evidence)" > "$TARGET_DIR/references/auto_gathered_initial_research.md"
+fi

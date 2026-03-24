@@ -16,25 +16,23 @@ gemini skills link /path/to/refined-agent-skills
 
 ---
 
-## 🏗️ The Mode Matrix Framework (v0.4.1)
+## 🏗️ The Mode Matrix Framework (v0.4.5)
 
-This repository follows a **"Mode-Aware Stateful Orchestration"** architecture. It eliminates "Instructional Dilution" by forcing the agent to establish an operational contract before work begins.
+This repository follows a **"Mode-Aware Stateful Orchestration"** architecture. It eliminates "Instructional Dilution" by forcing the agent to establish an operational contract before work begins, tracked via a visual progress map.
 
 ### 1. Orchestration & State (The Foundation)
-*   **[Selecting Optimal Methodology](skills/selecting-optimal-methodology/SKILL.md)**: The required entrypoint for establishing the task contract (Linear vs. Complex).
-    *   *Triggers*: "fix", "implement", "build", "update", "investigate".
-*   **[Authoring Artifact-Driven Plans](skills/authoring-artifact-driven-plans/SKILL.md)**: Enforces sharded task memory in `.gemini/skills/current-task-state/`.
-    *   *Triggers*: "plan the work", "initialize state", "task memory".
+*   **[Selecting Optimal Methodology](skills/selecting-optimal-methodology/SKILL.md)**: The required entrypoint for establishing the task contract.
+*   **[Authoring Artifact-Driven Plans](skills/authoring-artifact-driven-plans/SKILL.md)**: Enforces prefix-based sharded memory in `.gemini/skills/current-task-state/`.
+    *   *Features*: Visual Progress Map, `human_gathered_` and `auto_gathered_` prefixes.
 
-### 2. The 4-Quadrant Engines (The "Dual-Piston" Prowess)
-*   **[Executing Linear Task (Supervised)](skills/executing-linear-task/SKILL.md)**: Pattern matching with human sign-off.
-*   **[Executing Linear Task (Autonomous)](skills/executing-linear-task/SKILL.md)**: Background worker driven by hard signals.
-*   **[Navigating Complex Task (Supervised)](skills/navigating-complex-task-supervised/SKILL.md)**: Architectural sparring with human control.
-*   **[Navigating Complex Task (Autonomous)](skills/navigating-complex-task-autonomous/SKILL.md)**: Scientific loop with Reviewer-Proxy gatekeeping.
+### 2. The 3 Execution Engines
+*   **[Executing Linear Task](skills/executing-linear-task/SKILL.md)**: Consolidated high-velocity engine for pattern matching (Supervised or Autonomous).
+*   **[Navigating Complex Task (Supervised)](skills/navigating-complex-task-supervised/SKILL.md)**: Architectural sparring with human control and Reviewer-First filter.
+*   **[Navigating Complex Task (Autonomous)](skills/navigating-complex-task-autonomous/SKILL.md)**: Scientific loop with Reviewer-Proxy gatekeeping and Diagnostic RCA.
 
 ### 3. Sub-Routines & Convergence
 *   **[Conducting Adversarial Convergence](skills/conducting-adversarial-convergence/SKILL.md)**: Orchestrates the iterative debate between the Main Agent and the Reviewer.
-*   **[Brainstorming Multiple Options](skills/brainstorming-multiple-options/SKILL.md)**: Mechanical sub-routine for generating exactly 3 technical paths.
+*   **[Brainstorming Multiple Options](skills/brainstorming-multiple-options/SKILL.md)**: Mechanical sub-routine for generating at least 3 technical paths.
 
 ---
 
