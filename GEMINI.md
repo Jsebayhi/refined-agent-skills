@@ -5,15 +5,29 @@ This extension provides a collection of distilled, high-signal experts for the G
 ## Project Structure
 
 - `skills/`: Contains the individual skills.
-    - `engineering-agent-skills/`: Expert system for building and designing agent skills.
-    - `deep-reading-agent-skill/`: Teaches agents to deeply analyze and reflect on resources (PDFs, docs, web pages) section by section.
-    - `git-commit-convention/`: Commits staged changes conventionally.
-    - `deep-brainstorming/`: Guides the agent through a rigorous brainstorming process.
-    - `working-with-gitlab-mr/`: Enforces a high-transparency Merge Request lifecycle (Opening, Handling Feedback, Reviewing) on GitLab.
+    - `selecting-optimal-methodology/`: Entrypoint for task classification.
+    - `authoring-artifact-driven-plans/`: Disk-based state machine.
+    - `executing-linear-task/`: Consolidated high-velocity engine.
+    - `navigating-complex-task-supervised/`: HITL architectural sparring.
+    - `navigating-complex-task-autonomous/`: Reviewer-Proxy scientific loop.
+    - `engineering-agent-skills/`: Expert system for building agent skills.
 
-## Configuration
+## Project Standards
 
-- `gemini-extension.json`: Extension metadata for Gemini CLI.
+### The Flight Deck Mandate
+To prevent "Head-First" execution and ensure state synchronization, all agent responses MUST begin with the following mechanical header including a Visual Map:
+> **STEP_ID:** [PHASE].[TASK].[SUB] | **STATE_REF:** [FILE_PATH] | **APPROVAL:** [Status] | **MAP:** [x][x][>][ ][ ] (Discovery > Strategy > Execution)
+
+### STEP_ID Schema: `[PHASE_NUM].[TASK_NUM].[SUB_NUM]`
+*   **PHASE 1 (Discovery):** Research, Hypothesis, and Analysis.
+*   **PHASE 2 (Strategy):** Solution design and architectural alignment.
+*   **PHASE 3 (Execution):** Surgical implementation and validation.
+*   *Example:* `3.2.1` represents Phase 3 (Execution), Task 2, Sub-task 1.
+
+### Intelligence Sharding Schema
+To prevent "One-Big-File" syndrome and ensure source separation, all intelligence shards MUST use these prefixes:
+*   **Human Intelligence:** `human_gathered_[topic].md` (Guaranteed Guidance).
+*   **Autonomous Intelligence:** `auto_gathered_[topic].md` (Scrutinized Evidence).
 
 ## Workflows
 
@@ -32,7 +46,7 @@ This extension provides a collection of distilled, high-signal experts for the G
 *   **Stdout Isolation:** The `stdout` stream is reserved for JSON-RPC messages only. All logging, debugging, or standard command output MUST be redirected to `stderr`. Failure to do so will corrupt the JSON-RPC stream and break the connection.
 *   **Non-Interactive Enforcement:** All underlying CLI commands (e.g., `glab`, `gh`) MUST be executed with flags that disable interactive prompts (e.g., `--yes`, `--fill`) and suppress pagers (`GLAB_PAGER=cat`, `GH_PAGER=cat`).
 *   **Line-Buffered Stdio:** Use a line-by-line reading interface (like `readline`) for `stdin` to ensure the server processes each JSON-RPC request atomically.
-*   **Response Distillation:** All discovery and search tools MUST distill raw API responses to return only the essential fields (e.g., `id`, `title`, `state`, `url`). This prevents agent context window bloat.
+*   **Response Dilution:** All discovery and search tools MUST distill raw API responses to return only the essential fields (e.g., `id`, `title`, `state`, `url`). This prevents agent context window bloat.
 
 ### Git Conventions
 **MANDATORY:** One commit per skill. A commit must never touch multiple skills. 
@@ -43,12 +57,6 @@ This extension provides a collection of distilled, high-signal experts for the G
 - Prefix all discovery commands with `GH_PAGER=cat` or `GLAB_PAGER=cat`.
 - Forbid usage of `--live`, `--watch`, or any command that continuously refreshes output.
 - Use one-shot discovery commands (e.g., `gh pr checks` instead of `gh pr view --watch`).
-
-### README Maintenance
-When adding a new skill to the `skills/` directory:
-1. Update the `Available Skills` section in `README.md`.
-2. Include the skill name, a brief description, and its primary trigger phrases.
-3. Provide the specific installation and linking commands for that skill, matching the existing examples.
 
 ### Adding a New Skill
 Create a new directory in `skills/` with a `SKILL.md` file following the kebab-case naming convention.

@@ -16,68 +16,48 @@ gemini skills link /path/to/refined-agent-skills
 
 ---
 
-## 🏗️ The Production-Grade Software Lifecycle
+## 🏗️ The Mode Matrix Framework (v0.4.5)
 
-This suite follows an **"Orchestrator + Specialized Experts"** architecture. For complex tasks, agents are encouraged to activate multiple skills simultaneously.
+This repository follows a **"Mode-Aware Stateful Orchestration"** architecture. It eliminates "Instructional Dilution" by forcing the agent to establish an operational contract before work begins, tracked via a visual progress map.
 
-### 1. Orchestration (The Framework)
-*   **[Orchestrating Software Lifecycle](skills/orchestrating-software-lifecycle/SKILL.md)**: Manages the full 5-phase SDLC (Alignment, Architecture, Implementation, Validation, Submission).
-    *   *Triggers*: "fix a bug", "implement a feature", "address PR feedback".
+### 1. Orchestration & State (The Foundation)
+*   **[Selecting Optimal Methodology](skills/selecting-optimal-methodology/SKILL.md)**: The required entrypoint for establishing the task contract.
+*   **[Authoring Artifact-Driven Plans](skills/authoring-artifact-driven-plans/SKILL.md)**: Enforces prefix-based sharded memory in `.gemini/skills/current-task-state/`.
+    *   *Features*: Visual Progress Map, `human_gathered_` and `auto_gathered_` prefixes.
 
-### 2. Strategy & Architecture (The "Why")
-*   **[Deep Brainstorming](skills/deep-brainstorming/SKILL.md)**: Divergent thinking using Tree of Thought and Red Teaming during Phase 2.
-    *   *Triggers*: "brainstorm", "explore possibilities", "think deeply".
-*   **[Maintaining Rigorous Architecture Decisions](skills/maintaining-rigorous-architecture-decisions/SKILL.md)**: Convergent codification of decisions using ADRs. Mandates 3+ alternatives.
-    *   *Triggers*: "create an ADR", "architectural decision", "analyze alternatives".
+### 2. The 3 Execution Engines
+*   **[Executing Linear Task](skills/executing-linear-task/SKILL.md)**: Consolidated high-velocity engine for pattern matching (Supervised or Autonomous).
+*   **[Navigating Complex Task (Supervised)](skills/navigating-complex-task-supervised/SKILL.md)**: Architectural sparring with human control and Reviewer-First filter.
+*   **[Navigating Complex Task (Autonomous)](skills/navigating-complex-task-autonomous/SKILL.md)**: Scientific loop with Reviewer-Proxy gatekeeping and Diagnostic RCA.
 
-### 3. Implementation Experts (The "Hands")
-*   **[Engineering Reliable Software with Python](skills/engineering-reliable-software-with-python/SKILL.md)**: Production-grade Python, Ruff/Black compliance, and Pytest implementation.
-    *   *Triggers*: "write a python script", "fix the python code", "test with pytest".
-*   **[Engineering Reliable Scripts with Bash](skills/engineering-reliable-scripts-with-bash/SKILL.md)**: Robust shell scripting, ShellCheck compliance, and BATS testing.
-    *   *Triggers*: "write a bash script", "fix the shell script", "test with BATS".
-*   **[Authoring High-Signal Git Commits](skills/authoring-high-signal-git-commits/SKILL.md)**: Generates descriptive, truth-based commit messages from staged changes.
-    *   *Triggers*: "git commit", "prepare commit", "commit changes conventionally".
-
-### 4. Quality & Testing (The "Validation")
-*   **[Testing Software Efficiently](skills/testing-software-efficiently/SKILL.md)**: The language-agnostic "Testing Trophy" methodology.
-    *   *Triggers*: "testing strategy", "testing trophy", "mocking philosophy".
-*   **[Validating User Interfaces](skills/validating-user-interfaces/SKILL.md)**: Enforces POM, signal-based waiting, and user-centric assertions for UI/E2E testing.
-    *   *Triggers*: "write a ui test", "e2e testing", "playwright tests".
-
-### 5. Infrastructure & Security (The "Hardening")
-*   **[Upholding DevSecOps Standards](skills/upholding-devsecops-standards/SKILL.md)**: Shift-Left security, secret detection, and Local-CI Alignment.
-    *   *Triggers*: "security audit", "harden the pipeline", "check for secrets", "local ci alignment".
-
-### 6. Delivery & Collaboration (The "Submission")
-*   **[Collaborating on Git Projects](skills/collaborating-on-git-projects/SKILL.md)**: Dual-platform (gh/glab) support, Conventional Commits, and PRB rationale.
-    *   *Triggers*: "create a PR", "open a merge request", "PR standards".
-*   **[Interacting with GitHub](skills/interacting-with-github/SKILL.md)**: Production-grade GitHub management using `github:*` MCP tools. Supports precise PR feedback, security auditing, and GitHub Actions monitoring.
-    *   *Triggers*: "create a PR", "start a GitHub review", "check the actions", "search GitHub".
-*   **[Interacting with GitLab](skills/interacting-with-gitlab/SKILL.md)**: Production-grade GitLab management using `gitlab:*` MCP tools. Supports precise line-level feedback, security auditing, and pipeline monitoring.
-    *   *Triggers*: "comment on a line", "start a GitLab review", "check vulnerabilities", "answer a discussion", "check the pipeline".
-*   **[Authoring Effective User Documentation](skills/authoring-effective-user-documentation/SKILL.md)**: Enforces Diátaxis and "Documentation is Code."
-    *   *Triggers*: "update the readme", "write documentation", "create a user guide".
-
-### 7. External Research & Discovery
-*   **[Investigating External Dependencies](skills/investigating-external-dependencies/SKILL.md)**: Senior-Level library investigation (source code, APIs, best practices).
-    *   *Triggers*: "how does this library handle [X]?", "weird error from [Dependency]", "discover the grain".
-
-### 8. Agentic Systems & Architecture
-*   **[Engineering Multi-Agent Systems](skills/engineering-multi-agent-systems/SKILL.md)**: The "Standard Model" of agentic architecture, topologies, and cognitive thermodynamics.
-    *   *Triggers*: "multi-agent system", "synergistic agents", "agentic architecture", "coordination tax".
+### 3. Sub-Routines & Convergence
+*   **[Conducting Adversarial Convergence](skills/conducting-adversarial-convergence/SKILL.md)**: Orchestrates the iterative debate between the Main Agent and the Reviewer.
+*   **[Brainstorming Multiple Options](skills/brainstorming-multiple-options/SKILL.md)**: Mechanical sub-routine for generating at least 3 technical paths.
 
 ---
 
-## 🛠️ Meta-Engineering
+## 🛠️ Specialized Experts
 
-*   **[Engineering Agent Skills](skills/engineering-agent-skills/SKILL.md)**: The expert system for designing and scaffolding new agent skills.
-    *   *Triggers*: "create a skill", "build a workflow", "design an agent tool".
+### 1. Strategy & Architecture
+*   **[Deep Brainstorming](skills/deep-brainstorming/SKILL.md)**: Standalone creative partner for free-form Socratic design sessions.
+*   **[Maintaining Rigorous Architecture Decisions](skills/maintaining-rigorous-architecture-decisions/SKILL.md)**: Convergent codification of decisions using ADRs.
 
----
+### 2. Implementation Experts
+*   **[Engineering Reliable Software with Python](skills/engineering-reliable-software-with-python/SKILL.md)**: Python excellence (Ruff/Black/Pytest).
+*   **[Engineering Reliable Scripts with Bash](skills/engineering-reliable-scripts-with-bash/SKILL.md)**: Robust shell scripting (ShellCheck/BATS).
+*   **[Authoring High-Signal Git Commits](skills/authoring-high-signal-git-commits/SKILL.md)**: High-fidelity, truth-based commit messages.
 
-## 🔍 Analysis & Research Utilities
+### 3. Quality & Security
+*   **[Testing Software Efficiently](skills/testing-software-efficiently/SKILL.md)**: The "Testing Trophy" methodology.
+*   **[Validating User Interfaces](skills/validating-user-interfaces/SKILL.md)**: POM-based UI and E2E verification.
+*   **[Upholding DevSecOps Standards](skills/upholding-devsecops-standards/SKILL.md)**: Security-first engineering and Local-CI Alignment.
 
-*   **[Performing Systematic Root Cause Analysis](skills/performing-systematic-root-cause-analysis/SKILL.md)**: The "Debug Detective" hypothesis-driven workflow. Enforces a strict 5-attempt threshold before mandatory checkpoint backtracking.
-    *   *Triggers*: "investigate", "bug", "error", "failure", "root cause".
-*   **[Deep Reading Agent Skill](skills/deep-reading-agent-skill/SKILL.md)**: Section-by-section analysis and reflection on complex resources.
-    *   *Triggers*: "read deeply", "analyze the nuances", "reflect on the spirit".
+### 4. Delivery & Collaboration
+*   **[Collaborating on Git Projects](skills/collaborating-on-git-projects/SKILL.md)**: High-signal PR/MR lifecycle management (GitHub/GitLab).
+*   **[Interacting with GitHub](skills/interacting-with-github/SKILL.md)** / **[Interacting with GitLab](skills/interacting-with-gitlab/SKILL.md)**: Production-grade platform management via MCP.
+*   **[Authoring Effective User Documentation](skills/authoring-effective-user-documentation/SKILL.md)**: Diátaxis-based user guides and READMEs.
+
+### 5. Research & Meta
+*   **[Investigating External Dependencies](skills/investigating-external-dependencies/SKILL.md)**: Source-first library discovery.
+*   **[Deep Reading Agent Skill](skills/deep-reading-agent-skill/SKILL.md)**: High-fidelity resource analysis.
+*   **[Engineering Agent Skills](skills/engineering-agent-skills/SKILL.md)**: The expert system for building new skills.

@@ -210,7 +210,7 @@ const tools = {
       const match = createResp.match(/!(\d+)/) || createResp.match(/merge_requests\/(\d+)/);
       if (match) {
         const iid = match[1];
-        const autoMergeResp = runGlab(['mr', 'merge', iid, '--auto', '--yes']);
+        const autoMergeResp = runGlab(['mr', 'merge', iid, '--auto-merge', '--yes']);
         return `${createResp}\n\nAUTO-MERGE: ${autoMergeResp}`;
       }
       return createResp;
@@ -524,7 +524,7 @@ const tools = {
     description: "Enable auto-merge for an MR.",
     parameters: { mr_id: "string" },
     required: ["mr_id"],
-    run: ({ mr_id }) => runGlab(['mr', 'merge', mr_id, '--auto', '--yes'])
+    run: ({ mr_id }) => runGlab(['mr', 'merge', mr_id, '--auto-merge', '--yes'])
   },
 
   // --- Security & Vulnerabilities ---
